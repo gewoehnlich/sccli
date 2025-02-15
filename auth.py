@@ -2,7 +2,13 @@ import os
 import base64
 import hashlib
 import requests
+import threading
 from dotenv import load_dotenv
+
+import json
+import asyncio
+import webbrowser
+from server import Server
 
 class Auth:
     def __init__(self) -> None:
@@ -16,6 +22,8 @@ class Auth:
         access_token = self.load_token()
         if not access_token:
             access_token = self.authorize_user()
+
+        return access_token
 
     def load_token(self) -> str | None:
         try:
@@ -37,8 +45,12 @@ class Auth:
              "&code_challenge_method=S256"
             f"&state={state}"
         )
-
-        auth_code = self.get_auth_code(auth_url)
+        
+        server = Server()
+        webbrowser.open(auth_url)
+        auth_code, returned_state = asyncio.run(server.run())
+        if state != returned_state:
+            raise Exception("State mismatch!")
 
         token_url = "https://secure.soundcloud.com/oauth/token"
         headers = {
@@ -57,9 +69,10 @@ class Auth:
 
         response = requests.post(token_url, headers=headers, data=data)
         token_data = response.json()
+        print(token_data)
 
         with open(".tokens", "w") as file:
-            file.write(token_data)
+            file.write(json.dumps(token_data, indent=4))
 
         return token_data.get("access_token")
 
@@ -76,6 +89,16 @@ class Auth:
         state = base64.urlsafe_b64encode(
                 os.urandom(16)).decode().rstrip("=")
         return state
+
+    def run_server_in_thread(self):
+        asyncio.run(Server().start_server())
+
+    def run_server(self):
+        server_thread = threading.Thread(
+            target=self.run_server_in_thread, 
+            daemon=True
+        )
+        server_thread.start()
 
     def get_auth_code(self, auth_url: str) -> str:
         print(f"Open this URL in your browser:\n\n{auth_url}\n")

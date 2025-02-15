@@ -1,4 +1,4 @@
 from auth import Auth
 
-ob = Auth().main()
-
+access_token = Auth().main()
+print(access_token)
