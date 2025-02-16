@@ -2,7 +2,7 @@ import os
 import base64
 import hashlib
 import requests
-import threading
+import time
 from dotenv import load_dotenv
 
 import json
@@ -13,12 +13,11 @@ from server import Server
 class Auth:
     def __init__(self) -> None:
         load_dotenv()
-
         self.client_id = os.getenv("client_id")
         self.client_secret = os.getenv("client_secret")
         self.redirect_uri = "http://localhost:8080/callback"
 
-    def main(self) -> None:
+    def get_access_token(self) -> None:
         access_token = self.load_token()
         if not access_token:
             access_token = self.authorize_user()
@@ -28,9 +27,47 @@ class Auth:
     def load_token(self) -> str | None:
         try:
             with open(".tokens", "r") as file:
-                return file.read().strip()
+                token_data = json.loads(file.read().strip())
+                current_timestamp = int(time.time())
+                expire_timestamp = (
+                    int(token_data["timestamp"]) + 
+                    int(token_data["expires_in"])
+                )
+
+                if current_timestamp > expire_timestamp - 100:
+                    access_token = self.refresh_token(
+                        token_data["refresh_token"]
+                    )
+                else:
+                    access_token = token_data["access_token"]
+
+                return access_token
+
         except FileNotFoundError:
             return None
+
+    def refresh_token(self, refresh_token: str) -> str:
+        refresh_url = "https://secure.soundcloud.com/oauth/token"
+        headers = {
+            "accept": "application/json; charset=utf-8",
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+
+        data = {
+            "grant_type": "refresh_token",
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+            "refresh_token": refresh_token
+        }
+
+        response = requests.post(refresh_url, headers=headers, data=data)
+        token_data = response.json()
+        token_data["timestamp"] = int(time.time()) 
+
+        with open(".tokens", "w") as file:
+            file.write(json.dumps(token_data, indent=4))
+
+        return token_data.get("access_token")
 
     def authorize_user(self) -> str:
         code_verifier, code_challenge = self.generate_pkce()
@@ -69,7 +106,7 @@ class Auth:
 
         response = requests.post(token_url, headers=headers, data=data)
         token_data = response.json()
-        print(token_data)
+        token_data["timestamp"] = int(time.time()) 
 
         with open(".tokens", "w") as file:
             file.write(json.dumps(token_data, indent=4))
@@ -83,28 +120,12 @@ class Auth:
                 code_verifier.encode()).digest()
         code_challenge = base64.urlsafe_b64encode(
                 code_challenge).decode("utf-8").rstrip("=")
+        
         return code_verifier, code_challenge
     
     def generate_state(self) -> str:
         state = base64.urlsafe_b64encode(
                 os.urandom(16)).decode().rstrip("=")
+
         return state
-
-    def run_server_in_thread(self):
-        asyncio.run(Server().start_server())
-
-    def run_server(self):
-        server_thread = threading.Thread(
-            target=self.run_server_in_thread, 
-            daemon=True
-        )
-        server_thread.start()
-
-    def get_auth_code(self, auth_url: str) -> str:
-        print(f"Open this URL in your browser:\n\n{auth_url}\n")
-        print("After logging in, you'll be redirected to a blank page.")
-        print("Copy the 'code' parameter from the URL and paste it below.\n")
-
-        auth_code = input("Paste the code here: ").strip()
-        return auth_code
 
