@@ -34,9 +34,8 @@ class Server:
     async def callback_handler(self, request):
         auth_code = request.query.get("code", None)
         state = request.query.get("state", None)
-        if auth_code and state:
-            if not self.future.done():
-                self.future.set_result((auth_code, state))
+        if auth_code and state and not self.future.done():
+            self.future.set_result((auth_code, state))
 
         return web.Response(
             text="Callback received. You may close this window."
