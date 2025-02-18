@@ -7,8 +7,10 @@ from dotenv import load_dotenv
 
 import json
 import asyncio
+import aiohttp
 import webbrowser
 from server import Server
+from handlers.requests import Requests
 
 class Auth:
     def __init__(self) -> None:
@@ -17,14 +19,14 @@ class Auth:
         self.client_secret = os.getenv("client_secret")
         self.redirect_uri = "http://localhost:8080/callback"
 
-    def get_access_token(self) -> None:
-        access_token = self.load_token()
+    async def get_access_token(self) -> None:
+        access_token = await self.load_token()
         if not access_token:
-            access_token = self.authorize_user()
+            access_token = await self.authorize_user()
 
-        return access_token
+        return await access_token
 
-    def load_token(self) -> str | None:
+    async def load_token(self) -> str | None:
         try:
             with open(".tokens", "r") as file:
                 token_data = json.loads(file.read().strip())
@@ -35,18 +37,18 @@ class Auth:
                 )
 
                 if current_timestamp > expire_timestamp - 100:
-                    access_token = self.refresh_token(
+                    access_token = await self.refresh_token(
                         token_data["refresh_token"]
                     )
                 else:
                     access_token = token_data["access_token"]
 
-                return access_token
+                return await access_token
 
         except FileNotFoundError:
             return None
 
-    def refresh_token(self, refresh_token: str) -> str:
+    async def refresh_token(self, refresh_token: str) -> str:
         refresh_url = "https://secure.soundcloud.com/oauth/token"
         headers = {
             "accept": "application/json; charset=utf-8",
@@ -60,16 +62,17 @@ class Auth:
             "refresh_token": refresh_token
         }
 
-        response = requests.post(refresh_url, headers=headers, data=data)
+        # response = requests.post(refresh_url, headers=headers, data=data)
+        response = await post_request(refresh_url, headers=headers, data=data)
         token_data = response.json()
         token_data["timestamp"] = int(time.time()) 
 
         with open(".tokens", "w") as file:
             file.write(json.dumps(token_data, indent=4))
 
-        return token_data.get("access_token")
+        return await token_data.get("access_token")
 
-    def authorize_user(self) -> str:
+    async def authorize_user(self) -> str:
         code_verifier, code_challenge = self.generate_pkce()
         state = self.generate_state()
 
@@ -104,14 +107,15 @@ class Auth:
             "code": auth_code
         }
 
-        response = requests.post(token_url, headers=headers, data=data)
+        # response = requests.post(token_url, headers=headers, data=data)
+        response = await post_request(token_url, headers=headers, data=data)
         token_data = response.json()
         token_data["timestamp"] = int(time.time()) 
 
         with open(".tokens", "w") as file:
             file.write(json.dumps(token_data, indent=4))
 
-        return token_data.get("access_token")
+        return await token_data.get("access_token")
 
     def generate_pkce(self) -> tuple[str, str]:
         code_verifier = base64.urlsafe_b64encode(
