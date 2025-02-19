@@ -1,14 +1,11 @@
 import aiohttp
 from typing import Optional, Any, Dict
 
-# there is a way to optimize to use one aiohttp.ClientSession()
-# gotta return to it later
-
 # check for the right headers in post() data and json?
 # Content-Type: application/x-www-form-urlencoded for data
 # Content-Type: application/json for json
 
-class Requests:
+class AsyncRequest:
 	def __init__(self):
 		self.session = None
 
@@ -54,6 +51,11 @@ class Requests:
 	) -> Any:
 
 		headers = headers or {}
+		
+		print(url)
+		print(headers)
+		print(data)
+		print(json)
 		
 		try:
 			async with self.session.post(

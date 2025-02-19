@@ -5,13 +5,15 @@ import asyncio
 import aiohttp
 from auth import Auth
 from dotenv import load_dotenv
+from handlers.request import AsyncRequest
 load_dotenv()
 
 client_id = os.getenv("client_id")
 
-async def main() -> None:
-    access_token = await Auth().get_access_token()
-    print(access_token)
+async def main():
+	async with AsyncRequest() as request_session:
+		access_token = await Auth(request_session).get_access_token()
+		print(access_token)
 
 asyncio.run(main())
 
