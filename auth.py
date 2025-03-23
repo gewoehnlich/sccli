@@ -72,7 +72,13 @@ class Auth:
 			data=data
 		)
 
-		return "wrong"
+		print(refresh_url)
+		print(headers)
+		print(data)
+
+		# response = requests.post(refresh_url, headers=headers, data=data)
+		# print(response.json())
+		# return "wrong"
 
 		if not response:
 			print("POST request failed: No response")

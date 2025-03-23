@@ -5,7 +5,7 @@ import asyncio
 import aiohttp
 from auth import Auth
 from dotenv import load_dotenv
-from handlers.request import AsyncRequest
+from requests.request import AsyncRequest
 load_dotenv()
 
 client_id = os.getenv("client_id")
