@@ -1,3 +1,4 @@
 .env
 .tokens
+.venv
 __pycache__
