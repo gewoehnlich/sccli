@@ -1,5 +1,5 @@
 import shlex
-from typing import Tuple, List, Optional
+from typing import Tuple, List
 from src.commands.help import help_command
 from src.commands.exit import exit_command
 from src.commands.unknown import unknown_command
