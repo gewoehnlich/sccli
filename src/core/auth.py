@@ -7,16 +7,17 @@ from dotenv import load_dotenv
 import json
 import asyncio
 import webbrowser
-from server import Server
+from src.utils.server import Server
 
 class Auth:
     def __init__(self) -> None:
         load_dotenv()
-        self.client_id = os.getenv("client_id")
-        self.client_secret = os.getenv("client_secret")
-        self.redirect_uri = "http://localhost:8080/callback"
 
-    def get_access_token(self) -> None:
+        self.client_id = os.getenv("CLIENT_ID")
+        self.client_secret = os.getenv("CLIENT_SECRET")
+        self.redirect_uri = os.getenv("REDIRECT_URI")
+
+    def get_access_token(self) -> str:
         access_token = self.load_token()
         if not access_token:
             access_token = self.authorize_user()
@@ -29,9 +30,9 @@ class Auth:
                 token_data = json.loads(file.read().strip())
                 current_timestamp = int(time.time())
                 expire_timestamp = (
-                int(token_data["timestamp"]) + 
-                int(token_data["expires_in"])
-            )
+                    int(token_data["timestamp"]) + 
+                    int(token_data["expires_in"])
+                )
 
             if current_timestamp > expire_timestamp - 100:
                 if "refresh_token" not in token_data:
@@ -52,7 +53,7 @@ class Auth:
     def refresh_token(self, refresh_token: str) -> str:
         refresh_url = "https://secure.soundcloud.com/oauth/token"
         headers = {
-            "accept": "application/json; charset=utf-8",
+            "Accept": "application/json; charset=utf-8",
             "Content-Type": "application/x-www-form-urlencoded"
         }
 
