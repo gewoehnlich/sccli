@@ -1,10 +1,12 @@
 import asyncio
 from aiohttp import web
-from typing import Tuple
+from aiohttp.web_request import Request
+from asyncio import Future
+from typing import Tuple, Optional, Any
 
 class Server:
     def __init__(self) -> None:
-        self.future = None
+        self.future: Optional[Future[Any]] = None
 
     async def run(self) -> tuple[str, str]:
         self.future = asyncio.get_event_loop().create_future()
@@ -36,7 +38,7 @@ class Server:
             print("Shutting down the temporary server...")
             await self.runner.cleanup()
 
-    async def callback_handler(self, request) -> web.Response:
+    async def callback_handler(self, request: Request) -> web.Response:
         auth_code = request.query.get("code")
         state = request.query.get("state")
 

@@ -10,6 +10,7 @@ from src.utils.safe_getenv import safe_getenv
 from src.utils.server import Server
 from src.requests.refresh_token import RefreshTokenRequest
 from src.requests.authentication import AuthenticationRequest
+from typing import Any
 
 class Auth:
     def __init__(self) -> None:
@@ -67,7 +68,11 @@ class Auth:
         with open(TOKENS_FILE, "w") as file:
             file.write(json.dumps(token_data, indent=4))
 
-        return token_data.get("access_token")
+        access_token: Any = token_data.get("access_token")
+        if not isinstance(access_token, str):
+            raise ValueError("access_token is not a string.")
+
+        return access_token
 
     def authenticate_user(self) -> str:
         code_verifier, code_challenge = self.generate_pkce()
@@ -103,20 +108,25 @@ class Auth:
         with open(TOKENS_FILE, "w") as file:
             file.write(json.dumps(token_data, indent=4))
 
-        return token_data.get("access_token")
+        access_token: Any = token_data.get("access_token")
+        if not isinstance(access_token, str):
+            raise ValueError("access_token is not a string.")
+
+        return access_token
 
     def generate_pkce(self) -> tuple[str, str]:
-        code_verifier = base64.urlsafe_b64encode(
-            os.urandom(40)).decode("utf-8").rstrip("=")
-        code_challenge = hashlib.sha256(
-            code_verifier.encode()).digest()
-        code_challenge = base64.urlsafe_b64encode(
-            code_challenge).decode("utf-8").rstrip("=")
+        code_verifier: str = base64.urlsafe_b64encode(
+            os.urandom(40)
+        ).decode("utf-8").rstrip("=")
+        code_challenge: str = base64.urlsafe_b64encode(
+            hashlib.sha256(code_verifier.encode()).digest()
+        ).decode("utf-8").rstrip("=")
 
         return code_verifier, code_challenge
 
     def generate_state(self) -> str:
-        state = base64.urlsafe_b64encode(
-            os.urandom(16)).decode().rstrip("=")
+        state: str = base64.urlsafe_b64encode(
+            os.urandom(16)
+        ).decode().rstrip("=")
 
         return state
