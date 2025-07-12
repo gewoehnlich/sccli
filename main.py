@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 if __name__ == "__main__":
     # start shell session
-    # load_dotenv()
+    load_dotenv()
     # shell()
     auth = Auth()
     access_token = auth.get_access_token()
