@@ -26,7 +26,7 @@ class Auth:
 
     def load_token(self) -> str | None:
         try:
-            with open(".tokens", "r") as file:
+            with open(".tokens.json", "r") as file:
                 token_data = json.loads(file.read().strip())
                 current_timestamp = int(time.time())
                 expire_timestamp = (

@@ -1,4 +1,4 @@
 .env
-.tokens
+.tokens.json
 .venv
 __pycache__
