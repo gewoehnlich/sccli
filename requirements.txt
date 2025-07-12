@@ -55,6 +55,7 @@ mdurl==0.1.2
 more-itertools==10.7.0
 msgpack==1.1.1
 multidict==6.6.3
+mypy==1.16.1
 mypy_extensions==1.1.0
 nltk==3.9.1
 nodeenv==1.9.1
@@ -105,6 +106,7 @@ tomlkit==0.13.3
 tqdm==4.67.1
 trove-classifiers==2025.5.9.12
 typer==0.16.0
+types-requests==2.32.4.20250611
 typing_extensions==4.14.1
 uc-micro-py==1.0.3
 urllib3==2.5.0
