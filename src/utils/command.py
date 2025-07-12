@@ -19,12 +19,12 @@ def process_command(command_line: str) -> None:
         case _:
             unknown_command()
 
-def parse_input(command_line: str) -> Optional[Tuple[str, List[str]]]:
-    parts = shlex.split(command_line)
+def parse_input(command_line: str) -> Tuple[str, List[str]]:
+    parts: List[str] = shlex.split(command_line)
     if not parts:
-        raise Exception()
+        raise Exception("finish later. NO PARTS")
 
-    command = parts[0].lower()
-    args = parts[1:]
+    command: str = parts[0].lower()
+    args: List[str] = parts[1:]
 
     return command, args

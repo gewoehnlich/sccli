@@ -1,32 +1,32 @@
 import os
 import base64
 import hashlib
-import requests
 import time
-from dotenv import load_dotenv
 import json
 import asyncio
 import webbrowser
+from config import TOKENS_FILE
+from src.utils.safe_getenv import safe_getenv
 from src.utils.server import Server
+from src.requests.refresh_token import RefreshTokenRequest
+from src.requests.authentication import AuthenticationRequest
 
 class Auth:
     def __init__(self) -> None:
-        load_dotenv()
-
-        self.client_id = os.getenv("CLIENT_ID")
-        self.client_secret = os.getenv("CLIENT_SECRET")
-        self.redirect_uri = os.getenv("REDIRECT_URI")
+        self.client_id: str = safe_getenv("CLIENT_ID")
+        self.client_secret: str = safe_getenv("CLIENT_SECRET")
+        self.redirect_uri: str = safe_getenv("REDIRECT_URI")
 
     def get_access_token(self) -> str:
         access_token = self.load_token()
         if not access_token:
-            access_token = self.authorize_user()
+            access_token = self.authenticate_user()
 
         return access_token
 
     def load_token(self) -> str | None:
         try:
-            with open(".tokens.json", "r") as file:
+            with open(TOKENS_FILE, "r") as file:
                 token_data = json.loads(file.read().strip())
                 current_timestamp = int(time.time())
                 expire_timestamp = (
@@ -41,56 +41,35 @@ class Auth:
                 access_token = self.refresh_token(
                     token_data["refresh_token"]
                 )
-
             else:
                 access_token = token_data["access_token"]
 
             return access_token
-
         except (FileNotFoundError, KeyError):
             return None
 
     def refresh_token(self, refresh_token: str) -> str:
-        refresh_url = "https://secure.soundcloud.com/oauth/token"
-        headers = {
-            "Accept": "application/json; charset=utf-8",
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-
-        data = {
-            "grant_type": "refresh_token",
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
-            "refresh_token": refresh_token
-        }
-
-        response = requests.post(
-            refresh_url, 
-            headers=headers, 
-            data=data
-        )
-
-        print(refresh_url)
-        print(headers)
-        print(data)
+        response = RefreshTokenRequest(
+            self.client_id,
+            self.client_secret,
+            refresh_token
+        ).send()
 
         if not response:
-            print("POST request failed: No response")
-            return None
+            raise Exception("finish later. NO RESPONSE")
 
         try:
             token_data = response.json()
             token_data["timestamp"] = int(time.time()) 
         except Exception as e:
-            print(f"Failed to parse JSON: {e}")
-            return None
+            raise e
 
-        with open(".tokens", "w") as file:
+        with open(TOKENS_FILE, "w") as file:
             file.write(json.dumps(token_data, indent=4))
 
         return token_data.get("access_token")
 
-    def authorize_user(self) -> str:
+    def authenticate_user(self) -> str:
         code_verifier, code_challenge = self.generate_pkce()
         state = self.generate_state()
 
@@ -110,31 +89,18 @@ class Auth:
         if state != returned_state:
             raise Exception("State mismatch!")
 
-        token_url = "https://secure.soundcloud.com/oauth/token"
-        headers = {
-            "accept": "application/json; charset=utf-8",
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-
-        data = {
-            "grant_type": "authorization_code",
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
-            "redirect_uri": self.redirect_uri,
-            "code_verifier": code_verifier,
-            "code": auth_code
-        }
-
-        response = requests.post(
-            token_url, 
-            headers=headers, 
-            data=data
-        )
+        response = AuthenticationRequest(
+            self.client_id,
+            self.client_secret,
+            self.redirect_uri,
+            code_verifier,
+            auth_code
+        ).send()
 
         token_data = response.json()
         token_data["timestamp"] = int(time.time()) 
 
-        with open(".tokens", "w") as file:
+        with open(TOKENS_FILE, "w") as file:
             file.write(json.dumps(token_data, indent=4))
 
         return token_data.get("access_token")
