@@ -1,9 +1,9 @@
 import shlex
 from typing import Tuple, List
-from src.commands.help import help_command
-from src.commands.exit import exit_command
-from src.commands.unknown import unknown_command
-from src.commands.user import user_command
+from src.commands.help_command import help_command
+from src.commands.exit_command import exit_command
+from src.commands.unknown_command import unknown_command
+from src.commands.user_command import user_command
 
 def process_command(command_line: str) -> None:
     """Parses and executes a single command."""

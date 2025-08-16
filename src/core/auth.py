@@ -8,8 +8,8 @@ import webbrowser
 from config import TOKENS_FILE
 from src.utils.safe_getenv import safe_getenv
 from src.utils.server import Server
-from src.requests.refresh_token import RefreshTokenRequest
-from src.requests.authentication import AuthenticationRequest
+from src.requests.refresh_token_request import RefreshTokenRequest
+from src.requests.authentication_request import AuthenticationRequest
 from typing import Any
 
 class Auth:
