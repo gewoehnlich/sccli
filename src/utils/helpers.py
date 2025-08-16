@@ -10,4 +10,4 @@ def safe_getenv(key: str) -> str:
     return value
 
 def send_request(request: Request) -> Response:
-    return request().send()
+    return request.send()
