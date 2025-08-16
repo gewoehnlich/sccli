@@ -1,4 +1,6 @@
 from os import getenv
+from requests import Response
+from src.core.request import Request
 
 def safe_getenv(key: str) -> str:
     value = getenv(key)
@@ -7,5 +9,5 @@ def safe_getenv(key: str) -> str:
 
     return value
 
-# def send_request(request: Request) -> requests.response:
-#     return request().send()
+def send_request(request: Request) -> Response:
+    return request().send()
