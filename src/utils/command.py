@@ -3,6 +3,7 @@ from typing import Tuple, List
 from src.commands.help import help_command
 from src.commands.exit import exit_command
 from src.commands.unknown import unknown_command
+from src.commands.user import user_command
 
 def process_command(command_line: str) -> None:
     """Parses and executes a single command."""
@@ -14,6 +15,8 @@ def process_command(command_line: str) -> None:
     match command:
         case "help":
             help_command()
+        case "me" | "user":
+            user_command()
         case "exit" | "quit":
             exit_command()
         case _:
