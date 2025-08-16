@@ -6,3 +6,6 @@ def safe_getenv(key: str) -> str:
         raise ValueError(f"{key} is not set in .env file.")
 
     return value
+
+# def send_request(request: Request) -> requests.response:
+#     return request().send()

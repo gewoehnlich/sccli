@@ -6,7 +6,7 @@ import json
 import asyncio
 import webbrowser
 from config import TOKENS_FILE
-from src.utils.safe_getenv import safe_getenv
+from src.utils.helpers import safe_getenv
 from src.utils.server import Server
 from src.requests.refresh_token_request import RefreshTokenRequest
 from src.requests.authentication_request import AuthenticationRequest
