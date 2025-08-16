@@ -4,7 +4,7 @@ from src.commands.help_command import help_command
 from src.commands.exit_command import exit_command
 from src.commands.unknown_command import unknown_command
 from src.commands.user_command import user_command
-from src.commands.get_users_liked_tracks_command import get_users_liked_tracks_command
+from src.commands.users_liked_tracks_command import users_liked_tracks_command
 
 def process_command(command_line: str) -> None:
     """Parses and executes a single command."""
@@ -19,7 +19,7 @@ def process_command(command_line: str) -> None:
         case "me" | "user":
             user_command()
         case "tracks":
-            get_users_liked_tracks_command()
+            users_liked_tracks_command()
         case "exit" | "quit":
             exit_command()
         case _:

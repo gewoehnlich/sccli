@@ -1,3 +1,5 @@
+import requests
+
 class Request:
     def __init__(self, access_token: str | None = None) -> None:
         self.url: str = ""
@@ -10,3 +12,12 @@ class Request:
             self.headers['Authorization'] = f"OAuth {access_token}"
 
         self.data: dict[str, str] = {}
+
+    def send(self) -> requests.Response:
+        response: requests.Response = requests.get(
+            url     = self.url, 
+            headers = self.headers, 
+            data    = self.data
+        )
+
+        return response
