@@ -3,12 +3,12 @@ from src.core.request import Request
 from src.utils.links import SOUNDCLOUD_API_LINK
 import requests
 
-class UserInfoRequest(Request):
+class GetUsersLikedTracksRequest(Request):
     def __init__(self) -> None:
         access_token: str = Auth().get_access_token()
         super().__init__(access_token)
 
-        self.url = SOUNDCLOUD_API_LINK + '/me'
+        self.url = SOUNDCLOUD_API_LINK + '/me/likes/tracks'
         self.data = {}
 
     def send(self) -> requests.Response:
