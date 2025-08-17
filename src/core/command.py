@@ -1,6 +1,6 @@
 import shlex
 from typing import Tuple, List
-from src.commands.following_command import following_command
+from src.commands.followings_command import followings_command
 from src.commands.help_command import help_command
 from src.commands.exit_command import exit_command
 from src.commands.unknown_command import unknown_command
@@ -21,8 +21,8 @@ def process_command(command_line: str) -> None:
             user_command()
         case "tracks":
             users_liked_tracks_command(args)
-        case 'following':
-            following_command(args)
+        case "followings":
+            followings_command(args)
         case "exit" | "quit":
             exit_command()
         case _:
