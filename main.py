@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from sqlite3 import Cursor
+import sqlite3
 from src.core.shell import shell
 from src.core.database import Database
 from src.player.player import Player
@@ -9,7 +9,9 @@ if __name__ == "__main__":
     load_dotenv()
 
     # database connection
-    db: Cursor = Database().cursor
+    db: sqlite3.Connection = Database()
+    db.initialize_tables()
+    cur: sqlite3.Cursor = db.cursor
 
     # # cli music player
     # player: Player = Player()
