@@ -1,5 +1,4 @@
 from src.core.request import Request
-import requests
 
 class AuthenticationRequest(Request):
     def __init__(
@@ -12,7 +11,10 @@ class AuthenticationRequest(Request):
     ) -> None:
         super().__init__()
 
+        self.method = "POST"
+
         self.url = "https://secure.soundcloud.com/oauth/token"
+
         self.data = {
             "grant_type":    "authorization_code",
             "client_id":     client_id,
@@ -21,13 +23,3 @@ class AuthenticationRequest(Request):
             "code_verifier": code_verifier,
             "code":          auth_code
         }
-
-
-    def send(self) -> requests.Response:
-        response = requests.post(
-            url     = self.url, 
-            headers = self.headers, 
-            data    = self.data
-        )
-
-        return response

@@ -1,7 +1,7 @@
 from src.requests.followings_tracks_request import FollowingsTracksRequest
 from requests import Response
 from pprint import pprint
-from src.utils.helpers import send_request
+from src.utils.send_request import send_request
 from typing import List
 
 def followings_tracks_command(args: List[str]) -> None:
