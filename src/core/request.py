@@ -1,8 +1,8 @@
 import requests
 
-class Request:
+class Request(requests.Request):
     def __init__(self, access_token: str | None = None) -> None:
-        self.url: str = ""
+        self.url: str = str()
         self.headers: dict[str, str] = {
             "Accept": "application/json; charset=utf-8",
             "Content-Type": "application/x-www-form-urlencoded",
@@ -11,13 +11,15 @@ class Request:
         if access_token:
             self.headers['Authorization'] = f"OAuth {access_token}"
 
-        self.data: dict[str, str] = {}
+        self.params: dict[str, str] = dict()
+        self.data: dict[str, str] = dict()
 
     def send(self) -> requests.Response:
         response: requests.Response = requests.get(
             url     = self.url, 
             headers = self.headers, 
-            data    = self.data
+            params  = self.params,
+            data    = self.data,
         )
 
         return response

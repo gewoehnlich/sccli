@@ -8,3 +8,6 @@ class MeTracksRequest(Request):
         super().__init__(access_token)
 
         self.url = SOUNDCLOUD_API_LINK + '/me/tracks'
+
+        self.params["limit"] = "5"
+        self.params["linked_partitioning"] = "true"

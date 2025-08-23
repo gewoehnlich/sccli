@@ -79,7 +79,7 @@ class Database:
         self,
         fields: list[str]
     ) -> str:
-        fields_string: str = ""
+        fields_string: str = str()
 
         for field in fields:
             fields_string += field + self._FIELDS_SEPARATOR 
