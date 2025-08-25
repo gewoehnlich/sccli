@@ -15,10 +15,10 @@ class UsersLikedTracksRequest(Request):
 
         self.method = "GET"
 
-        self.url = SOUNDCLOUD_API_LINK + self._API_ENDPOINT
-
         if url:
             self.url = url
+        else:
+            self.url = SOUNDCLOUD_API_LINK + self._API_ENDPOINT
 
         self.params["limit"] = "1"
         self.params["access"] = "playable"
