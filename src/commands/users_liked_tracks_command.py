@@ -3,21 +3,25 @@ from requests import Response
 from pprint import pprint
 from src.utils.send_request import send_request
 from typing import List, Any
+from src.requests.next_href_request import NextHrefRequest
 
 def users_liked_tracks_command(args: List[str]) -> None:
     _COLLECTION = "collection"
     _NEXT_HREF  = "next_href"
 
-    request: UsersLikedTracksRequest = UsersLikedTracksRequest()
-    response: Response = send_request(request = request)
+    more_tracks: bool = True
 
-    result: dict[str, Any] = response.json()
+    while more_tracks:
+        request: UsersLikedTracksRequest = UsersLikedTracksRequest()
+        response: Response = send_request(request = request)
 
-    collection: dict[str, Any] = result[_COLLECTION]
-    next_href: str | None = result[_NEXT_HREF]
+        result: dict[str, Any] = response.json()
 
-    if collection:
-        pprint(collection)
+        collection: dict[str, Any] = result[_COLLECTION]
+        next_href: str | None = result[_NEXT_HREF]
 
-    if next_href:
-        pprint(next_href)
+        if collection:
+            pprint(collection)
+
+        if next_href:
+            pprint(next_href)
