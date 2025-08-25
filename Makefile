@@ -12,3 +12,6 @@ pyright:
 
 mypy:
 	mypy .
+
+sccli:
+	python3 main.py

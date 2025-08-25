@@ -1,10 +1,18 @@
 import sqlite3
 
 class Database:
-    def __init__(self):
-        self._DATABASE_NAME: str = "sccli.db"
-        self._FIELDS_SEPARATOR: str = ", "
+    _DATABASE_NAME = "sccli.db"
+    _FIELDS_SEPARATOR = ", "
 
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Database, cls).__new__(cls)
+
+        return cls._instance
+
+    def __init__(self):
         self.db: sqlite3.Connection = sqlite3.connect(self._DATABASE_NAME)
         self.cursor: sqlite3.Cursor = self.db.cursor()
 
