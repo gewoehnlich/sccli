@@ -12,7 +12,16 @@ class Request(requests.Request):
         if access_token:
             self.headers['Authorization'] = f"OAuth {access_token}"
 
+        # to build parameters to a link, like in GET requests 
+        # for example:
+        # self.params = {
+        #     'a': 'qwer',
+        #     'b': 'asdf'
+        # }
+        # result = https://example.com/?a=qwer&b=asdf
         self.params: dict[str, str] = dict()
+
+        # for POST requests
         self.data: dict[str, str] = dict()
 
     def send(self) -> requests.Response:

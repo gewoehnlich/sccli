@@ -6,7 +6,7 @@ from typing import Any
 from time import sleep
 from pprint import pprint
 
-class GetMyLikedTracksAction(Action):
+class FetchMyLikedTracksAction(Action):
     _COLLECTION: str = "collection"
     _NEXT_HREF: str  = "next_href"
 
