@@ -1,6 +1,6 @@
 from requests import Response
 from src.core.action import Action
-from src.requests.users_liked_tracks_request import UsersLikedTracksRequest
+from src.requests.fetch_my_liked_tracks_request import FetchMyLikedTracksRequest
 from src.utils.send_request import send_request
 from typing import Any
 from time import sleep
@@ -16,11 +16,11 @@ class FetchMyLikedTracksAction(Action):
 
         while not fetched:
             if next_href:
-                request: UsersLikedTracksRequest = UsersLikedTracksRequest(
+                request: FetchMyLikedTracksRequest = FetchMyLikedTracksRequest(
                     url = next_href
                 )
             else:
-                request: UsersLikedTracksRequest = UsersLikedTracksRequest()
+                request: FetchMyLikedTracksRequest = FetchMyLikedTracksRequest()
         
             response: Response = send_request(request = request)
             result: dict[str, Any] = response.json()
