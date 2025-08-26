@@ -1,9 +1,8 @@
 import sqlite3
+from core.query import Query
 
 class Database:
     _DATABASE_NAME = "sccli.db"
-    _FIELDS_SEPARATOR = ", "
-
     _instance = None
 
     def __new__(cls):
@@ -15,6 +14,7 @@ class Database:
     def __init__(self):
         self.db: sqlite3.Connection = sqlite3.connect(self._DATABASE_NAME)
         self.cursor: sqlite3.Cursor = self.db.cursor()
+        self.query = Query()
 
     def initialize_tables(self) -> None:
         self._create_table_if_not_exists(
@@ -64,7 +64,7 @@ class Database:
         table: str,
         fields: list[str]
     ) -> None:
-        query: str = self._make_query(
+        query: str = self.query.make_query(
             statement = "CREATE TABLE IF NOT EXISTS",
             table = table,
             fields = fields
@@ -72,27 +72,3 @@ class Database:
 
         self.cursor.execute(query)
 
-    def _make_query(
-        self,
-        statement: str,
-        table: str,
-        fields: list[str]
-    ) -> str:
-        fields_string: str = self._concatenate_fields(fields = fields)
-
-        query: str = f"{statement} {table}({fields_string})"
-        return query
-
-    def _concatenate_fields(
-        self,
-        fields: list[str]
-    ) -> str:
-        fields_string: str = str()
-
-        for field in fields:
-            fields_string += field + self._FIELDS_SEPARATOR 
-
-        if fields_string.endswith(self._FIELDS_SEPARATOR):
-            fields_string = fields_string.rstrip(self._FIELDS_SEPARATOR)
-
-        return fields_string
