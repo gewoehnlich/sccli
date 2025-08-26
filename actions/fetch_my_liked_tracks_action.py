@@ -5,11 +5,9 @@ from utils.send_request import send_request
 from typing import Any
 from time import sleep
 from pprint import pprint
+from utils.keys import _COLLECTION, _NEXT_HREF
 
 class FetchMyLikedTracksAction(Action):
-    _COLLECTION: str = "collection"
-    _NEXT_HREF: str  = "next_href"
-
     def run(self) -> bool:
         fetched: bool = False
         next_href: str = str()
@@ -25,14 +23,12 @@ class FetchMyLikedTracksAction(Action):
             response: Response = send_request(request = request)
             result: dict[str, Any] = response.json()
 
-            collection: dict[str, Any] = result[self._COLLECTION]
-            next_href = result[self._NEXT_HREF]
+            collection: dict[str, Any] = result[_COLLECTION]
+            next_href = result[_NEXT_HREF]
 
             if collection:
                 pprint(collection)
-
-            if next_href:
-                pprint(next_href)
+                # for track in collection:
 
             if not next_href:
                 fetched = True
