@@ -1,8 +1,8 @@
-from src.requests.me_tracks_request import MeTracksRequest 
-from src.core.request import Request
+from requests_.me_tracks_request import MeTracksRequest 
+from core.request import Request
 from requests import Response
 from pprint import pprint
-from src.utils.send_request import send_request
+from utils.send_request import send_request
 from typing import List
 
 def my_tracks_command(args: List[str]) -> None:

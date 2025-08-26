@@ -1,7 +1,7 @@
-from src.requests.user_info_request import UserInfoRequest
+from requests_.user_info_request import UserInfoRequest
 from requests import Response
 from pprint import pprint
-from src.utils.send_request import send_request
+from utils.send_request import send_request
 
 def user_command() -> None:
     response: Response = send_request(UserInfoRequest())

@@ -1,4 +1,4 @@
-from src.core.request import Request
+from core.request import Request
 
 class RefreshTokenRequest(Request):
     def __init__(

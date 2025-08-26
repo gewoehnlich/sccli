@@ -1,7 +1,7 @@
-from src.requests.get_track_request import GetTrackRequest
+from requests_.get_track_request import GetTrackRequest
 from requests import Response
 from pprint import pprint
-from src.utils.send_request import send_request
+from utils.send_request import send_request
 from typing import List
 
 def get_track_command(args: List[str]) -> None:

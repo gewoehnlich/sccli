@@ -1,15 +1,15 @@
 import shlex
 from typing import Tuple, List
-from src.commands.fetch_my_liked_tracks_command import fetch_my_liked_tracks_command
-from src.commands.followings_command import followings_command
-from src.commands.followings_tracks_command import followings_tracks_command
-from src.commands.get_track_command import get_track_command
-from src.commands.get_track_streaming_url_command import get_track_streaming_url_command
-from src.commands.help_command import help_command
-from src.commands.exit_command import exit_command
-from src.commands.my_tracks_command import my_tracks_command
-from src.commands.unknown_command import unknown_command
-from src.commands.user_command import user_command
+from commands.fetch_my_liked_tracks_command import fetch_my_liked_tracks_command
+from commands.followings_command import followings_command
+from commands.followings_tracks_command import followings_tracks_command
+from commands.get_track_command import get_track_command
+from commands.get_track_streaming_url_command import get_track_streaming_url_command
+from commands.help_command import help_command
+from commands.exit_command import exit_command
+from commands.my_tracks_command import my_tracks_command
+from commands.unknown_command import unknown_command
+from commands.user_command import user_command
 
 def process_command(command_line: str) -> None:
     """Parses and executes a single command."""

@@ -1,6 +1,6 @@
-from src.commands.exit_command import exit_command
-from src.commands.welcome_command import welcome_command
-from src.core.command import process_command
+from commands.exit_command import exit_command
+from commands.welcome_command import welcome_command
+from core.command import process_command
 
 def shell() -> None:
     """Starts the interactive shell session."""

@@ -1,6 +1,6 @@
-from src.core.request import Request
-from src.utils.links import SOUNDCLOUD_API_LINK
-from src.utils.access_token import access_token
+from core.request import Request
+from utils.links import SOUNDCLOUD_API_LINK
+from utils.access_token import access_token
 
 class FetchMyLikedTracksRequest(Request):
     _API_ENDPOINT: str = "/me/likes/tracks"
