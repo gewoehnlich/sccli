@@ -1,5 +1,8 @@
 import sqlite3
+from core.table import Table
 from core.query import Query
+from tables.tracks import TracksTable
+from tables.users import UsersTable
 
 class Database:
     _DATABASE_NAME = "sccli.db"
@@ -18,55 +21,23 @@ class Database:
 
     def initialize_tables(self) -> None:
         self._create_table_if_not_exists(
-            table = "tracks",
-            fields = [
-                "access",
-                "artwork_url",
-                "created_at",
-                "description",
-                "duration",
-                "id",
-                "metadata_artist",
-                "permalink_url",
-                "playback_count",
-                "stream_url",
-                "title",
-                "uri",
-                "urn",
-            ]
+            table = TracksTable()
         )
 
         self._create_table_if_not_exists(
-            table = "users",
-            fields = [
-                "avatar_url",
-                "city",
-                "country",
-                "created_at",
-                "description",
-                "followers_count",
-                "followings_count",
-                "id",
-                "kind",
-                "last_modified",
-                "permalink",
-                "permalink_url",
-                "plan",
-                "track_count",
-                "uri",
-                "urn",
-                "username",
-            ]
+            table = UsersTable()
         )
 
     def _create_table_if_not_exists(
         self,
-        table: str,
-        fields: list[str]
+        table: Table
     ) -> None:
+        name: str = table.name
+        fields: list[str] = table.fields
+
         query: str = self.query.make_query(
             statement = "CREATE TABLE IF NOT EXISTS",
-            table = table,
+            table = name,
             fields = fields
         )
 

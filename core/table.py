@@ -1,3 +1,3 @@
 class Table:
-    def __init__(self):
-        pass
+    name: str = str()
+    fields: list[str] = list()
