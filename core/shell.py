@@ -9,9 +9,11 @@ def shell() -> None:
     while True:
         try:
             command_line: str = input("sccli> ")
-            process_command(command_line)
+            process_command(command_line = command_line)
+
         except KeyboardInterrupt:
             exit_command()
             break
+
         except Exception as e:
             print(f"An unexpected error occurred: {e}")

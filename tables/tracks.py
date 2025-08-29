@@ -1,7 +1,18 @@
+from sqlite3 import Cursor
 from core.table import Table
+from core.query import Query
 
 class TracksTable(Table):
-    def __init__(self):
+    def __init__(
+        self,
+        cursor: Cursor,
+        query_builder: Query
+    ) -> None:
+        super().__init__(
+            cursor = cursor,
+            query_builder = query_builder
+        )
+
         self.name = "tracks"
         self.fields = [
             "access",
