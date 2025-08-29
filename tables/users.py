@@ -1,12 +1,12 @@
 from sqlite3 import Cursor
 from core.table import Table
-from core.query import Query
+from core.query_builder import QueryBuilder
 
 class UsersTable(Table):
     def __init__(
         self,
         cursor: Cursor,
-        query_builder: Query
+        query_builder: QueryBuilder
     ) -> None:
         super().__init__(
             cursor = cursor,

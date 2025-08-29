@@ -1,6 +1,6 @@
 from sqlite3 import Cursor
 from typing import Any
-from core.query import Query
+from core.query_builder import QueryBuilder
 
 class Table:
     name: str = str()
@@ -9,10 +9,10 @@ class Table:
     def __init__(
         self,
         cursor: Cursor,
-        query_builder: Query,
+        query_builder: QueryBuilder,
     ) -> None:
         self.cursor: Cursor = cursor
-        self.query_builder: Query = query_builder
+        self.query_builder: QueryBuilder = query_builder
 
     def insert(
         self,

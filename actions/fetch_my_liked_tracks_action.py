@@ -3,7 +3,7 @@ from core.action import Action
 from core.request import Request
 from core.table import Table
 from requests_.fetch_my_liked_tracks_request import FetchMyLikedTracksRequest
-from tables.tracks import TracksTable
+# from tables.tracks import TracksTable
 from utils.send_request import send_request
 from typing import Any
 from time import sleep
@@ -13,9 +13,12 @@ from utils.keys import _COLLECTION, _NEXT_HREF
 class FetchMyLikedTracksAction(Action):
     def run(
         self,
-        # request: Request,
+        request: Request,
         table: Table | None = None,
     ) -> bool:
+        if not table:
+            raise Exception("no table. to-do later")
+
         fetched: bool = False
         next_href: str = str()
 
@@ -35,8 +38,8 @@ class FetchMyLikedTracksAction(Action):
 
             if collection:
                 pprint(collection)
-                # for track in collection:
-                #     table.insert(track)
+                for track in collection:
+                    table.insert(track)
 
             if not next_href:
                 fetched = True

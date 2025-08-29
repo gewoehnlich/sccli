@@ -1,6 +1,6 @@
 import sqlite3
 from core.table import Table
-from core.query import Query
+from core.query_builder import QueryBuilder
 
 
 class Database:
@@ -9,7 +9,7 @@ class Database:
 
     def __new__(
         cls: object, 
-        query_builder: Query,
+        query_builder: QueryBuilder,
     ) -> None:
         if cls._instance is None:
             cls._instance = super(
@@ -22,7 +22,7 @@ class Database:
 
     def __init__(
         self,
-        query_builder: Query,
+        query_builder: QueryBuilder,
     ) -> None:
         if hasattr(self, "db"):
             return

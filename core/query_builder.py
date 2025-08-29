@@ -1,10 +1,10 @@
-class Query:
+class QueryBuilder:
     _FIELDS_SEPARATOR = ", "
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(Query, cls).__new__(cls)
+            cls._instance = super(QueryBuilder, cls).__new__(cls)
 
         return cls._instance
 
