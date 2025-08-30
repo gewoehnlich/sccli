@@ -13,6 +13,8 @@ class Shell():
         tables,
         query_builder,
     ) -> None:
+        pass
+
     def run(self) -> None:
         """Starts the interactive shell session."""
         welcome_command()
