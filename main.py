@@ -1,7 +1,8 @@
 from sqlite3 import Connection, Cursor
 from dotenv import load_dotenv
+from core.di_container import DiContainer
 from core.query_builder import QueryBuilder
-from core.shell import Shell
+from core.shell import shell
 from core.database import Database
 from player.player import Player
 from tables.tracks import TracksTable
@@ -12,6 +13,10 @@ from utils.stop import stop
 if __name__ == "__main__":
     # load .env file variables
     load_dotenv()
+
+    # dependency injection
+    di_container: DiContainer = DiContainer()
+    di_container.wire(modules = [__name__])
 
     # database connection
     query_builder: QueryBuilder = QueryBuilder()
@@ -40,11 +45,4 @@ if __name__ == "__main__":
     # player.run()
 
     # start shell session
-    shell: Shell = Shell(
-        actions = actions,
-        commands = commands,
-        db = db,
-        requests = requests,
-        tables = tables,
-        query_builder = query_builder,
-    )
+    shell(di_container = di_container)

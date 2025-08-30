@@ -1,9 +1,8 @@
-from core.di_container import DiContainer
+from dependency_injector import containers, providers
 from tables.tracks import TracksTable
 from tables.users import UsersTable
 
 
-class TablesContainer(DiContainer):
-    def __init__(self) -> None:
-        self.tracks = TracksTable
-        self.users = UsersTable
+class TablesContainer(containers.DeclarativeContainer):
+    tracks = providers.Callable(TracksTable)
+    users = providers.Callable(UsersTable)

@@ -1,7 +1,14 @@
-from actions import fetch_my_liked_tracks_action
-from core.di_container import DiContainer
+from dependency_injector import containers, providers
+from actions.fetch_my_liked_tracks_action import fetch_my_liked_tracks_action
 
 
-class ActionsContainer(DiContainer):
-    def __init__(self) -> None:
-        self.fetch_my_liked_tracks = fetch_my_liked_tracks_action
+class ActionsContainer(containers.DeclarativeContainer):
+    fetch_my_liked_tracks = providers.Callable(fetch_my_liked_tracks_action)
+
+    _instance = None
+
+    def __new__(cls) -> None:
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance

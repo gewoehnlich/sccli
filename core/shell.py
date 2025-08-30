@@ -1,32 +1,22 @@
-from commands.exit_command import exit_command
-from commands.welcome_command import welcome_command
+from dependency_injector.wiring import Provide, inject
+
+from core.di_container import DiContainer
 from core.command import process_command
 
 
-class Shell():
-    def __init__(
-        self,
-        actions,
-        commands,
-        db,
-        requests,
-        tables,
-        query_builder,
-    ) -> None:
-        pass
+@inject
+def shell(di_container: DiContainer = Provide[DiContainer]) -> None:
+    """Starts the interactive shell session."""
+    di_container.commands().welcome_command()
 
-    def run(self) -> None:
-        """Starts the interactive shell session."""
-        welcome_command()
-        
-        while True:
-            try:
-                command_line: str = input("sccli> ")
-                process_command(command_line = command_line)
+    while True:
+        try:
+            command_line: str = input("sccli> ")
+            process_command(command_line = command_line)
 
-            except KeyboardInterrupt:
-                exit_command()
-                break
+        except KeyboardInterrupt:
+            di_container.commands().exit_command()
+            break
 
-            except Exception as e:
-                print(f"An unexpected error occurred: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
