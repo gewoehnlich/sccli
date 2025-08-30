@@ -7,16 +7,9 @@ class Database:
     _DATABASE_NAME: str = "sccli.db"
     _instance = None
 
-    def __new__(
-        cls: object, 
-        query_builder: QueryBuilder,
-    ) -> None:
+    def __new__(cls: object) -> None:
         if cls._instance is None:
-            cls._instance = super(
-                Database, cls
-            ).__new__(cls)
-
-            cls._instance.query_builder = query_builder
+            cls._instance = super().__new__(cls)
 
         return cls._instance
 
@@ -42,6 +35,24 @@ class Database:
             statement = "CREATE TABLE IF NOT EXISTS",
             table = name,
             fields = fields
+        )
+
+        self.cursor.execute(query)
+
+    def insert(
+        self,
+        data: dict[str, Any],
+    ) -> None:
+        result: list[str] = list()
+        for field in self.fields:
+            result.append(
+                data.get(field, str())
+            )
+
+        query: str = self.query_builder.make_query(
+            statement = "INSERT INTO",
+            table = self.name,
+            fields = result,
         )
 
         self.cursor.execute(query)

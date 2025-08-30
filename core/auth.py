@@ -5,12 +5,12 @@ import time
 import json
 import asyncio
 import webbrowser
+from typing import Any
 from config import TOKENS_FILE
 from utils.safe_getenv import safe_getenv
 from utils.server import Server
 from requests_.refresh_token_request import RefreshTokenRequest
 from requests_.authentication_request import AuthenticationRequest
-from typing import Any
 
 class Auth:
     def __init__(self) -> None:

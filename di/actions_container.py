@@ -1,9 +1,9 @@
 from dependency_injector import containers, providers
-from actions.fetch_my_liked_tracks_action import fetch_my_liked_tracks_action
+from actions.fetch_my_liked_tracks_action import FetchMyLikedTracksAction
 
 
 class ActionsContainer(containers.DeclarativeContainer):
-    fetch_my_liked_tracks = providers.Callable(fetch_my_liked_tracks_action)
+    fetch_my_liked_tracks = providers.Callable(FetchMyLikedTracksAction)
 
     _instance = None
 

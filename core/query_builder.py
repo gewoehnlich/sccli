@@ -1,5 +1,6 @@
 class QueryBuilder:
     _FIELDS_SEPARATOR = ", "
+
     _instance = None
 
     def __new__(cls):

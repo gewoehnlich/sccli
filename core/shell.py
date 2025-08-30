@@ -7,7 +7,7 @@ from core.command import process_command
 @inject
 def shell(di_container: DiContainer = Provide[DiContainer]) -> None:
     """Starts the interactive shell session."""
-    di_container.commands().welcome_command()
+    di_container.commands().welcome()
 
     while True:
         try:
@@ -15,7 +15,7 @@ def shell(di_container: DiContainer = Provide[DiContainer]) -> None:
             process_command(command_line = command_line)
 
         except KeyboardInterrupt:
-            di_container.commands().exit_command()
+            di_container.commands().exit()
             break
 
         except Exception as e:
