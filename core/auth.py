@@ -6,17 +6,22 @@ import json
 import asyncio
 import webbrowser
 from typing import Any
-from config import TOKENS_FILE
-from utils.safe_getenv import safe_getenv
 from utils.server import Server
 from requests_.refresh_token_request import RefreshTokenRequest
 from requests_.authentication_request import AuthenticationRequest
 
 class Auth:
-    def __init__(self) -> None:
-        self.client_id: str = safe_getenv("CLIENT_ID")
-        self.client_secret: str = safe_getenv("CLIENT_SECRET")
-        self.redirect_uri: str = safe_getenv("REDIRECT_URI")
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        redirect_uri: str,
+        tokens_file: str,
+    ) -> None:
+        self.client_id: str = client_id
+        self.client_secret: str = client_secret
+        self.redirect_uri: str = redirect_uri
+        self.tokens_file: str = tokens_file
 
     def get_access_token(self) -> str:
         access_token = self.load_token()
@@ -27,11 +32,15 @@ class Auth:
 
     def load_token(self) -> str | None:
         try:
-            with open(TOKENS_FILE, "r") as file:
+            with open(
+                file = self.tokens_file,
+                mode = "r",
+                encoding = "utf-8",
+            ) as file:
                 token_data = json.loads(file.read().strip())
                 current_timestamp = int(time.time())
                 expire_timestamp = (
-                    int(token_data["timestamp"]) + 
+                    int(token_data["timestamp"]) +
                     int(token_data["expires_in"])
                 )
 
@@ -61,11 +70,15 @@ class Auth:
 
         try:
             token_data = response.json()
-            token_data["timestamp"] = int(time.time()) 
+            token_data["timestamp"] = int(time.time())
         except Exception as e:
             raise e
 
-        with open(TOKENS_FILE, "w") as file:
+        with open(
+            file = self.tokens_file,
+            mode = "w",
+            encoding = "utf-8",
+        ) as file:
             file.write(json.dumps(token_data, indent=4))
 
         access_token: Any = token_data.get("access_token")
@@ -105,7 +118,11 @@ class Auth:
         token_data = response.json()
         token_data["timestamp"] = int(time.time()) 
 
-        with open(TOKENS_FILE, "w") as file:
+        with open(
+            file = self.tokens_file,
+            mode = "w",
+            encoding = "utf-8",
+        ) as file:
             file.write(json.dumps(token_data, indent=4))
 
         access_token: Any = token_data.get("access_token")

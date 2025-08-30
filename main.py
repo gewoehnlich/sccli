@@ -7,6 +7,7 @@ from core.database import Database
 from player.player import Player
 from tables.tracks import TracksTable
 from tables.users import UsersTable
+from utils.safe_getenv import safe_getenv
 from utils.stop import stop
 
 
@@ -16,32 +17,10 @@ def main() -> None:
 
     # dependency injection
     di_container: DiContainer = DiContainer()
-    di_container.config.client_id = ''
-    di_container.config.client_secret = ''
-    di_container.config.redirect_uri = ''
+    di_container.config.client_id     = safe_getenv("CLIENT_ID")
+    di_container.config.client_secret = safe_getenv("CLIENT_SECRET")
+    di_container.config.redirect_uri  = safe_getenv("REDIRECT_URI")
     di_container.wire(modules = [__name__])
-
-    # database connection
-    query_builder: QueryBuilder = QueryBuilder()
-
-    db: Connection = Database(
-        query_builder = query_builder
-    )
-    cursor: Cursor = db.cursor
-
-    db.create_table_if_not_exists(
-        table = TracksTable(
-            cursor = cursor,
-            query_builder = query_builder,
-        )
-    )
-
-    db.create_table_if_not_exists(
-        table = UsersTable(
-            cursor = cursor,
-            query_builder = query_builder,
-        )
-    )
 
     # # cli music player
     # player: Player = Player()

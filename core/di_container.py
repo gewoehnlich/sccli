@@ -7,6 +7,8 @@ from di.query_builder_container import QueryBuilderContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
 from utils.enums import DatabaseEnum
+from utils.safe_getenv import safe_getenv
+
 
 class DiContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
@@ -20,12 +22,17 @@ class DiContainer(containers.DeclarativeContainer):
         query_builder = query_builder,
     )
 
+    auth = providers.Singleton(
+        AuthContainer,
+        client_id = safe_getenv("CLIENT_ID"),
+        client_secret = safe_getenv("CLIENT_SECRET"),
+        redirect_uri = safe_getenv("REDIRECT_URI"),
+        tokens_file = ".tokens.json",
+    )
 
-    auth = providers.Singleton(AuthContainer)
     actions = providers.Singleton(ActionsContainer)
     commands = providers.Singleton(CommandsContainer)
     requests = providers.Singleton(RequestsContainer)
-
 
     _instance = None
 
@@ -36,23 +43,13 @@ class DiContainer(containers.DeclarativeContainer):
         return cls._instance
 
     def __init__(self) -> None:
-        query_builder: QueryBuilder = self.query().query_builder
+        self.initialize_tables()
 
-        db: Connection = Database(
-            query_builder = query_builder
-        )
-        cursor: Cursor = db.cursor
-
-        db.create_table_if_not_exists(
-            table = TracksTable(
-                cursor = cursor,
-                query_builder = query_builder,
-            )
+    def initialize_tables(self) -> None:
+        self.db().create_table_if_not_exists(
+            table = self.tables().tracks
         )
 
-        db.create_table_if_not_exists(
-            table = UsersTable(
-                cursor = cursor,
-                query_builder = query_builder,
-            )
+        self.db().create_table_if_not_exists(
+            table = self.tables().users
         )

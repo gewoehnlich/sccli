@@ -1,3 +1,3 @@
 class Table:
     name: str = ""
-    fields: list[str] = []
+    fields: tuple[str] = tuple()
