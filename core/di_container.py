@@ -7,7 +7,6 @@ from di.query_builder_container import QueryBuilderContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
 from utils.enums import DatabaseEnum
-# from utils.safe_getenv import safe_getenv
 
 
 class DiContainer(containers.DeclarativeContainer):
@@ -24,9 +23,6 @@ class DiContainer(containers.DeclarativeContainer):
 
     auth = providers.Singleton(
         AuthContainer,
-        # client_id = safe_getenv("CLIENT_ID"),
-        # client_secret = safe_getenv("CLIENT_SECRET"),
-        # redirect_uri = safe_getenv("REDIRECT_URI"),
         client_id     = config.client_id,
         client_secret = config.client_secret,
         redirect_uri  = config.redirect_uri,
