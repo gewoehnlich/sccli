@@ -1,10 +1,14 @@
+from hashlib import new
 import sqlite3
+
 from core.table import Table
 from core.query_builder import QueryBuilder
+from di.tables_container import TablesContainer
 
 
 class Database:
-    _DATABASE_NAME: str = "sccli.db"
+    DATABASE_NAME: str = "sccli.db"
+
     _instance = None
 
     def __new__(cls: object) -> None:
@@ -15,13 +19,15 @@ class Database:
 
     def __init__(
         self,
+        db: str,
+        tables: TablesContainer,
         query_builder: QueryBuilder,
     ) -> None:
-        if hasattr(self, "db"):
-            return
+        if db != "SQLITE":
+            raise Exception("not supported db; to-do")
 
-        self.db: sqlite3.Connection = sqlite3.connect(self._DATABASE_NAME)
-        self.cursor: sqlite3.Cursor = self.db.cursor()
+        self.db: sqlite3.Cursor = sqlite3.connect(self.DATABASE_NAME).cursor()
+        self.tables: TablesContainer = tables
         self.query_builder = query_builder
 
     def create_table_if_not_exists(

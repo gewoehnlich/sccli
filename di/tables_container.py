@@ -4,5 +4,5 @@ from tables.users import UsersTable
 
 
 class TablesContainer(containers.DeclarativeContainer):
-    tracks = providers.Callable(TracksTable)
-    users = providers.Callable(UsersTable)
+    tracks = providers.Object(TracksTable)
+    users = providers.Object(UsersTable)

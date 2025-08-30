@@ -6,16 +6,26 @@ from di.database_container import DatabaseContainer
 from di.query_builder_container import QueryBuilderContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
+from utils.enums import DatabaseEnum
 
 class DiContainer(containers.DeclarativeContainer):
-    config   = providers.Configuration()
-    auth     = providers.Singleton(AuthContainer)
-    db       = providers.Singleton(DatabaseContainer)
-    query    = providers.Singleton(QueryBuilderContainer)
-    actions  = providers.Singleton(ActionsContainer)
+    config = providers.Configuration()
+
+    query_builder = providers.Singleton(QueryBuilderContainer)
+    tables = providers.Singleton(TablesContainer)
+    db = providers.Singleton(
+        DatabaseContainer,
+        db = DatabaseEnum.SQLITE.name,
+        tables = tables,
+        query_builder = query_builder,
+    )
+
+
+    auth = providers.Singleton(AuthContainer)
+    actions = providers.Singleton(ActionsContainer)
     commands = providers.Singleton(CommandsContainer)
     requests = providers.Singleton(RequestsContainer)
-    tables   = providers.Singleton(TablesContainer)
+
 
     _instance = None
 

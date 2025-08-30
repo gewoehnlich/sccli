@@ -10,13 +10,16 @@ from tables.users import UsersTable
 from utils.stop import stop
 
 
-def main(di_container: DiContainer) -> None:
+def main() -> None:
     # load .env file variables
     load_dotenv()
 
     # dependency injection
-    # di_container: DiContainer = DiContainer()
-    # di_container.wire(modules = [__name__])
+    di_container: DiContainer = DiContainer()
+    di_container.config.client_id = ''
+    di_container.config.client_secret = ''
+    di_container.config.redirect_uri = ''
+    di_container.wire(modules = [__name__])
 
     # database connection
     query_builder: QueryBuilder = QueryBuilder()
@@ -48,6 +51,4 @@ def main(di_container: DiContainer) -> None:
     shell(di_container = di_container)
 
 if __name__ == "__main__":
-    main(
-        DiContainer()
-    )
+    main()
