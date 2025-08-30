@@ -1,6 +1,6 @@
 from dependency_injector import containers, providers
-from dependency_injector.wiring import Provide, inject
 
-class DiContainer:
+
+class DiContainer(containers.DeclarativeContainer):
     def __init__(self) -> None:
         pass
