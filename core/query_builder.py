@@ -13,7 +13,7 @@ class QueryBuilder:
         self,
         statement: str,
         table: str,
-        fields: list[str]
+        fields: tuple[str]
     ) -> str:
         fields_string: str = self._concatenate_fields(fields = fields)
         query: str = f"{statement} {table}({fields_string})"
@@ -22,7 +22,7 @@ class QueryBuilder:
 
     def _concatenate_fields(
         self,
-        fields: list[str]
+        fields: tuple[str]
     ) -> str:
         fields_string: str = str()
 

@@ -1,5 +1,5 @@
-from hashlib import new
 import sqlite3
+from typing import Any
 
 from core.table import Table
 from core.query_builder import QueryBuilder
@@ -34,31 +34,29 @@ class Database:
         self,
         table: Table
     ) -> None:
-        name: str = table.name
-        fields: list[str] = table.fields
-
         query: str = self.query_builder.make_query(
             statement = "CREATE TABLE IF NOT EXISTS",
-            table = name,
-            fields = fields
+            table = table.name,
+            fields = table.fields
         )
 
-        self.cursor.execute(query)
+        self.db.execute(query)
 
     def insert(
         self,
+        table: Table,
         data: dict[str, Any],
     ) -> None:
-        result: list[str] = list()
-        for field in self.fields:
+        result: list[str] = []
+        for field in table.fields:
             result.append(
-                data.get(field, str())
+                data.get(field, "")
             )
 
         query: str = self.query_builder.make_query(
             statement = "INSERT INTO",
-            table = self.name,
+            table = table.name,
             fields = result,
         )
 
-        self.cursor.execute(query)
+        self.db.execute(query)

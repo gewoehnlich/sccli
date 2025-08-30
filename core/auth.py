@@ -18,10 +18,10 @@ class Auth:
         redirect_uri: str,
         tokens_file: str,
     ) -> None:
-        self.client_id: str = client_id
+        self.client_id: str     = client_id
         self.client_secret: str = client_secret
-        self.redirect_uri: str = redirect_uri
-        self.tokens_file: str = tokens_file
+        self.redirect_uri: str  = redirect_uri
+        self.tokens_file: str   = tokens_file
 
     def get_access_token(self) -> str:
         access_token = self.load_token()

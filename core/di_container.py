@@ -7,7 +7,7 @@ from di.query_builder_container import QueryBuilderContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
 from utils.enums import DatabaseEnum
-from utils.safe_getenv import safe_getenv
+# from utils.safe_getenv import safe_getenv
 
 
 class DiContainer(containers.DeclarativeContainer):
@@ -24,13 +24,16 @@ class DiContainer(containers.DeclarativeContainer):
 
     auth = providers.Singleton(
         AuthContainer,
-        client_id = safe_getenv("CLIENT_ID"),
-        client_secret = safe_getenv("CLIENT_SECRET"),
-        redirect_uri = safe_getenv("REDIRECT_URI"),
-        tokens_file = ".tokens.json",
+        # client_id = safe_getenv("CLIENT_ID"),
+        # client_secret = safe_getenv("CLIENT_SECRET"),
+        # redirect_uri = safe_getenv("REDIRECT_URI"),
+        client_id     = config.client_id,
+        client_secret = config.client_secret,
+        redirect_uri  = config.redirect_uri,
+        tokens_file   = ".tokens.json",
     )
 
-    actions = providers.Singleton(ActionsContainer)
+    actions  = providers.Singleton(ActionsContainer)
     commands = providers.Singleton(CommandsContainer)
     requests = providers.Singleton(RequestsContainer)
 
@@ -42,8 +45,10 @@ class DiContainer(containers.DeclarativeContainer):
 
         return cls._instance
 
+
     def __init__(self) -> None:
         self.initialize_tables()
+
 
     def initialize_tables(self) -> None:
         self.db().create_table_if_not_exists(
