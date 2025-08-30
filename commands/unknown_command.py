@@ -1,4 +1,4 @@
 from config import UNKNOWN_COMMAND_MESSAGE
 
-def unknown_command(self) -> None:
+def unknown_command() -> None:
     print(UNKNOWN_COMMAND_MESSAGE)

@@ -1,5 +1,5 @@
-from dotenv import load_dotenv
 from sqlite3 import Connection, Cursor
+from dotenv import load_dotenv
 from core.query_builder import QueryBuilder
 from core.shell import Shell
 from core.database import Database

@@ -4,7 +4,7 @@ from pprint import pprint
 from utils.send_request import send_request
 from typing import List
 
-def get_track_command(self, args: List[str]) -> None:
+def get_track_command(args: List[str]) -> None:
     track_urn: str = "soundcloud:tracks:1672134090"
     response: Response = send_request(
         GetTrackRequest(track_urn)
