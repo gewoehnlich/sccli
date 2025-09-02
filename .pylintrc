@@ -1,5 +1,5 @@
 [MASTER]
-init-hook='import os, sys; sys.path.append(os.getcwd())'
+init-hook="import os, sys; sys.path.append(os.getcwd())"
 
 [TYPECHECK]
-extension-pkg-allow-list=dependency_injector.providers,dependency_injector.containers,dependency_injector.providers.Configuration
+extension-pkg-allow-list=dependency_injector.providers,dependency_injector.containers
