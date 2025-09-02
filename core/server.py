@@ -29,7 +29,7 @@ class Server:
         await site.start()
 
         print("Server is running at http://localhost:8080/callback")
-        
+
         if self.future is not None:
             await self.future
 
@@ -43,9 +43,9 @@ class Server:
         state = request.query.get("state")
 
         if (
-            auth_code 
-            and state 
-            and self.future is not None 
+            auth_code
+            and state
+            and self.future is not None
             and not self.future.done()
         ):
             self.future.set_result((auth_code, state))
@@ -53,4 +53,3 @@ class Server:
         return web.Response(
             text="Callback received. You may close this window."
         )
-

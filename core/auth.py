@@ -6,7 +6,7 @@ import json
 import asyncio
 import webbrowser
 from typing import Any
-from utils.server import Server
+from core.server import Server
 from requests_.refresh_token_request import RefreshTokenRequest
 from requests_.authentication_request import AuthenticationRequest
 

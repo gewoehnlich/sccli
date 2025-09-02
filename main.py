@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 from core.di_container import DiContainer
 from core.shell import shell
-# from utils.safe_getenv import safe_getenv
 
 
 def main() -> None:
@@ -10,6 +9,7 @@ def main() -> None:
 
     # dependency injection
     di_container: DiContainer = DiContainer()
+
     di_container.config.client_id.from_env(
         name = "CLIENT_ID",
         required = True,

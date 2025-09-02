@@ -5,6 +5,7 @@ from di.commands_container import CommandsContainer
 from di.database_container import DatabaseContainer
 from di.query_builder_container import QueryBuilderContainer
 from di.requests_container import RequestsContainer
+from di.server_container import ServerContainer
 from di.tables_container import TablesContainer
 from utils.enums import DatabaseEnum
 
@@ -27,6 +28,10 @@ class DiContainer(containers.DeclarativeContainer):
         client_secret = config.client_secret,
         redirect_uri  = config.redirect_uri,
         tokens_file   = ".tokens.json",
+    )
+
+    server = providers.Singleton(
+        ServerContainer
     )
 
     actions  = providers.Singleton(ActionsContainer)
