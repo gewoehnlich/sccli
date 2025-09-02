@@ -6,4 +6,3 @@ __pycache__
 test.py
 sccli.db
 .ruff_cache
-.pylintrc
