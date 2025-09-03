@@ -37,7 +37,6 @@ class Shell:
     @inject
     def process_command(
         commands: CommandsContainer = Provide[DiContainer.commands],
-        actions: ActionsContainer = Provide[DiContainer.actions],
         command_line: str,
     ) -> None:
         """Parses and executes the command."""
@@ -48,28 +47,25 @@ class Shell:
 
         match command:
             case "help":
-                commands.help()
+                commands.help().run()
             case "me" | "user":
-                commands.user()
+                commands.user().run()
             case "liked:tracks" | "lt":
-                commands.fetch_my_liked_tracks(
-                    actions.fetch_my_liked_tracks,
-                    args
-                )
+                commands.fetch_my_liked_tracks(args).run()
             case "me:followings":
-                commands.followings(args)
+                commands.followings(args).run()
             case "me:followings:tracks":
-                commands.followings_tracks(args)
+                commands.followings_tracks(args).run()
             case "me:tracks":
-                commands.my_tracks(args)
+                commands.my_tracks(args).run()
             case "track":
-                commands.get_track(args)
+                commands.get_track(args).run()
             case "track_streaming_url":
-                commands.get_track_streaming_url(args)
+                commands.get_track_streaming_url(args).run()
             case "exit" | "quit" | "q":
-                commands.exit()
+                commands.exit().run()
             case _:
-                commands.unknown()
+                commands.unknown().run()
 
     def parse_input(command_line: str) -> Tuple[str, List[str]]:
         parts: List[str] = shlex.split(command_line)

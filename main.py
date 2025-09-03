@@ -1,7 +1,7 @@
 from _config.server import SERVER_PORT, SERVER_PATH
 from dotenv import load_dotenv
 from core.di_container import DiContainer
-from core.shell import shell
+from core.shell import Shell
 
 
 def main() -> None:
@@ -43,7 +43,8 @@ def main() -> None:
     # player.run()
 
     # start shell session
-    shell(di_container = di_container)
+    shell: Shell = Shell()
+    shell.run()
 
 if __name__ == "__main__":
     main()

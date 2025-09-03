@@ -42,6 +42,7 @@ class DiContainer(containers.DeclarativeContainer):
 
     _instance = None
 
+
     def __new__(cls) -> None:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -54,10 +55,13 @@ class DiContainer(containers.DeclarativeContainer):
 
 
     def initialize_tables(self) -> None:
-        self.db().create_table_if_not_exists(
-            table = self.tables().tracks
+        db:     DatabaseContainer = self.db()
+        tables: TablesContainer   = self.tables()
+
+        db.create_table_if_not_exists(
+            table = tables.tracks
         )
 
-        self.db().create_table_if_not_exists(
-            table = self.tables().users
+        db.create_table_if_not_exists(
+            table = tables.users
         )
