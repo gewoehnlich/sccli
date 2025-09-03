@@ -1,9 +1,11 @@
 from actions.fetch_my_liked_tracks_action import FetchMyLikedTracksAction
-from utils.run_action import run_action
+from core.action import Action
 
-def fetch_my_liked_tracks_command(args: list[str]) -> None:
-    result: bool = run_action(
-        FetchMyLikedTracksAction()
-    )
+
+def fetch_my_liked_tracks_command(
+    action: Action,
+    args: list[str],
+) -> None:
+    result: bool = action()
 
     # to-do: handle true / false

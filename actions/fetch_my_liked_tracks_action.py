@@ -1,19 +1,17 @@
-from requests import Response
-from core.action import Action
-from core.request import Request
-from core.table import Table
-from requests_.fetch_my_liked_tracks_request import FetchMyLikedTracksRequest
-# from tables.tracks import TracksTable
-from utils.send_request import send_request
 from typing import Any
 from time import sleep
 from pprint import pprint
+from requests import Response
 from utils.keys import _COLLECTION, _NEXT_HREF
+from core.action import Action
+from core.request import Request
+from core.table import Table
+
 
 class FetchMyLikedTracksAction(Action):
     def run(
         self,
-        request: Request,
+        request: Request | None = None,
         table: Table | None = None,
     ) -> bool:
         if not table:
@@ -24,13 +22,11 @@ class FetchMyLikedTracksAction(Action):
 
         while not fetched:
             if next_href:
-                request: FetchMyLikedTracksRequest = FetchMyLikedTracksRequest(
-                    url = next_href
-                )
+                request: Request = request(url = next_href)
             else:
-                request: FetchMyLikedTracksRequest = FetchMyLikedTracksRequest()
-        
-            response: Response = send_request(request = request)
+                request: Request = request()
+
+            response: Response = request.send()
             result: dict[str, Any] = response.json()
 
             collection: list[dict[str, Any]] = result[_COLLECTION]

@@ -5,7 +5,7 @@ from core.request import Request
 class Action:
     def run(
         self, 
-        request: Request,
+        request: Request | None = None,
         table: Table | None = None,
     ) -> bool:
-        return True
+        return False
