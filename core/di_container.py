@@ -38,8 +38,6 @@ class DiContainer(containers.DeclarativeContainer):
     commands = providers.Singleton(CommandsContainer)
     requests = providers.Singleton(RequestsContainer)
 
-    # add server thing
-
     _instance = None
 
     def __new__(cls) -> None:

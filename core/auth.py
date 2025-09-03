@@ -6,9 +6,10 @@ import json
 import asyncio
 import webbrowser
 from typing import Any
+from requests import Response
+
+from core.request import Request
 from core.server import Server
-from requests_.refresh_token_request import RefreshTokenRequest
-from requests_.authentication_request import AuthenticationRequest
 
 class Auth:
     def __init__(
@@ -17,11 +18,16 @@ class Auth:
         client_secret: str,
         redirect_uri: str,
         tokens_file: str,
+        authentication_request: Request,
+        refresh_token_request: Request,
     ) -> None:
         self.client_id: str     = client_id
         self.client_secret: str = client_secret
         self.redirect_uri: str  = redirect_uri
         self.tokens_file: str   = tokens_file
+
+        self.authentication_request: Request = authentication_request
+        self.refresh_token_request:  Request = refresh_token_request
 
     def get_access_token(self) -> str:
         access_token = self.load_token()
@@ -37,11 +43,13 @@ class Auth:
                 mode = "r",
                 encoding = "utf-8",
             ) as file:
-                token_data = json.loads(file.read().strip())
+                token_data = json.loads(
+                    file.read().strip()
+                )
+
                 current_timestamp = int(time.time())
                 expire_timestamp = (
-                    int(token_data["timestamp"]) +
-                    int(token_data["expires_in"])
+                    int(token_data["timestamp"]) + int(token_data["expires_in"])
                 )
 
             if current_timestamp > expire_timestamp - 100:
@@ -49,20 +57,25 @@ class Auth:
                     return None
 
                 access_token = self.refresh_token(
-                    token_data["refresh_token"]
+                    refresh_token = token_data["refresh_token"]
                 )
+
             else:
                 access_token = token_data["access_token"]
 
             return access_token
+
         except (FileNotFoundError, KeyError):
             return None
 
-    def refresh_token(self, refresh_token: str) -> str:
-        response = RefreshTokenRequest(
-            self.client_id,
-            self.client_secret,
-            refresh_token
+    def refresh_token(
+        self, 
+        refresh_token: str
+    ) -> str:
+        response: Response = self.refresh_token_request(
+            client_id     = self.client_id,
+            client_secret = self.client_secret,
+            refresh_token = refresh_token
         ).send()
 
         if not response:
@@ -71,6 +84,7 @@ class Auth:
         try:
             token_data = response.json()
             token_data["timestamp"] = int(time.time())
+
         except Exception as e:
             raise e
 
@@ -79,7 +93,9 @@ class Auth:
             mode = "w",
             encoding = "utf-8",
         ) as file:
-            file.write(json.dumps(token_data, indent=4))
+            file.write(
+                json.dumps(token_data, indent=4)
+            )
 
         access_token: Any = token_data.get("access_token")
         if not isinstance(access_token, str):
@@ -107,7 +123,7 @@ class Auth:
         if state != returned_state:
             raise Exception("State mismatch!")
 
-        response = AuthenticationRequest(
+        response = self.authentication_request(
             self.client_id,
             self.client_secret,
             self.redirect_uri,
@@ -115,7 +131,7 @@ class Auth:
             auth_code
         ).send()
 
-        token_data = response.json()
+        token_data: dict[str, Any] = response.json()
         token_data["timestamp"] = int(time.time()) 
 
         with open(
