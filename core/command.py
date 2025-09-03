@@ -1,9 +1,10 @@
 from core.action import Action
+from core.resource import Resource
 
 
 class Command:
-    action: Action | None = None
-    resource: Resource | None = None
+    action: Action
+    resource: Resource
 
     def run(
         action: Action,

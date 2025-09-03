@@ -20,7 +20,7 @@ class Shell:
         commands: CommandsContainer = Provide[DiContainer.commands]
     ) -> None:
         """Starts the interactive shell session."""
-        commands.welcome()
+        commands.welcome().run()
 
         while True:
             try:
@@ -28,7 +28,7 @@ class Shell:
                 self.process_command(command_line = command_line)
 
             except KeyboardInterrupt:
-                commands.exit()
+                commands.exit().run()
                 break
 
             except Exception as e:

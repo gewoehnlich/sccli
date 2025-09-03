@@ -1,15 +1,7 @@
-from dependency_injector.wiring import Provide
 from core.action import Action
 from core.command import Command
-from core.di_container import DiContainer
+from core.resource import Resource
 
-def fetch_my_liked_tracks_command(
-    action: Action,
-    args: list[str],
-) -> None:
-    result: bool = action()
-
-    # to-do: handle true / false
 
 class FetchMyLikedTracksCommand(Command):
     _instance = None
