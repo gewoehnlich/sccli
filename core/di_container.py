@@ -31,7 +31,9 @@ class DiContainer(containers.DeclarativeContainer):
     )
 
     server = providers.Singleton(
-        ServerContainer
+        ServerContainer,
+        server_port = config.server_port,
+        server_path = config.server_path,
     )
 
     actions  = providers.Singleton(ActionsContainer)

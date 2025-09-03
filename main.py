@@ -1,3 +1,4 @@
+from _config.server import SERVER_PORT, SERVER_PATH
 from dotenv import load_dotenv
 from core.di_container import DiContainer
 from core.shell import shell
@@ -31,6 +32,9 @@ def main() -> None:
         default = ".tokens.json",
         required = True,
     )
+
+    di_container.config.server_port.from_value(SERVER_PORT)
+    di_container.config.server_path.from_value(SERVER_PATH)
 
     di_container.wire(modules = [__name__])
 

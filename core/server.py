@@ -5,8 +5,16 @@ from asyncio import Future
 from typing import Tuple, Optional, Any
 
 class Server:
-    def __init__(self) -> None:
-        self.future: Optional[Future[Any]] = None
+    future: Optional[Future[Any]] = None
+
+    def __init__(
+        self,
+        server_port: int,
+        server_path: str,
+    ) -> None:
+        self.server_port: int = server_port
+        self.server_path: str = server_path
+        self.url: str = f"http://localhost:{self.server_port}{self.server_path}"
 
     async def run(self) -> tuple[str, str]:
         self.future = asyncio.get_event_loop().create_future()
@@ -21,14 +29,22 @@ class Server:
 
     async def start_server(self) -> None:
         app = web.Application()
-        app.router.add_get("/callback", self.callback_handler)
+        app.router.add_get(
+            self.server_path,
+            self.callback_handler,
+        )
+
         self.runner = web.AppRunner(app)
         await self.runner.setup()
 
-        site = web.TCPSite(self.runner, "localhost", 8080)
+        site = web.TCPSite(
+            self.runner,
+            "localhost",
+            self.server_port
+        )
         await site.start()
 
-        print("Server is running at http://localhost:8080/callback")
+        print(f"Server is running at {self.url}")
 
         if self.future is not None:
             await self.future
