@@ -16,8 +16,7 @@ class ExitCommand(Command):
         action: Action,
         resource: Resource,
     ) -> None:
-        if action:
-            self.action = action
-
-        if resource:
-            self.resource = resource
+        super().__init__(
+            action = action,
+            resource = resource,
+        )

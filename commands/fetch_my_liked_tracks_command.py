@@ -16,5 +16,7 @@ class FetchMyLikedTracksCommand(Command):
         action: Action,
         resource: Resource,
     ) -> None:
-        self.action = action
-        self.resource = resource
+        super().__init__(
+            action = action,
+            resource = resource,
+        )

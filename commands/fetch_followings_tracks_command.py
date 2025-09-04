@@ -3,7 +3,7 @@ from core.command import Command
 from core.resource import Resource
 
 
-class FetchFollowingsCommand(Command):
+class FetchFollowingsTracksCommand(Command):
     _instance = None
 
     def __new__(cls) -> None:

@@ -6,6 +6,16 @@ class Command:
     action: Action
     resource: Resource
 
+    def __init__(
+        action: Action,
+        resource: Resource,
+    ) -> None:
+        if action:
+            self.action = action
+
+        if resource:
+            self.resource = resource
+
     def run(
         action: Action,
         resource: Resource,

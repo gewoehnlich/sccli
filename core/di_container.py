@@ -7,6 +7,7 @@ from di.query_builder_container import QueryBuilderContainer
 from di.requests_container import RequestsContainer
 from di.server_container import ServerContainer
 from di.tables_container import TablesContainer
+from di.resources_container import ResourcesContainer
 from utils.enums import DatabaseEnum
 
 
@@ -36,9 +37,10 @@ class DiContainer(containers.DeclarativeContainer):
         server_path = config.server_path,
     )
 
-    actions  = providers.Singleton(ActionsContainer)
-    commands = providers.Singleton(CommandsContainer)
-    requests = providers.Singleton(RequestsContainer)
+    requests  = providers.Singleton(RequestsContainer)
+    resources = providers.Singleton(ResourcesContainer)
+    actions   = providers.Singleton(ActionsContainer)
+    commands  = providers.Singleton(CommandsContainer)
 
     _instance = None
 
@@ -49,10 +51,8 @@ class DiContainer(containers.DeclarativeContainer):
 
         return cls._instance
 
-
     def __init__(self) -> None:
         self.initialize_tables()
-
 
     def initialize_tables(self) -> None:
         db:     DatabaseContainer = self.db()
