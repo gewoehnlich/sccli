@@ -2,10 +2,11 @@ class QueryBuilder:
     fields_separator: str | None = None
 
     _instance = None
+    _initialized: bool = False
 
-    def __new__(cls):
+    def __new__(cls, *args, **kwargs) -> None:
         if cls._instance is None:
-            cls._instance = super(QueryBuilder, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
 
         return cls._instance
 
@@ -13,9 +14,11 @@ class QueryBuilder:
         self,
         fields_separator: str
     ) -> None:
-        self.fields_separator = fields_separator
+        if not self._initialized:
+            self.fields_separator = fields_separator
+            self._initialized = True
 
-    def make(
+    def make_query(
         self,
         statement: str,
         table: str,
