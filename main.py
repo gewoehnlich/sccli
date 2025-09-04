@@ -37,9 +37,9 @@ def main() -> None:
     di_container.config.server_port.from_value(SERVER_PORT)
     di_container.config.server_path.from_value(SERVER_PATH)
 
-    di_container.config.welcome_message.from_value(WELCOME_COMMAND_MESSAGE)
-    di_container.config.exit_message.from_value(EXIT_COMMAND_MESSAGE)
-    di_container.config.help_message.from_value(HELP_COMMAND_MESSAGE)
+    di_container.config.welcome_command_message.from_value(WELCOME_COMMAND_MESSAGE)
+    di_container.config.exit_command_message.from_value(EXIT_COMMAND_MESSAGE)
+    di_container.config.help_command_message.from_value(HELP_COMMAND_MESSAGE)
     di_container.config.unknown_command_message.from_value(UNKNOWN_COMMAND_MESSAGE)
 
     di_container.wire(modules = [__name__])

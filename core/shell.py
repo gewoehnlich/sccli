@@ -1,8 +1,7 @@
-from dependency_injector.wiring import Provide, inject
 import shlex
 from typing import Tuple, List
+from dependency_injector.wiring import Provide, inject
 from core.di_container import DiContainer
-from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 
 

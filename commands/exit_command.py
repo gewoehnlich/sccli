@@ -1,4 +1,23 @@
-from config import EXIT_COMMAND_MESSAGE
+from core.action import Action
+from core.command import Command
+from core.resource import Resource
 
-def exit_command() -> None:
-    print(EXIT_COMMAND_MESSAGE)
+
+class ExitCommand(Command):
+    _instance = None
+
+    def __new__(cls) -> None:
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
+
+    def __init__(
+        action: Action,
+        resource: Resource,
+    ) -> None:
+        if action:
+            self.action = action
+
+        if resource:
+            self.resource = resource

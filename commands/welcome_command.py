@@ -1,9 +1,3 @@
-from config import WELCOME_COMMAND_MESSAGE
-from core.command import Command
-
-def welcome_command() -> None:
-    print(WELCOME_COMMAND_MESSAGE)
-
 from core.action import Action
 from core.command import Command
 from core.resource import Resource

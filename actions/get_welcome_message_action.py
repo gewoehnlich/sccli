@@ -3,9 +3,8 @@ from core.action import Action
 from core.di_container import DiContainer
 
 
-class WelcomeAction(Action):
+class GetWelcomeMessageAction(Action):
     def run(
         config: str = Provide[DiContainer.config]
     ) -> str:
-        return config.welcome_message
-
+        return config.welcome_command_message
