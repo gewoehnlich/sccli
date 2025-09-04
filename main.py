@@ -2,7 +2,7 @@ from _config.messages import EXIT_COMMAND_MESSAGE, HELP_COMMAND_MESSAGE, UNKNOWN
 from _config.server import SERVER_PORT, SERVER_PATH
 from dotenv import load_dotenv
 from core.di_container import DiContainer
-from core.shell import Shell
+# from core.shell import Shell
 
 
 def main() -> None:
@@ -60,8 +60,8 @@ def main() -> None:
     # player.run()
 
     # start shell session
-    shell: Shell = Shell()
-    shell.run()
+    # shell: Shell = Shell()
+    # shell.run()
 
 if __name__ == "__main__":
     main()

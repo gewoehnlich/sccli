@@ -1,13 +1,13 @@
 from dependency_injector import containers, providers
-from di.actions_container import ActionsContainer
-from di.auth_container import AuthContainer
-from di.commands_container import CommandsContainer
+# from di.actions_container import ActionsContainer
+# from di.auth_container import AuthContainer
+# from di.commands_container import CommandsContainer
 from di.database_container import DatabaseContainer
 from di.query_builder_container import QueryBuilderContainer
-from di.requests_container import RequestsContainer
-from di.server_container import ServerContainer
+# from di.requests_container import RequestsContainer
+# from di.server_container import ServerContainer
 from di.tables_container import TablesContainer
-from di.resources_container import ResourcesContainer
+# from di.resources_container import ResourcesContainer
 from utils.enums import DatabaseEnum
 
 
@@ -23,24 +23,24 @@ class DiContainer(containers.DeclarativeContainer):
         query_builder = query_builder,
     )
 
-    auth = providers.Singleton(
-        AuthContainer,
-        client_id     = config.client_id,
-        client_secret = config.client_secret,
-        redirect_uri  = config.redirect_uri,
-        tokens_file   = ".tokens.json",
-    )
-
-    server = providers.Singleton(
-        ServerContainer,
-        server_port = config.server_port,
-        server_path = config.server_path,
-    )
-
-    requests  = providers.Singleton(RequestsContainer)
-    resources = providers.Singleton(ResourcesContainer)
-    actions   = providers.Singleton(ActionsContainer)
-    commands  = providers.Singleton(CommandsContainer)
+    # requests  = providers.Singleton(RequestsContainer)
+    # resources = providers.Singleton(ResourcesContainer)
+    # actions   = providers.Singleton(ActionsContainer)
+    # commands  = providers.Singleton(CommandsContainer)
+    #
+    # auth = providers.Singleton(
+    #     AuthContainer,
+    #     client_id     = config.client_id,
+    #     client_secret = config.client_secret,
+    #     redirect_uri  = config.redirect_uri,
+    #     tokens_file   = ".tokens.json",
+    # )
+    #
+    # server = providers.Singleton(
+    #     ServerContainer,
+    #     server_port = config.server_port,
+    #     server_path = config.server_path,
+    # )
 
     _instance = None
 
@@ -55,13 +55,15 @@ class DiContainer(containers.DeclarativeContainer):
         self.initialize_tables()
 
     def initialize_tables(self) -> None:
-        db:     DatabaseContainer = self.db()
-        tables: TablesContainer   = self.tables()
+        pass
 
-        db.create_table_if_not_exists(
-            table = tables.tracks
-        )
-
-        db.create_table_if_not_exists(
-            table = tables.users
-        )
+        # db:     DatabaseContainer = self.db()
+        # tables: TablesContainer   = self.tables()
+        #
+        # db.create_table_if_not_exists(
+        #     table = tables.tracks
+        # )
+        #
+        # db.create_table_if_not_exists(
+        #     table = tables.users
+        # )
