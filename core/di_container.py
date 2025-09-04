@@ -14,14 +14,18 @@ from utils.enums import DatabaseEnum
 class DiContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
-    query_builder = providers.Singleton(QueryBuilderContainer)
-    tables = providers.Singleton(TablesContainer)
-    db = providers.Singleton(
-        DatabaseContainer,
-        db = DatabaseEnum.SQLITE.name,
-        tables = tables,
-        query_builder = query_builder,
+    query_builder = providers.Singleton(
+        QueryBuilderContainer,
+        config.fields_separator,
     )
+
+    # tables = providers.Singleton(TablesContainer)
+    # db = providers.Singleton(
+    #     DatabaseContainer,
+    #     db = DatabaseEnum.SQLITE.name,
+    #     tables = tables,
+    #     query_builder = query_builder,
+    # )
 
     # requests  = providers.Singleton(RequestsContainer)
     # resources = providers.Singleton(ResourcesContainer)

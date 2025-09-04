@@ -1,5 +1,5 @@
 class QueryBuilder:
-    _FIELDS_SEPARATOR = ", "
+    fields_separator: str | None = None
 
     _instance = None
 
@@ -9,7 +9,13 @@ class QueryBuilder:
 
         return cls._instance
 
-    def make_query(
+    def __init__(
+        self,
+        fields_separator: str
+    ) -> None:
+        self.fields_separator = fields_separator
+
+    def make(
         self,
         statement: str,
         table: str,
@@ -24,12 +30,12 @@ class QueryBuilder:
         self,
         fields: tuple[str]
     ) -> str:
-        fields_string: str = str()
+        fields_string: str = ""
 
         for field in fields:
-            fields_string += field + self._FIELDS_SEPARATOR
+            fields_string += field + self.fields_separator
 
-        if fields_string.endswith(self._FIELDS_SEPARATOR):
-            fields_string = fields_string.rstrip(self._FIELDS_SEPARATOR)
+        if fields_string.endswith(self.fields_separator):
+            fields_string = fields_string.rstrip(self.fields_separator)
 
         return fields_string
