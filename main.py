@@ -6,7 +6,6 @@ from config import (
     WELCOME_COMMAND_MESSAGE,
     SERVER_PATH,
     SERVER_PORT,
-    FIELDS_SEPARATOR,
 )
 
 from core.di_container import DiContainer
@@ -64,8 +63,6 @@ def main() -> None:
     di_container.config.unknown_command_message.from_value(
         UNKNOWN_COMMAND_MESSAGE
     )
-
-    di_container.config.fields_separator.from_value(FIELDS_SEPARATOR)
 
     di_container.wire(modules = [__name__])
 

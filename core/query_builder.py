@@ -1,5 +1,5 @@
 class QueryBuilder:
-    fields_separator: str | None = None
+    _FIELDS_SEPARATOR: str = ", "
 
     _instance = None
     _initialized: bool = False
@@ -10,12 +10,8 @@ class QueryBuilder:
 
         return cls._instance
 
-    def __init__(
-        self,
-        fields_separator: str
-    ) -> None:
+    def __init__(self) -> None:
         if not self._initialized:
-            self.fields_separator = fields_separator
             self._initialized = True
 
     def make_query(
@@ -36,9 +32,9 @@ class QueryBuilder:
         fields_string: str = ""
 
         for field in fields:
-            fields_string += field + self.fields_separator
+            fields_string += field + self._FIELDS_SEPARATOR
 
-        if fields_string.endswith(self.fields_separator):
-            fields_string = fields_string.rstrip(self.fields_separator)
+        if fields_string.endswith(self._FIELDS_SEPARATOR):
+            fields_string = fields_string.rstrip(self._FIELDS_SEPARATOR)
 
         return fields_string

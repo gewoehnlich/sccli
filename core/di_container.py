@@ -14,10 +14,7 @@ from utils.enums import DatabaseEnum
 class DiContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
-    query_builder = providers.Singleton(
-        QueryBuilderContainer,
-        config.fields_separator,
-    )
+    query_builder = providers.Singleton(QueryBuilderContainer)
 
     # tables = providers.Singleton(TablesContainer)
     # db = providers.Singleton(
