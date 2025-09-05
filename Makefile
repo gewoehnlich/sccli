@@ -15,3 +15,6 @@ mypy:
 
 sccli:
 	python3 main.py
+
+tests:
+	pytest -v

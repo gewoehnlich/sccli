@@ -5,15 +5,15 @@ from core.di_container import DiContainer
 
 
 @pytest.fixture
-def query_builder() -> QueryBuilder:
+def qb() -> QueryBuilder:
     """Return a fresh QueryBuilder with a test separator (',')."""
     return QueryBuilder()
 
 
 def test_concatenate_fields(
-    query_builder: QueryBuilder
+    qb: QueryBuilder
 ) -> None:
-    result = query_builder._concatenate_fields((
+    result = qb._concatenate_fields((
         "id", 
         "name", 
         "email"
@@ -23,22 +23,30 @@ def test_concatenate_fields(
 
 
 def test_concatenate_fields_trailing_separator(
-    query_builder: QueryBuilder
+    qb: QueryBuilder
 ) -> None:
     # It should not leave a trailing separator
-    result = query_builder._concatenate_fields(("field1",))
+    result = qb._concatenate_fields(("field1",))
     assert result == "field1"
 
 
 def test_make_query(
-    query_builder: QueryBuilder
+    qb: QueryBuilder
 ) -> None:
-    query = query_builder.make_query(
+    query = qb.make_query(
         statement = "INSERT INTO",
         table = "users",
         fields = ("id", "name"),
     )
     assert query == "INSERT INTO users(id, name)"
+
+
+def test_is_singleton(
+    qb: QueryBuilder
+) -> None:
+    qb2: QueryBuilder = QueryBuilder()
+
+    assert qb == qb2
 
 
 def test_query_builder_from_container():
