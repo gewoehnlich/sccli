@@ -1,17 +1,17 @@
+from __future__ import annotations
 import sqlite3
-from typing import Any
+from typing import Any, Self
 
-from core.table import Table
 from core.query_builder import QueryBuilder
+from core.table import Table
 from di.tables_container import TablesContainer
 
 
 class Database:
-    DATABASE_NAME: str = "sccli.db"
+    _instance: Self | None = None
+    _initialized: bool = False
 
-    _instance = None
-
-    def __new__(cls: object) -> None:
+    def __new__(cls: type[Self], *args, **kwargs) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
@@ -19,16 +19,24 @@ class Database:
 
     def __init__(
         self,
-        db: str,
+        database_name: str,
         tables: TablesContainer,
         query_builder: QueryBuilder,
     ) -> None:
-        if db != "SQLITE":
-            raise Exception("not supported db; to-do")
+        if not self._initialized:
+            self._initialized = True
 
-        self.db: sqlite3.Cursor = sqlite3.connect(self.DATABASE_NAME).cursor()
+        self.db: sqlite3.Cursor = sqlite3.connect(database_name).cursor()
         self.tables: TablesContainer = tables
-        self.query_builder = query_builder
+        self.query_builder: QueryBuilder = query_builder
+
+    def initialize_tables(self) -> None:
+        for name, provider in self.tables.providers.items():
+            table: Table = provider()
+
+            self.create_table_if_not_exists(
+                table = table
+            )
 
     def create_table_if_not_exists(
         self,

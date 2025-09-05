@@ -1,28 +1,28 @@
 from dependency_injector import containers, providers
+from typing import Self
 # from di.actions_container import ActionsContainer
 # from di.auth_container import AuthContainer
 # from di.commands_container import CommandsContainer
-from di.database_container import DatabaseContainer
-from di.query_builder_container import QueryBuilderContainer
+# from di.database_container import DatabaseContainer
+# from di.query_builder_container import QueryBuilderContainer
 # from di.requests_container import RequestsContainer
 # from di.server_container import ServerContainer
 from di.tables_container import TablesContainer
 # from di.resources_container import ResourcesContainer
-from utils.enums import DatabaseEnum
-
+from core.query_builder import QueryBuilder
+from core.database import Database
 
 class DiContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
-    query_builder = providers.Singleton(QueryBuilderContainer)
-
-    # tables = providers.Singleton(TablesContainer)
-    # db = providers.Singleton(
-    #     DatabaseContainer,
-    #     db = DatabaseEnum.SQLITE.name,
-    #     tables = tables,
-    #     query_builder = query_builder,
-    # )
+    query_builder = providers.Singleton(QueryBuilder)
+    tables = providers.Singleton(TablesContainer)
+    db = providers.Singleton(
+        Database,
+        database_name = config.database_name,
+        tables = tables,
+        query_builder = query_builder,
+    )
 
     # requests  = providers.Singleton(RequestsContainer)
     # resources = providers.Singleton(ResourcesContainer)
@@ -43,28 +43,17 @@ class DiContainer(containers.DeclarativeContainer):
     #     server_path = config.server_path,
     # )
 
-    _instance = None
+    _instance: Self | None = None
+    _initialized: bool = False
 
-
-    def __new__(cls) -> None:
+    def __new__(cls: type[Self], *args, **kwargs) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
         return cls._instance
 
     def __init__(self) -> None:
-        self.initialize_tables()
+        if self._initialized:
+            return
 
-    def initialize_tables(self) -> None:
-        pass
-
-        # db:     DatabaseContainer = self.db()
-        # tables: TablesContainer   = self.tables()
-        #
-        # db.create_table_if_not_exists(
-        #     table = tables.tracks
-        # )
-        #
-        # db.create_table_if_not_exists(
-        #     table = tables.users
-        # )
+        self._initialized = True

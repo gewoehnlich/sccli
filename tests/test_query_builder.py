@@ -6,7 +6,6 @@ from core.di_container import DiContainer
 
 @pytest.fixture
 def qb() -> QueryBuilder:
-    """Return a fresh QueryBuilder with a test separator (',')."""
     return QueryBuilder()
 
 
@@ -52,7 +51,7 @@ def test_is_singleton(
 def test_query_builder_from_container():
     container = DiContainer()
 
-    qb: QueryBuilder = container.query_builder().query_builder()
+    qb: QueryBuilder = container.query_builder()
 
     query = qb.make_query(
         statement = "INSERT INTO",

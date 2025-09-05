@@ -1,10 +1,12 @@
+from typing import Self
+
 class QueryBuilder:
     _FIELDS_SEPARATOR: str = ", "
 
-    _instance = None
+    _instance: Self | None = None
     _initialized: bool = False
 
-    def __new__(cls, *args, **kwargs) -> None:
+    def __new__(cls: type[Self], *args, **kwargs) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 

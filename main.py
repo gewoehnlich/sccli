@@ -6,6 +6,7 @@ from config import (
     WELCOME_COMMAND_MESSAGE,
     SERVER_PATH,
     SERVER_PORT,
+    DATABASE_NAME,
 )
 
 from core.di_container import DiContainer
@@ -63,6 +64,10 @@ def main() -> None:
     di_container.config.unknown_command_message.from_value(
         UNKNOWN_COMMAND_MESSAGE
     )
+
+    di_container.config.database_name.from_value(DATABASE_NAME)
+
+    di_container.db().initialize_tables()
 
     di_container.wire(modules = [__name__])
 
