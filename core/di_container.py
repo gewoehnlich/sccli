@@ -7,7 +7,7 @@ from core.query_builder import QueryBuilder
 from core.server import Server
 # from di.actions_container import ActionsContainer
 # from di.commands_container import CommandsContainer
-# from di.requests_container import RequestsContainer
+from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
 # from di.resources_container import ResourcesContainer
 
@@ -16,7 +16,8 @@ class DiContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
     query_builder = providers.Singleton(QueryBuilder)
-    tables = providers.Singleton(TablesContainer)
+    tables        = providers.Singleton(TablesContainer)
+
     db = providers.Singleton(
         Database,
         database_name = config.database_name,
@@ -25,8 +26,8 @@ class DiContainer(containers.DeclarativeContainer):
     )
 
     requests  = providers.Singleton(RequestsContainer)
-    # resources = providers.Singleton(ResourcesContainer)
     # actions   = providers.Singleton(ActionsContainer)
+    # resources = providers.Singleton(ResourcesContainer)
     # commands  = providers.Singleton(CommandsContainer)
 
     server = providers.Singleton(
@@ -37,13 +38,13 @@ class DiContainer(containers.DeclarativeContainer):
 
     auth = providers.Singleton(
         Auth,
-        client_id              = config.client_id,
-        client_secret          = config.client_secret,
-        redirect_uri           = config.redirect_uri,
-        tokens_file            = config.tokens_file,
-        server                 = server,
-        authentication_request = requests.authentication,
-        refresh_token_request  = requests.refresh_token,
+        client_id              = config.client_id(),
+        client_secret          = config.client_secret(),
+        redirect_uri           = config.redirect_uri(),
+        tokens_file            = config.tokens_file(),
+        server                 = server(),
+        authentication_request = requests().authentication,
+        refresh_token_request  = requests().refresh_token,
     )
 
     _instance: Self | None = None

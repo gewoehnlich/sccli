@@ -38,6 +38,7 @@ class Auth:
         self.client_secret: str = client_secret
         self.redirect_uri: str  = redirect_uri
         self.tokens_file: str   = tokens_file
+        print(client_id, client_secret, redirect_uri, tokens_file)
 
         self.server: Server = server
 
@@ -45,6 +46,8 @@ class Auth:
         self.refresh_token_request:  Request = refresh_token_request
 
         self._initialized = True
+
+        return None
 
     def get_access_token(self) -> str:
         access_token = self.load_token()
@@ -87,7 +90,7 @@ class Auth:
             return None
 
     def refresh_token(
-        self, 
+        self,
         refresh_token: str
     ) -> str:
         response: Response = self.refresh_token_request(

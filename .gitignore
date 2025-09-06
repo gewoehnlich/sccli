@@ -8,3 +8,4 @@ sccli.db
 .ruff_cache
 .pytest_cache
 test.db
+.test_tokens.json
