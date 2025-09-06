@@ -5,32 +5,50 @@ import time
 import json
 import asyncio
 import webbrowser
-from typing import Any
+from typing import Any, Self
 from requests import Response
 
 from core.request import Request
 from core.server import Server
 
 class Auth:
+    _instance: Self | None = None
+    _initialized: bool = False
+
+    def __new__(cls: type[Self], *args, **kwargs) -> Self:
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
+
     def __init__(
         self,
         client_id: str,
         client_secret: str,
         redirect_uri: str,
         tokens_file: str,
+        server: Server,
         authentication_request: Request,
         refresh_token_request: Request,
     ) -> None:
+        if self._initialized:
+            return None
+
         self.client_id: str     = client_id
         self.client_secret: str = client_secret
         self.redirect_uri: str  = redirect_uri
         self.tokens_file: str   = tokens_file
 
+        self.server: Server = server
+
         self.authentication_request: Request = authentication_request
         self.refresh_token_request:  Request = refresh_token_request
 
+        self._initialized = True
+
     def get_access_token(self) -> str:
         access_token = self.load_token()
+
         if not access_token:
             access_token = self.authenticate_user()
 
@@ -117,9 +135,8 @@ class Auth:
             f"&state={state}"
         )
 
-        server = Server()
         webbrowser.open(auth_url)
-        auth_code, returned_state = asyncio.run(server.run())
+        auth_code, returned_state = asyncio.run(self.server.run())
         if state != returned_state:
             raise Exception("State mismatch!")
 
@@ -132,7 +149,7 @@ class Auth:
         ).send()
 
         token_data: dict[str, Any] = response.json()
-        token_data["timestamp"] = int(time.time()) 
+        token_data["timestamp"] = int(time.time())
 
         with open(
             file = self.tokens_file,

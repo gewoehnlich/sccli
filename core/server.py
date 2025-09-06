@@ -2,19 +2,33 @@ import asyncio
 from aiohttp import web
 from aiohttp.web_request import Request
 from asyncio import Future
-from typing import Tuple, Optional, Any
+from typing import Tuple, Optional, Any, Self
 
 class Server:
     future: Optional[Future[Any]] = None
+
+    _instance: Self | None = None
+    _initialized: bool = False
+
+    def __new__(cls: type[Self], *args, **kwargs) -> Self:
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
 
     def __init__(
         self,
         server_port: int,
         server_path: str,
     ) -> None:
+        if self._initialized:
+            return
+
         self.server_port: int = server_port
         self.server_path: str = server_path
         self.url: str = f"http://localhost:{self.server_port}{self.server_path}"
+
+        self._initialized = True
 
     async def run(self) -> tuple[str, str]:
         self.future = asyncio.get_event_loop().create_future()
@@ -42,6 +56,7 @@ class Server:
             "localhost",
             self.server_port
         )
+
         await site.start()
 
         print(f"Server is running at {self.url}")
@@ -54,7 +69,10 @@ class Server:
             print("Shutting down the temporary server...")
             await self.runner.cleanup()
 
-    async def callback_handler(self, request: Request) -> web.Response:
+    async def callback_handler(
+        self,
+        request: Request
+    ) -> web.Response:
         auth_code = request.query.get("code")
         state = request.query.get("state")
 
