@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import pytest
 
 from _config.database import TEST_DATABASE_NAME
@@ -18,6 +19,21 @@ def db() -> Database:
     return di_container.db()
 
 
+def check_if_table_exists(
+    db: Database,
+    table: Table,
+) -> bool:
+    query: str = f"""
+        SELECT name FROM sqlite_master
+        WHERE type='table' AND name=?;
+    """
+
+    db.cursor.execute(query, (table.name,))
+    table_exists = db.cursor.fetchone() is not None
+
+    return table_exists
+
+
 def test_if_db_created(
     db: Database
 ) -> None:
@@ -29,7 +45,8 @@ def test_if_db_created(
 def test_if_initial_tables_are_created(
     db: Database
 ) -> None:
-    # to-do 
+    # to-do
+    
     db.initialize_tables()
     pass
 
@@ -41,5 +58,30 @@ def test_create_table_if_not_exists(
     test_table.name = "test"
     test_table.fields = ("id", "name")
 
+    table_exists = check_if_table_exists(
+        db = db,
+        table = test_table
+    )
+
+    assert table_exists is False
+
     db.create_table_if_not_exists(table = test_table)
-    pass
+
+    table_exists = check_if_table_exists(
+        db = db,
+        table = test_table
+    )
+
+    assert table_exists is True
+
+def test_if_test_db_deleted_after_tests(
+    db: Database
+) -> None:
+    db_exists: bool = Path(TEST_DATABASE_NAME).exists()
+    assert db_exists == True
+
+    db._db.close()
+    os.remove(TEST_DATABASE_NAME)
+
+    db_exists = Path(TEST_DATABASE_NAME).exists()
+    assert db_exists == False
