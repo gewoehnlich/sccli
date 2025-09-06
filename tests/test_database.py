@@ -45,10 +45,27 @@ def test_if_db_created(
 def test_if_initial_tables_are_created(
     db: Database
 ) -> None:
-    # to-do
-    
+    for name, provider in db.tables.providers.items():
+        table: Table = provider()
+
+        table_exists: bool = check_if_table_exists(
+            db = db,
+            table = table,
+        )
+
+        assert table_exists == False
+
     db.initialize_tables()
-    pass
+
+    for name, provider in db.tables.providers.items():
+        table: Table = provider()
+
+        table_exists: bool = check_if_table_exists(
+            db = db,
+            table = table,
+        )
+
+        assert table_exists == True
 
 
 def test_create_table_if_not_exists(
