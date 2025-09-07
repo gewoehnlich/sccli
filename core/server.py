@@ -6,6 +6,7 @@ from typing import Tuple, Optional, Any, Self
 
 class Server:
     future: Optional[Future[Any]] = None
+    runner: Optional[Any] = None
 
     _instance: Self | None = None
     _initialized: bool = False

@@ -38,11 +38,11 @@ class DiContainer(containers.DeclarativeContainer):
 
     auth = providers.Singleton(
         Auth,
-        client_id              = config.client_id(),
-        client_secret          = config.client_secret(),
-        redirect_uri           = config.redirect_uri(),
-        tokens_file            = config.tokens_file(),
-        server                 = server(),
+        client_id     = config.client_id(),
+        client_secret = config.client_secret(),
+        redirect_uri  = config.redirect_uri(),
+        tokens_file   = config.tokens_file(),
+        server = server(),
         authentication_request = requests().authentication,
         refresh_token_request  = requests().refresh_token,
     )

@@ -16,10 +16,7 @@ class Command:
         if resource:
             self.resource = resource
 
-    def run(
-        action: Action,
-        resource: Resource,
-    ) -> None:
+    def run(self) -> None:
         if self.action:
             result = self.action()
 

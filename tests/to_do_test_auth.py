@@ -50,9 +50,9 @@ def test_if_tokens_file_is_created(
     auth: Auth
 ) -> None:
     file_exists: bool = Path(TEST_TOKENS_FILE).exists()
-    assert file_exists == False
+    assert file_exists is False
 
     access_token: str = auth.get_access_token()
 
     file_exists: bool = Path(TEST_TOKENS_FILE).exists()
-    assert file_exists == True
+    assert file_exists is True
