@@ -7,6 +7,7 @@ from core.query_builder import QueryBuilder
 from core.server import Server
 # from di.actions_container import ActionsContainer
 # from di.commands_container import CommandsContainer
+from di.dto_container import DtoContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
 # from di.resources_container import ResourcesContainer
@@ -25,6 +26,7 @@ class DiContainer(containers.DeclarativeContainer):
         query_builder = query_builder,
     )
 
+    dto       = providers.Singleton(DtoContainer)
     requests  = providers.Singleton(RequestsContainer)
     # actions   = providers.Singleton(ActionsContainer)
     # resources = providers.Singleton(ResourcesContainer)
@@ -42,7 +44,8 @@ class DiContainer(containers.DeclarativeContainer):
         client_secret = config.client_secret(),
         redirect_uri  = config.redirect_uri(),
         tokens_file   = config.tokens_file(),
-        server = server(),
+        tokensDto = dto().tokens,
+        server = server,
         authentication_request = requests().authentication,
         refresh_token_request  = requests().refresh_token,
     )

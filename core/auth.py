@@ -8,8 +8,10 @@ import webbrowser
 from typing import Any, Self
 from requests import Response
 
+from core.dto import Dto
 from core.request import Request
 from core.server import Server
+from dto.tokens_dto import TokensDto
 
 class Auth:
     _instance: Self | None = None
@@ -27,6 +29,7 @@ class Auth:
         client_secret: str,
         redirect_uri: str,
         tokens_file: str,
+        tokensDto: Dto,
         server: Server,
         authentication_request: Request,
         refresh_token_request: Request,
@@ -39,6 +42,7 @@ class Auth:
         self.redirect_uri: str  = redirect_uri
         self.tokens_file: str   = tokens_file
 
+        self.tokensDto: Dto = tokensDto
         self.server: Server = server
 
         self.authentication_request: Request = authentication_request
@@ -47,6 +51,7 @@ class Auth:
         self._initialized = True
 
     def get_access_token(self) -> str:
+        # tokenData: Dto = self.tokensDto().fromJsonFile(self.tokens_file)
         access_token = self.load_token()
 
         if not access_token:
