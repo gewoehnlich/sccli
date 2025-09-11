@@ -3,7 +3,7 @@ from actions.fetch_my_liked_tracks_action import FetchMyLikedTracksAction
 
 
 class ActionsContainer(containers.DeclarativeContainer):
-    fetch_my_liked_tracks = providers.Object(FetchMyLikedTracksAction)
+    fetch_my_liked_tracks = providers.Singleton(FetchMyLikedTracksAction)
 
     _instance = None
 

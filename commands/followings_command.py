@@ -4,7 +4,7 @@ from core.command import Command
 from core.resource import Resource
 
 
-class FetchFollowingsCommand(Command):
+class FollowingsCommand(Command):
     _instance:    Self | None = None
     _initialized: bool        = False
 

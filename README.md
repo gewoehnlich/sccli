@@ -29,3 +29,4 @@
 - pip-audit: https://pypi.org/project/pip-audit/
 - safety: https://github.com/pyupio/safety
 - pre-commit hooks
+- poetry: instead of requirements.txt

@@ -16,6 +16,7 @@ class Shell:
 
     @inject
     def run(
+        self,
         commands: CommandsContainer = Provide[DiContainer.commands]
     ) -> None:
         """Starts the interactive shell session."""
@@ -35,8 +36,9 @@ class Shell:
 
     @inject
     def process_command(
+        self,
+        command_line: str = "",
         commands: CommandsContainer = Provide[DiContainer.commands],
-        command_line: str,
     ) -> None:
         """Parses and executes the command."""
         if not command_line:
@@ -50,7 +52,7 @@ class Shell:
             case "me" | "user":
                 commands.user().run()
             case "liked:tracks" | "lt":
-                commands.fetch_my_liked_tracks(args).run()
+                commands.my_liked_tracks(args).run()
             case "me:followings":
                 commands.followings(args).run()
             case "me:followings:tracks":
@@ -58,15 +60,18 @@ class Shell:
             case "me:tracks":
                 commands.my_tracks(args).run()
             case "track":
-                commands.get_track(args).run()
+                commands.track(args).run()
             case "track_streaming_url":
-                commands.get_track_streaming_url(args).run()
+                commands.track_streaming_url(args).run()
             case "exit" | "quit" | "q":
                 commands.exit().run()
             case _:
-                commands.unknown().run()
+                commands.unknown_command().run()
 
-    def parse_input(command_line: str) -> Tuple[str, List[str]]:
+    def parse_input(
+        self,
+        command_line: str
+    ) -> Tuple[str, List[str]]:
         parts: List[str] = shlex.split(command_line)
         if not parts:
             raise Exception("finish later. NO PARTS")

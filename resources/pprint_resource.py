@@ -1,0 +1,2 @@
+class PprintResource:
+    pass

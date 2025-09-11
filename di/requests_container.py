@@ -12,12 +12,12 @@ from requests_.user_info_request import UserInfoRequest
 
 
 class RequestsContainer(containers.DeclarativeContainer):
-    authentication          = providers.Object(AuthenticationRequest)
-    fetch_my_liked_tracks   = providers.Object(FetchMyLikedTracksRequest)
-    followings              = providers.Object(FollowingsRequest)
-    followings_tracks       = providers.Object(FollowingsTracksRequest)
-    get_track               = providers.Object(GetTrackRequest)
-    get_track_streaming_url = providers.Object(GetTrackStreamingUrlRequest)
-    me_tracks               = providers.Object(MeTracksRequest)
-    refresh_token           = providers.Object(RefreshTokenRequest)
-    user_info               = providers.Object(UserInfoRequest)
+    authentication          = providers.Factory(AuthenticationRequest)
+    fetch_my_liked_tracks   = providers.Factory(FetchMyLikedTracksRequest)
+    followings              = providers.Factory(FollowingsRequest)
+    followings_tracks       = providers.Factory(FollowingsTracksRequest)
+    get_track               = providers.Factory(GetTrackRequest)
+    get_track_streaming_url = providers.Factory(GetTrackStreamingUrlRequest)
+    me_tracks               = providers.Factory(MeTracksRequest)
+    refresh_token           = providers.Factory(RefreshTokenRequest)
+    user_info               = providers.Factory(UserInfoRequest)

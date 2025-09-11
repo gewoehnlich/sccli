@@ -12,13 +12,13 @@ class FetchMyLikedTracksAction(Action):
     def run(
         self,
         request: Request | None = None,
-        table: Table | None = None,
+        table:   Table   | None = None,
     ) -> bool:
         if not table:
             raise Exception("no table. to-do later")
 
-        fetched: bool = False
-        next_href: str = str()
+        fetched:   bool = False
+        next_href: str  = str()
 
         while not fetched:
             if next_href:

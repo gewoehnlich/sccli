@@ -5,12 +5,12 @@ from core.auth import Auth
 from core.database import Database
 from core.query_builder import QueryBuilder
 from core.server import Server
-# from di.actions_container import ActionsContainer
-# from di.commands_container import CommandsContainer
+from di.actions_container import ActionsContainer
+from di.commands_container import CommandsContainer
 # from di.dto_container import DtoContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
-# from di.resources_container import ResourcesContainer
+from di.resources_container import ResourcesContainer
 
 
 class DiContainer(containers.DeclarativeContainer):
@@ -29,8 +29,8 @@ class DiContainer(containers.DeclarativeContainer):
     # dto       = providers.Singleton(DtoContainer)
     requests  = providers.Singleton(RequestsContainer)
     actions   = providers.Singleton(ActionsContainer)
-    # resources = providers.Singleton(ResourcesContainer)
-    # commands  = providers.Singleton(CommandsContainer)
+    resources = providers.Singleton(ResourcesContainer)
+    commands  = providers.Singleton(CommandsContainer)
 
     server = providers.Singleton(
         Server,

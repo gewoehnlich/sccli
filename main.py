@@ -10,7 +10,7 @@ from config import (
 )
 
 from core.di_container import DiContainer
-# from core.shell import Shell
+from core.shell import Shell
 
 
 def main() -> None:
@@ -62,8 +62,10 @@ def main() -> None:
     # player.run()
 
     # start shell session
-    # shell: Shell = Shell()
-    # shell.run()
+    shell: Shell = Shell()
+    shell.run(
+        commands = di_container.commands,
+    )
 
 if __name__ == "__main__":
     main()
