@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 import pytest
 
-from _config.database import TEST_DATABASE_NAME
+from config import TEST_DATABASE_NAME
 from core.database import Database
 from core.di_container import DiContainer
 from core.table import Table

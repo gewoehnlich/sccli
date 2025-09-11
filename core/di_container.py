@@ -7,7 +7,7 @@ from core.query_builder import QueryBuilder
 from core.server import Server
 # from di.actions_container import ActionsContainer
 # from di.commands_container import CommandsContainer
-from di.dto_container import DtoContainer
+# from di.dto_container import DtoContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
 # from di.resources_container import ResourcesContainer
@@ -22,13 +22,13 @@ class DiContainer(containers.DeclarativeContainer):
     db = providers.Singleton(
         Database,
         database_name = config.database_name,
-        tables = tables,
+        tables        = tables,
         query_builder = query_builder,
     )
 
-    dto       = providers.Singleton(DtoContainer)
+    # dto       = providers.Singleton(DtoContainer)
     requests  = providers.Singleton(RequestsContainer)
-    # actions   = providers.Singleton(ActionsContainer)
+    actions   = providers.Singleton(ActionsContainer)
     # resources = providers.Singleton(ResourcesContainer)
     # commands  = providers.Singleton(CommandsContainer)
 
@@ -44,14 +44,14 @@ class DiContainer(containers.DeclarativeContainer):
         client_secret = config.client_secret(),
         redirect_uri  = config.redirect_uri(),
         tokens_file   = config.tokens_file(),
-        tokensDto = dto().tokens,
+        # tokensDto = dto().tokens,
         server = server,
         authentication_request = requests().authentication,
         refresh_token_request  = requests().refresh_token,
     )
 
-    _instance: Self | None = None
-    _initialized: bool = False
+    _instance:    Self | None = None
+    _initialized: bool        = False
 
     def __new__(cls: type[Self], *args, **kwargs) -> Self:
         if cls._instance is None:

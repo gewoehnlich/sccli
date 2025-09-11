@@ -1,29 +1,36 @@
 from typing import Self
 
+
 class QueryBuilder:
     _FIELDS_SEPARATOR: str = ", "
 
-    _instance: Self | None = None
-    _initialized: bool = False
+    _instance:    Self | None = None
+    _initialized: bool        = False
 
-    def __new__(cls: type[Self], *args, **kwargs) -> Self:
+    def __new__(
+        cls: type[Self],
+        *args,
+        **kwargs
+    ) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
         return cls._instance
 
-    def __init__(self) -> None:
+    def __init__(
+        self
+    ) -> None:
         if not self._initialized:
             self._initialized = True
 
     def make_query(
         self,
         statement: str,
-        table: str,
-        fields: tuple[str]
+        table:     str,
+        fields:    tuple[str]
     ) -> str:
         fields_string: str = self._concatenate_fields(fields = fields)
-        query: str = f"{statement} {table}({fields_string})"
+        query:         str = f"{statement} {table}({fields_string})"
 
         return query
 

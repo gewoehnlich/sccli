@@ -7,6 +7,7 @@ class Command:
     resource: Resource
 
     def __init__(
+        self,
         action: Action,
         resource: Resource,
     ) -> None:

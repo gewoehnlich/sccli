@@ -1,7 +1,6 @@
 # to-do: add config validator running before the main script
 
 # [DATABASE]
-
 DATABASE_NAME: str = "sccli.db"
 TEST_DATABASE_NAME: str = "test.db"
 

@@ -1,11 +1,29 @@
-from requests_.me_tracks_request import MeTracksRequest 
-from core.request import Request
-from requests import Response
-from pprint import pprint
-from utils.send_request import send_request
-from typing import List
+from typing import Self
+from core.action import Action
+from core.command import Command
+from core.resource import Resource
 
-def my_tracks_command(args: List[str]) -> None:
-    request: Request = MeTracksRequest()
-    response: Response = send_request(request = request)
-    pprint(response.json())
+
+class MyTracksCommand(Command):
+    _instance:    Self | None = None
+    _initialized: bool        = False
+
+    def __new__(
+        cls: type[Self],
+        *args,
+        **kwargs,
+    ) -> Self:
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
+
+    def __init__(
+        self,
+        action: Action,
+        resource: Resource,
+    ) -> None:
+        super().__init__(
+            action = action,
+            resource = resource,
+        )

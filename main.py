@@ -25,20 +25,17 @@ def main() -> None:
         required = True,
         as_ = str,
     )
-
     di_container.config.client_secret.from_env(
         name = "CLIENT_SECRET",
         required = True,
         as_ = str,
     )
-
     di_container.config.redirect_uri.from_env(
         name = "REDIRECT_URI",
         default = "https://localhost:8080/callback",
         required = True,
         as_ = str,
     )
-
     di_container.config.tokens_file.from_env(
         name = "TOKENS_FILE",
         default = ".tokens.json",
@@ -49,21 +46,10 @@ def main() -> None:
     di_container.config.server_port.from_value(SERVER_PORT)
     di_container.config.server_path.from_value(SERVER_PATH)
 
-    di_container.config.welcome_command_message.from_value(
-        WELCOME_COMMAND_MESSAGE
-    )
-
-    di_container.config.exit_command_message.from_value(
-        EXIT_COMMAND_MESSAGE
-    )
-
-    di_container.config.help_command_message.from_value(
-        HELP_COMMAND_MESSAGE
-    )
-
-    di_container.config.unknown_command_message.from_value(
-        UNKNOWN_COMMAND_MESSAGE
-    )
+    di_container.config.welcome_command_message.from_value(WELCOME_COMMAND_MESSAGE)
+    di_container.config.exit_command_message.from_value(EXIT_COMMAND_MESSAGE)
+    di_container.config.help_command_message.from_value(HELP_COMMAND_MESSAGE)
+    di_container.config.unknown_command_message.from_value(UNKNOWN_COMMAND_MESSAGE)
 
     di_container.config.database_name.from_value(DATABASE_NAME)
 

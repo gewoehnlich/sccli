@@ -5,4 +5,4 @@ from tables.users import UsersTable
 
 class TablesContainer(containers.DeclarativeContainer):
     tracks = providers.Object(TracksTable)
-    users = providers.Object(UsersTable)
+    users  = providers.Object(UsersTable)

@@ -14,10 +14,14 @@ from core.server import Server
 from dto.tokens_dto import TokensDto
 
 class Auth:
-    _instance: Self | None = None
-    _initialized: bool = False
+    _instance:    Self | None = None
+    _initialized: bool        = False
 
-    def __new__(cls: type[Self], *args, **kwargs) -> Self:
+    def __new__(
+        cls: type[Self],
+        *args, 
+        **kwargs,
+    ) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
@@ -29,7 +33,7 @@ class Auth:
         client_secret: str,
         redirect_uri: str,
         tokens_file: str,
-        tokensDto: Dto,
+        # tokensDto: Dto,
         server: Server,
         authentication_request: Request,
         refresh_token_request: Request,
@@ -42,7 +46,7 @@ class Auth:
         self.redirect_uri: str  = redirect_uri
         self.tokens_file: str   = tokens_file
 
-        self.tokensDto: Dto = tokensDto
+        # self.tokensDto: Dto = tokensDto
         self.server: Server = server
 
         self.authentication_request: Request = authentication_request

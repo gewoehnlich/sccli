@@ -4,7 +4,7 @@ from core.command import Command
 from core.resource import Resource
 
 
-class UserCommand(Command):
+class TrackCommand(Command):
     _instance:    Self | None = None
     _initialized: bool        = False
 

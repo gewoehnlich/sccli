@@ -2,7 +2,6 @@ from __future__ import annotations
 import sqlite3
 from typing import Any, Self
 
-from _config.database import TEST_DATABASE_NAME
 from core.query_builder import QueryBuilder
 from core.table import Table
 from di.tables_container import TablesContainer
