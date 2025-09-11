@@ -1,2 +1,9 @@
+from pprint import pprint
+
+
 class PprintResource:
-    pass
+    def __init__(
+        self,
+        data,
+    ) -> None:
+        pprint(data)

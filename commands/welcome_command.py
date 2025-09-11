@@ -1,4 +1,6 @@
 from typing import Self
+from dependency_injector.wiring import Provide, inject
+
 from core.action import Action
 from core.command import Command
 from core.resource import Resource
@@ -18,10 +20,11 @@ class WelcomeCommand(Command):
 
         return cls._instance
 
+    @inject
     def __init__(
         self,
-        action: Action,
-        resource: Resource,
+        action: Action = Provide["DiContainer.actions.welcome_action"],
+        resource: Resource = Provide["DiContainer.resources.pprint"],
     ) -> None:
         super().__init__(
             action = action,

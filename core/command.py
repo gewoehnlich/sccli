@@ -19,7 +19,7 @@ class Command:
 
     def run(self) -> None:
         if self.action:
-            result = self.action()
+            result = self.action().run()
 
         if result and self.resource:
             response = self.resource(result)

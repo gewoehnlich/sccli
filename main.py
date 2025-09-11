@@ -64,7 +64,7 @@ def main() -> None:
     # start shell session
     shell: Shell = Shell()
     shell.run(
-        commands = di_container.commands,
+        commands = di_container.commands(),
     )
 
 if __name__ == "__main__":
