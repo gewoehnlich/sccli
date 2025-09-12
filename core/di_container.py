@@ -30,14 +30,18 @@ class DiContainer(containers.DeclarativeContainer):
     requests  = providers.Singleton(RequestsContainer)
     actions   = providers.Singleton(ActionsContainer)
     resources = providers.Singleton(ResourcesContainer)
-    commands  = providers.Singleton(CommandsContainer)
+    commands  = providers.Singleton(
+        CommandsContainer,
+        requests = requests,
+        actions = actions,
+        resources = resources,
+    )
 
     server = providers.Singleton(
         Server,
         server_port = config.server_port,
         server_path = config.server_path,
     )
-
     auth = providers.Singleton(
         Auth,
         client_id     = config.client_id(),

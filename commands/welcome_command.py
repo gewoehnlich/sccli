@@ -23,8 +23,8 @@ class WelcomeCommand(Command):
     @inject
     def __init__(
         self,
-        action: Action = Provide["DiContainer.actions.welcome_action"],
-        resource: Resource = Provide["DiContainer.resources.pprint"],
+        action: Action,
+        resource: Resource,
     ) -> None:
         super().__init__(
             action = action,
