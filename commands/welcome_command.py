@@ -1,5 +1,4 @@
 from typing import Self
-from dependency_injector.wiring import Provide, inject
 
 from core.action import Action
 from core.command import Command
@@ -20,7 +19,6 @@ class WelcomeCommand(Command):
 
         return cls._instance
 
-    @inject
     def __init__(
         self,
         action: Action,

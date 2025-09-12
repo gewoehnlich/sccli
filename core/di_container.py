@@ -26,7 +26,7 @@ class DiContainer(containers.DeclarativeContainer):
         query_builder = query_builder,
     )
 
-    # dto       = providers.Singleton(DtoContainer)
+    # make them DependenciesContainers ?
     requests  = providers.Singleton(RequestsContainer)
     actions   = providers.Singleton(ActionsContainer)
     resources = providers.Singleton(ResourcesContainer)

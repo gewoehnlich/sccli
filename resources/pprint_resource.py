@@ -2,7 +2,7 @@ from pprint import pprint
 
 
 class PprintResource:
-    def __init__(
+    def print(
         self,
         data,
     ) -> None:

@@ -18,18 +18,18 @@ class CommandsContainer(containers.DeclarativeContainer):
     actions   = providers.DependenciesContainer()
     resources = providers.DependenciesContainer()
 
-    exit                = providers.Singleton(ExitCommand)
-    my_liked_tracks     = providers.Singleton(MyLikedTracksCommand)
-    followings          = providers.Singleton(FollowingsCommand)
-    followings_tracks   = providers.Singleton(FollowingsTracksCommand)
-    track               = providers.Singleton(TrackCommand)
-    track_streaming_url = providers.Singleton(TrackStreamingUrlCommand)
-    help                = providers.Singleton(HelpCommand)
-    my_tracks           = providers.Singleton(MyTracksCommand)
-    unknown_command     = providers.Singleton(UnknownCommand)
-    user                = providers.Singleton(UserCommand)
+    # exit                = providers.Singleton(ExitCommand)
+    # my_liked_tracks     = providers.Singleton(MyLikedTracksCommand)
+    # followings          = providers.Singleton(FollowingsCommand)
+    # followings_tracks   = providers.Singleton(FollowingsTracksCommand)
+    # track               = providers.Singleton(TrackCommand)
+    # track_streaming_url = providers.Singleton(TrackStreamingUrlCommand)
+    # help                = providers.Singleton(HelpCommand)
+    # my_tracks           = providers.Singleton(MyTracksCommand)
+    # unknown_command     = providers.Singleton(UnknownCommand)
+    # user                = providers.Singleton(UserCommand)
     welcome             = providers.Singleton(
         WelcomeCommand,
-        actions.get_welcome_message_action,
+        actions.get_welcome_message,
         resources.pprint,
     )

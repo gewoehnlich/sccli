@@ -4,6 +4,8 @@ from core.action import Action
 
 class GetWelcomeMessageAction(Action):
     def run(
-        config
+        self,
+        # config
     ) -> str:
-        return config.welcome_command_message
+        return "123"
+        # return config.welcome_command_message

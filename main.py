@@ -1,3 +1,4 @@
+from dependency_injector.wiring import Provide
 from dotenv import load_dotenv
 from config import (
     EXIT_COMMAND_MESSAGE,
@@ -13,13 +14,24 @@ from core.di_container import DiContainer
 from core.shell import Shell
 
 
-def main() -> None:
-    # load .env file variables
+def main(di_container: DiContainer = Provide[DiContainer]) -> None:
+    # # cli music player
+    # player: Player = Player()
+    # player.run()
+
+    # start shell session
+    # shell: Shell = Shell()
+    # shell.run(
+    #     commands = di_container.commands(),
+    # )
+
+    di_container.commands().welcome().run()
+
+
+if __name__ == "__main__":
     load_dotenv()
 
-    # dependency injection
     di_container: DiContainer = DiContainer()
-
     di_container.config.client_id.from_env(
         name = "CLIENT_ID",
         required = True,
@@ -45,27 +57,13 @@ def main() -> None:
 
     di_container.config.server_port.from_value(SERVER_PORT)
     di_container.config.server_path.from_value(SERVER_PATH)
-
     di_container.config.welcome_command_message.from_value(WELCOME_COMMAND_MESSAGE)
     di_container.config.exit_command_message.from_value(EXIT_COMMAND_MESSAGE)
     di_container.config.help_command_message.from_value(HELP_COMMAND_MESSAGE)
     di_container.config.unknown_command_message.from_value(UNKNOWN_COMMAND_MESSAGE)
-
     di_container.config.database_name.from_value(DATABASE_NAME)
 
     di_container.db().initialize_tables()
-
     di_container.wire(modules = [__name__])
 
-    # # cli music player
-    # player: Player = Player()
-    # player.run()
-
-    # start shell session
-    shell: Shell = Shell()
-    shell.run(
-        commands = di_container.commands(),
-    )
-
-if __name__ == "__main__":
     main()
