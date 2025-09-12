@@ -1,5 +1,6 @@
 from dependency_injector.wiring import Provide
 from dotenv import load_dotenv
+
 from config import (
     EXIT_COMMAND_MESSAGE,
     HELP_COMMAND_MESSAGE,
@@ -9,7 +10,6 @@ from config import (
     SERVER_PORT,
     DATABASE_NAME,
 )
-
 from core.di_container import DiContainer
 from core.shell import Shell
 
@@ -26,6 +26,7 @@ def main(di_container: DiContainer = Provide[DiContainer]) -> None:
     # )
 
     di_container.commands().welcome().run()
+    di_container.commands().my_liked_tracks().run()
 
 
 if __name__ == "__main__":

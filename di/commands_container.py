@@ -14,12 +14,15 @@ from commands.welcome_command import WelcomeCommand
 
 
 class CommandsContainer(containers.DeclarativeContainer):
-    requests  = providers.DependenciesContainer()
     actions   = providers.DependenciesContainer()
     resources = providers.DependenciesContainer()
 
     # exit                = providers.Singleton(ExitCommand)
-    # my_liked_tracks     = providers.Singleton(MyLikedTracksCommand)
+    my_liked_tracks     = providers.Singleton(
+        MyLikedTracksCommand,
+        action   = actions.fetch_my_liked_tracks,
+        resource = resources.pprint,
+    )
     # followings          = providers.Singleton(FollowingsCommand)
     # followings_tracks   = providers.Singleton(FollowingsTracksCommand)
     # track               = providers.Singleton(TrackCommand)
@@ -30,6 +33,6 @@ class CommandsContainer(containers.DeclarativeContainer):
     # user                = providers.Singleton(UserCommand)
     welcome             = providers.Singleton(
         WelcomeCommand,
-        actions.get_welcome_message,
-        resources.pprint,
+        action   = actions.get_welcome_message,
+        resource = resources.pprint,
     )

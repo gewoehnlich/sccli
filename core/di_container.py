@@ -7,7 +7,6 @@ from core.query_builder import QueryBuilder
 from core.server import Server
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
-# from di.dto_container import DtoContainer
 from di.requests_container import RequestsContainer
 from di.tables_container import TablesContainer
 from di.resources_container import ResourcesContainer
@@ -28,12 +27,15 @@ class DiContainer(containers.DeclarativeContainer):
 
     # make them DependenciesContainers ?
     requests  = providers.Singleton(RequestsContainer)
-    actions   = providers.Singleton(ActionsContainer)
+    actions   = providers.Singleton(
+        ActionsContainer,
+        requests = requests,
+        tables   = tables,
+    )
     resources = providers.Singleton(ResourcesContainer)
     commands  = providers.Singleton(
         CommandsContainer,
-        requests = requests,
-        actions = actions,
+        actions   = actions,
         resources = resources,
     )
 
