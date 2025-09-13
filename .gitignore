@@ -9,3 +9,4 @@ sccli.db
 .pytest_cache
 test.db
 .test_tokens.json
+config.yml

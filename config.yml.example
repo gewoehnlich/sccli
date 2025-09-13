@@ -1,0 +1,25 @@
+soundcloud:
+  client_id:
+  client_secret:
+
+database:
+  name:
+
+messages:
+  welcome:
+  exit:
+  help:
+  unknown:
+
+server:
+  port:
+  path:
+
+tokens:
+  file:
+
+tests:
+  database:
+    name:
+  tokens:
+    file:
