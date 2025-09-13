@@ -3,11 +3,11 @@ from core.request import Request
 class AuthenticationRequest(Request):
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
-        code_verifier: str,
-        auth_code: str,
+        client_id:     str | None = None,
+        client_secret: str | None = None,
+        redirect_uri:  str | None = None,
+        code_verifier: str | None = None,
+        auth_code:     str | None = None,
     ) -> None:
         super().__init__()
 
@@ -21,5 +21,5 @@ class AuthenticationRequest(Request):
             "client_secret": client_secret,
             "redirect_uri":  redirect_uri,
             "code_verifier": code_verifier,
-            "code":          auth_code
+            "code":          auth_code,
         }

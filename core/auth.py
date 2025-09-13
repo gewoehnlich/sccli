@@ -99,6 +99,7 @@ class Auth:
         self,
         refresh_token: str
     ) -> str:
+        print(type(self.refresh_token_request))
         response: Response = self.refresh_token_request(
             client_id      = self.client_id,
             client_secret  = self.client_secret,
