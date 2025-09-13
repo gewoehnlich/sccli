@@ -32,13 +32,20 @@ class Settings():
 
         super().__init__()
 
+        self._initialized = True
+
 
     def load(
         self,
     ) -> AppSettings:
         user_config_data: dict[str, Any] = self.read_user_config_data()
-        filtered_config: dict[str, Any] = self.remove_none_values(user_config_data)
-        settings = self.add_default_values(filtered_config)
+        filtered_config: dict[str, Any] = self.remove_none_values(
+            config = user_config_data
+        )
+        settings: AppSettings = self.add_default_values(
+            config = filtered_config
+        )
+
         return settings
 
 

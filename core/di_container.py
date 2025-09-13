@@ -20,23 +20,24 @@ class DiContainer(containers.DeclarativeContainer):
     tables = providers.Singleton(TablesContainer)
     db = providers.Singleton(
         Database,
-        database_name = config.database_name,
+        database_name = config.database.name,
         tables        = tables,
         query_builder = query_builder,
     )
 
     server = providers.Singleton(
         Server,
-        server_port = config.server_port,
-        server_path = config.server_path,
+        server_port = config.server.port,
+        server_path = config.server.path,
     )
     auth_requests = providers.Singleton(AuthRequestsContainer)
     auth = providers.Singleton(
         Auth,
-        client_id     = config.client_id,
-        client_secret = config.client_secret,
-        redirect_uri  = config.redirect_uri,
-        tokens_file   = config.tokens_file,
+        client_id     = config.soundcloud.client_id,
+        client_secret = config.soundcloud.client_secret,
+        server_port   = config.server.port,
+        server_path   = config.server.path,
+        tokens_file   = config.tokens.file,
         server = server,
         authentication_request = auth_requests().authentication,
         refresh_token_request  = auth_requests().refresh_token,
