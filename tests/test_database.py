@@ -2,17 +2,19 @@ from pathlib import Path
 import os
 import pytest
 
-from config import TEST_DATABASE_NAME
 from core.database import Database
 from core.di_container import DiContainer
 from core.table import Table
+from default_settings.app import AppSettings
 from di.tables_container import TablesContainer
 
 
 @pytest.fixture
 def db() -> Database:
+    settings: AppSettings = Settings().load()
+
     di_container: DiContainer = DiContainer()
-    di_container.config.database_name.from_value(TEST_DATABASE_NAME)
+    di_container.config.from_pydantic(settings)
 
     di_container.wire(modules = [__name__])
 

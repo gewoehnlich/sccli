@@ -8,10 +8,10 @@ import webbrowser
 from typing import Any, Self
 from requests import Response
 
-from core.dto import Dto
 from core.request import Request
 from core.server import Server
-from dto.tokens_dto import TokensDto
+from di.auth_requests import AuthRequestsContainer
+
 
 class Auth:
     _instance:    Self | None = None
@@ -27,32 +27,32 @@ class Auth:
 
         return cls._instance
 
+
     def __init__(
         self,
         client_id: str,
         client_secret: str,
-        redirect_uri: str,
+        server_port: int,
+        server_path: str,
         tokens_file: str,
-        # tokensDto: Dto,
         server: Server,
-        authentication_request: Request,
-        refresh_token_request: Request,
+        auth_requests: AuthRequestsContainer,
     ) -> None:
         if self._initialized:
             return
 
         self.client_id: str     = client_id
         self.client_secret: str = client_secret
-        self.redirect_uri: str  = redirect_uri
+        self.redirect_uri: str  = f"http://localhost:{server_port}{server_path}"
         self.tokens_file: str   = tokens_file
 
-        # self.tokensDto: Dto = tokensDto
         self.server: Server = server
 
-        self.authentication_request: Request = authentication_request
-        self.refresh_token_request:  Request = refresh_token_request
+        self.authentication_request: Request = auth_requests.authentication
+        self.refresh_token_request:  Request = auth_requests.refresh_token
 
         self._initialized = True
+
 
     def get_access_token(self) -> str:
         # tokenData: Dto = self.tokensDto().fromJsonFile(self.tokens_file)
@@ -62,6 +62,7 @@ class Auth:
             access_token = self.authenticate_user()
 
         return access_token
+
 
     def load_token(self) -> str | None:
         try:
@@ -94,6 +95,7 @@ class Auth:
 
         except (FileNotFoundError, KeyError):
             return None
+
 
     def refresh_token(
         self,
@@ -130,6 +132,7 @@ class Auth:
             raise ValueError("access_token is not a string.")
 
         return access_token
+
 
     def authenticate_user(self) -> str:
         code_verifier, code_challenge = self.generate_pkce()
@@ -174,6 +177,7 @@ class Auth:
 
         return access_token
 
+
     def generate_pkce(self) -> tuple[str, str]:
         code_verifier: str = base64.urlsafe_b64encode(
             os.urandom(40)
@@ -183,6 +187,7 @@ class Auth:
         ).decode("utf-8").rstrip("=")
 
         return code_verifier, code_challenge
+
 
     def generate_state(self) -> str:
         state: str = base64.urlsafe_b64encode(

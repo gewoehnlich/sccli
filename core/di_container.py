@@ -38,9 +38,8 @@ class DiContainer(containers.DeclarativeContainer):
         server_port   = config.server.port,
         server_path   = config.server.path,
         tokens_file   = config.tokens.file,
-        server = server,
-        authentication_request = auth_requests().authentication,
-        refresh_token_request  = auth_requests().refresh_token,
+        server        = server,
+        auth_requests = auth_requests,
     )
 
     requests = providers.Singleton(
