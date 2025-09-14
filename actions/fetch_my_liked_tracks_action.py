@@ -36,10 +36,10 @@ class FetchMyLikedTracksAction(Action):
     def run(
         self,
     ) -> bool:
-        request = self.request
-        table   = self.table
+        request_factory = self.request
+        table = self.table
 
-        if not request:
+        if not request_factory:
             raise Exception("no table. to-do later")
 
         if not table:
@@ -50,9 +50,9 @@ class FetchMyLikedTracksAction(Action):
 
         while not fetched:
             if next_href:
-                request: Request = request(url = next_href)
+                request: Request = request_factory(url = next_href)
             else:
-                request: Request = request()
+                request: Request = request_factory()
 
             response: Response = request.send()
             result: dict[str, Any] = response.json()

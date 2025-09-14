@@ -61,7 +61,11 @@ class DiContainer(containers.DeclarativeContainer):
     _instance:    Self | None = None
     _initialized: bool        = False
 
-    def __new__(cls: type[Self], *args, **kwargs) -> Self:
+    def __new__(
+        cls: type[Self],
+        *args,
+        **kwargs
+    ) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 

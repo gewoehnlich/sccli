@@ -14,8 +14,8 @@ class ActionsContainer(containers.DeclarativeContainer):
     # fetch_followings = providers.Singleton(FetchFollowingsAction)
     fetch_my_liked_tracks = providers.Singleton(
         FetchMyLikedTracksAction,
-        request = requests.fetch_my_liked_tracks,
-        tables  = tables.tracks,
+        request = requests.fetch_my_liked_tracks.provider,
+        table   = tables.tracks,
     )
     # get_exit_message            = providers.Singleton(GetExitMessageAction)
     # get_help_message            = providers.Singleton(GetHelpMessageAction)

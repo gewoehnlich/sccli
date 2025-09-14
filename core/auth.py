@@ -55,7 +55,6 @@ class Auth:
 
 
     def get_access_token(self) -> str:
-        # tokenData: Dto = self.tokensDto().fromJsonFile(self.tokens_file)
         access_token = self.load_token()
 
         if not access_token:
