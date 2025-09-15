@@ -3,6 +3,7 @@ from time import sleep
 from pprint import pprint
 from requests import Response
 from commands import welcome_command
+from core.database import Database
 from utils.keys import _COLLECTION, _NEXT_HREF
 from core.action import Action
 from core.request import Request
@@ -25,12 +26,14 @@ class FetchMyLikedTracksAction(Action):
 
     def __init__(
         self,
-        request: Request | None = None,
-        table:   Table   | None = None,
+        request:  Request  | None = None,
+        database: Database | None = None,
+        table:    Table    | None = None,
     ) -> None:
         super().__init__(
-            request = request,
-            table   = table,
+            request  = request,
+            database = database,
+            table    = table,
         )
 
     def run(
@@ -63,7 +66,10 @@ class FetchMyLikedTracksAction(Action):
             if collection:
                 pprint(collection)
                 for track in collection:
-                    table.insert(track)
+                    self.database.insert(
+                        table = table,
+                        data = track,
+                    )
 
             if not next_href:
                 fetched = True

@@ -22,7 +22,7 @@ class Database:
     def __init__(
         self,
         database_name: str,
-        tables: TablesContainer,
+        tables:        TablesContainer,
         query_builder: QueryBuilder,
     ) -> None:
         if self._initialized:

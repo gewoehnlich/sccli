@@ -17,7 +17,7 @@ if __name__ == "__main__":
     di_container: DiContainer = DiContainer()
     di_container.config.from_pydantic(settings)
 
-    di_container.db().initialize_tables()
+    di_container.database().initialize_tables()
 
     di_container.wire(modules = [__name__])
 

@@ -18,7 +18,7 @@ class DiContainer(containers.DeclarativeContainer):
 
     query_builder = providers.Singleton(QueryBuilder)
     tables = providers.Singleton(TablesContainer)
-    db = providers.Singleton(
+    database = providers.Singleton(
         Database,
         database_name = config.database.name,
         tables        = tables,
@@ -49,6 +49,7 @@ class DiContainer(containers.DeclarativeContainer):
     actions = providers.Singleton(
         ActionsContainer,
         requests = requests,
+        database = database,
         tables   = tables,
     )
     resources = providers.Singleton(ResourcesContainer)

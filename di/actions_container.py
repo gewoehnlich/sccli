@@ -8,14 +8,16 @@ from actions.get_welcome_message_action import GetWelcomeMessageAction
 
 
 class ActionsContainer(containers.DeclarativeContainer):
-    requests  = providers.DependenciesContainer()
-    tables    = providers.DependenciesContainer()
+    requests = providers.DependenciesContainer()
+    database = providers.Dependency()
+    tables   = providers.DependenciesContainer()
 
     # fetch_followings = providers.Singleton(FetchFollowingsAction)
     fetch_my_liked_tracks = providers.Singleton(
         FetchMyLikedTracksAction,
-        request = requests.fetch_my_liked_tracks.provider,
-        table   = tables.tracks,
+        request  = requests.fetch_my_liked_tracks.provider,
+        database = database,
+        table    = tables.tracks,
     )
     # get_exit_message            = providers.Singleton(GetExitMessageAction)
     # get_help_message            = providers.Singleton(GetHelpMessageAction)
