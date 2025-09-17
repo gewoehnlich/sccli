@@ -1,20 +1,61 @@
+from datetime import datetime
+from sqlalchemy import DateTime, Enum, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
+
 from core.table import Table
+from enums.track_access import TrackAccess
 
 
 class TracksTable(Table):
-    name: str = "tracks"
-    fields: tuple[str] = (
-        "access",
-        "artwork_url",
-        "created_at",
-        "description",
-        "duration",
-        "id",
-        "metadata_artist",
-        "permalink_url",
-        "playback_count",
-        "stream_url",
-        "title",
-        "uri",
-        "urn",
+    __tablename__ = "tracks"
+
+    id: Mapped[int] = mapped_column(
+        primary_key = True,
+        nullable = False,
     )
+    access: Mapped[TrackAccess] = mapped_column(
+        Enum(TrackAccess)
+    )
+    artwork_url: Mapped[str] = mapped_column(
+        String,
+        nullable = True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime
+    )
+    description: Mapped[str] = mapped_column(
+        Text,
+        nullable = True
+    )
+    duration: Mapped[int] = mapped_column(
+        Integer
+    )
+    metadata_artist: Mapped[str] = mapped_column(
+        String,
+        nullable = True
+    )
+    permalink_url: Mapped[str] = mapped_column(
+        String
+    )
+    playback_count: Mapped[int] = mapped_column(
+        Integer,
+        nullable = True
+    )
+    stream_url: Mapped[str] = mapped_column(
+        String,
+        nullable = True
+    )
+    title: Mapped[str] = mapped_column(
+        String
+    )
+    uri: Mapped[str] = mapped_column(
+        String,
+        unique = True
+    )
+    urn: Mapped[str] = mapped_column(
+        String
+    )
+
+
+    def __repr__(self) -> str:
+        return f"<TracksTable(id={self.id}, title='{self.title}')>"

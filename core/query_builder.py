@@ -1,5 +1,7 @@
 from typing import Self
 
+from core.table import Table
+
 
 class QueryBuilder:
     _FIELDS_SEPARATOR: str = ", "
@@ -26,11 +28,14 @@ class QueryBuilder:
     def make_query(
         self,
         statement: str,
-        table:     str,
-        fields:    tuple[str]
+        table:     Table,
+        values:    tuple[str] | None = None
     ) -> str:
-        fields_string: str = self._concatenate_fields(fields = fields)
-        query:         str = f"{statement} {table}({fields_string})"
+        fields_string: str = self._concatenate_fields(fields = table.fields)
+        query:         str = f"{statement} {table.name}({fields_string})"
+        if values:
+            values_string: str = self._concatenate_fields(fields = values)
+            query += f" VALUES({values_string})"
 
         return query
 

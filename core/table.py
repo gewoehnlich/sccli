@@ -1,6 +1,5 @@
-class Table:
-    name: str = ""
-    fields: tuple[str] = tuple()
+from sqlalchemy.orm import DeclarativeBase
 
-    def __str__(self) -> str:
-        return self.name
+
+class Table(DeclarativeBase):
+    pass

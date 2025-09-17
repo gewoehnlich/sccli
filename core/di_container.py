@@ -3,7 +3,6 @@ from typing import Self
 
 from core.auth import Auth
 from core.database import Database
-from core.query_builder import QueryBuilder
 from core.server import Server
 from di.actions_container import ActionsContainer
 from di.auth_requests import AuthRequestsContainer
@@ -16,13 +15,11 @@ from di.resources_container import ResourcesContainer
 class DiContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
-    query_builder = providers.Singleton(QueryBuilder)
     tables = providers.Singleton(TablesContainer)
     database = providers.Singleton(
         Database,
         database_name = config.database.name,
         tables        = tables,
-        query_builder = query_builder,
     )
 
     server = providers.Singleton(
