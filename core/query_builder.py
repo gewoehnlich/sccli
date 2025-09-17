@@ -41,7 +41,7 @@ class QueryBuilder:
         fields_string: str = ""
 
         for field in fields:
-            fields_string += field + self._FIELDS_SEPARATOR
+            fields_string += str(field) + self._FIELDS_SEPARATOR
 
         if fields_string.endswith(self._FIELDS_SEPARATOR):
             fields_string = fields_string.rstrip(self._FIELDS_SEPARATOR)

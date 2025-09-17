@@ -1,6 +1,5 @@
-from sqlite3 import Cursor
 from core.table import Table
-from core.query_builder import QueryBuilder
+
 
 class UsersTable(Table):
     name: str = "users"
