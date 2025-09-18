@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from sqlalchemy import DateTime, Enum, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -16,21 +17,21 @@ class TracksTable(Table):
     access: Mapped[TrackAccess] = mapped_column(
         Enum(TrackAccess)
     )
-    artwork_url: Mapped[str] = mapped_column(
+    artwork_url: Mapped[Optional[str]] = mapped_column(
         String,
         nullable = True
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime
     )
-    description: Mapped[str] = mapped_column(
+    description: Mapped[Optional[str]] = mapped_column(
         Text,
         nullable = True
     )
     duration: Mapped[int] = mapped_column(
         Integer
     )
-    metadata_artist: Mapped[str] = mapped_column(
+    metadata_artist: Mapped[Optional[str]] = mapped_column(
         String,
         nullable = True
     )
@@ -39,11 +40,9 @@ class TracksTable(Table):
     )
     playback_count: Mapped[int] = mapped_column(
         Integer,
-        nullable = True
     )
     stream_url: Mapped[str] = mapped_column(
         String,
-        nullable = True
     )
     title: Mapped[str] = mapped_column(
         String

@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Any, Self
+from sqlalchemy.orm import sessionmaker
 import sqlalchemy
+from sqlalchemy.orm.session import Session
 
 from core.table import Table
 from di.tables_container import TablesContainer
@@ -31,11 +33,16 @@ class Database:
             return
 
         self.database_name: str = database_name
+        self.tables: TablesContainer = tables
         self.engine: sqlalchemy.Engine = sqlalchemy.create_engine(
             f"sqlite+pysqlite:///{self.database_name}"
         )
         self.metadata: sqlalchemy.MetaData = sqlalchemy.MetaData()
-        self.tables: TablesContainer = tables
+        self.session = Session(
+            sessionmaker(
+                bind = self.engine
+            )
+        )
 
         self._initialized = True
 
@@ -43,25 +50,14 @@ class Database:
     def initialize_tables(
         self,
     ) -> None:
-        for name, provider in self.tables.providers.items():
-            table: Table = provider()
-
-            self._map_to_sqlalchemy_table(
-                table = table
-            )
-
+        # for name, provider in self.tables.providers.items():
+        #     table: Table = provider()
+        #
+        #     self._map_to_sqlalchemy_table(
+        #         table = table
+        #     )
+        #
         self.metadata.create_all(self.engine)
-
-
-    def _map_to_sqlalchemy_table(
-        self,
-        table: Table
-    ) -> sqlalchemy.Table:
-        columns: list[sqlalchemy.Column] = []
-        for field in table.fields:
-            columns.append(sqlalchemy.Column(field, sqlalchemy.String))
-
-        return sqlalchemy.Table(table.name, self.metadata, *columns)
 
 
     def insert(
