@@ -48,13 +48,13 @@ class Database:
     ) -> None:
         self.table_base.metadata.create_all(self.engine)
 
-    # def insert(
-    #     self,
-    #     table: TableBase,
-    #     data: dict[str, Any],
-    # ) -> None:
-    #     sqlalchemy_table = self.metadata.tables[table.name]
-    #     statement = sqlalchemy.insert(sqlalchemy_table).values(**data)
-    #     with self.engine.connect() as conn:
-    #         conn.execute(statement)
+    def insert(
+        self,
+        table: Table,
+        data: dict[str, Any],
+    ) -> None:
+        sqlalchemy_table = self.metadata.tables[table.name]
+        statement = sqlalchemy.insert(sqlalchemy_table).values(**data)
+        with self.engine.connect() as conn:
+            conn.execute(statement)
     #         conn.commit()

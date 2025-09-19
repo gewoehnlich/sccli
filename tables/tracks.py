@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy import DateTime, Enum, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.types import Boolean
 
 from core.table import Table
 from enums.track_access import TrackAccess
@@ -10,49 +11,65 @@ from enums.track_access import TrackAccess
 class TracksTable(Table):
     __tablename__ = "tracks"
 
+    access: Mapped[TrackAccess] = mapped_column(
+        Enum(TrackAccess),
+    )
+    artwork_url: Mapped[Optional[str]] = mapped_column(
+        String,
+        nullable = True,
+    )
+    comments_count: Mapped[int] = mapped_column(
+        Integer,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+    )
+    description: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable = True,
+    )
+    duration: Mapped[int] = mapped_column(
+        Integer,
+    )
+    favoritings_count: Mapped[int] = mapped_column(
+        Integer,
+    )
     id: Mapped[int] = mapped_column(
         primary_key = True,
         nullable = False,
     )
-    access: Mapped[TrackAccess] = mapped_column(
-        Enum(TrackAccess)
-    )
-    artwork_url: Mapped[Optional[str]] = mapped_column(
-        String,
-        nullable = True
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime
-    )
-    description: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable = True
-    )
-    duration: Mapped[int] = mapped_column(
-        Integer
-    )
     metadata_artist: Mapped[Optional[str]] = mapped_column(
         String,
-        nullable = True
+        nullable = True,
     )
     permalink_url: Mapped[str] = mapped_column(
-        String
+        String,
     )
     playback_count: Mapped[int] = mapped_column(
+        Integer,
+    )
+    reposts_count: Mapped[int] = mapped_column(
         Integer,
     )
     stream_url: Mapped[str] = mapped_column(
         String,
     )
     title: Mapped[str] = mapped_column(
-        String
+        String,
     )
     uri: Mapped[str] = mapped_column(
         String,
-        unique = True
+        unique = True,
     )
     urn: Mapped[str] = mapped_column(
-        String
+        String,
+    )
+    # user: Mapped[User]
+    user_favorite: Mapped[bool] = mapped_column(
+        Boolean,
+    )
+    user_playback_count: Mapped[int] = mapped_column(
+        Integer,
     )
 
 
