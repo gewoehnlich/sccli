@@ -8,18 +8,20 @@ from di.actions_container import ActionsContainer
 from di.auth_requests import AuthRequestsContainer
 from di.commands_container import CommandsContainer
 from di.requests_container import RequestsContainer
-from di.tables_container import TablesContainer
 from di.resources_container import ResourcesContainer
+from di.tables_container import TablesContainer
 
 
 class DiContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
-    tables = providers.Singleton(TablesContainer)
+    tables = providers.Singleton(
+        TablesContainer,
+    )
     database = providers.Singleton(
         Database,
         database_name = config.database.name,
-        tables        = tables,
+        tables = tables,
     )
 
     server = providers.Singleton(
@@ -49,7 +51,9 @@ class DiContainer(containers.DeclarativeContainer):
         database = database,
         tables   = tables,
     )
-    resources = providers.Singleton(ResourcesContainer)
+    resources = providers.Singleton(
+        ResourcesContainer,
+    )
     commands = providers.Singleton(
         CommandsContainer,
         actions   = actions,

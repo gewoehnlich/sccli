@@ -1,5 +1,5 @@
-from sqlalchemy.orm import DeclarativeBase
+from core.model import Model
 
 
-class Table(DeclarativeBase):
-    pass
+class Table(Model):
+    __abstract__ = True

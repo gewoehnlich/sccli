@@ -3,6 +3,7 @@ from typing import Optional
 from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import String, Integer, Text
+
 from core.table import Table
 
 
