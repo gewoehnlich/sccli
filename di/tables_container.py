@@ -1,7 +1,7 @@
 from dependency_injector import containers, providers
 from core.table import Table
-from tables.tracks import TracksTable
-from tables.users import UsersTable
+from tables.tracks_table import TracksTable
+from tables.users_table import UsersTable
 
 
 class TablesContainer(containers.DeclarativeContainer):

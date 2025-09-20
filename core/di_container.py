@@ -7,6 +7,7 @@ from core.server import Server
 from di.actions_container import ActionsContainer
 from di.auth_requests import AuthRequestsContainer
 from di.commands_container import CommandsContainer
+from di.dto_container import DtoContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
 from di.tables_container import TablesContainer
@@ -41,9 +42,16 @@ class DiContainer(containers.DeclarativeContainer):
         auth_requests = auth_requests,
     )
 
+    dto = providers.Singleton(
+        DtoContainer,
+    )
+    models = providers.Singleton(
+        ModelsContainer,
+    )
     requests = providers.Singleton(
         RequestsContainer,
         auth = auth,
+        dto  = dto,
     )
     actions = providers.Singleton(
         ActionsContainer,

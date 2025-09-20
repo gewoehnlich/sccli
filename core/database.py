@@ -1,9 +1,8 @@
-from __future__ import annotations
-from typing import Any, Self
+from typing import Self
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 import sqlalchemy
 
-from core.table import Table
+from core.dto import Dto
 from di.tables_container import TablesContainer
 
 
@@ -26,7 +25,7 @@ class Database:
     def __init__(
         self,
         database_name: str,
-        tables: TablesContainer,
+        tables:        TablesContainer,
     ) -> None:
         if self._initialized:
             return
@@ -36,7 +35,7 @@ class Database:
         self.engine: sqlalchemy.Engine = sqlalchemy.create_engine(
             f"sqlite+pysqlite:///{self.database_name}"
         )
-        self.session = sessionmaker(bind = self.engine)
+        # self.session = sessionmaker(bind = self.engine)
 
         self.tables: TablesContainer = tables
         self.table_base: DeclarativeBase = self.tables.table_base()
@@ -48,13 +47,11 @@ class Database:
     ) -> None:
         self.table_base.metadata.create_all(self.engine)
 
-    # def insert(
-    #     self,
-    #     table: Table,
-    #     data: dict[str, Any],
-    # ) -> None:
-    #     sqlalchemy_table = self.metadata.tables[table.name]
-    #     statement = sqlalchemy.insert(sqlalchemy_table).values(**data)
-    #     with self.engine.connect() as conn:
-    #         conn.execute(statement)
-    #         conn.commit()
+    def insert(
+        self,
+        dto:   Dto,
+    ) -> None:
+        with sessionmaker(bind = self.engine) as session:
+            session.add(dto)
+            session.commit()
+            print(session.query(dto).all())

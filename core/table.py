@@ -1,5 +1,7 @@
-from core.model import Model
+from core.base import Base
 
 
-class Table(Model):
+class Table(
+    Base
+):
     __abstract__ = True

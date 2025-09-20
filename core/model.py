@@ -1,4 +1,6 @@
-from sqlalchemy.orm import DeclarativeBase, declarative_base
+from core.dto import Dto
 
 
-Model: DeclarativeBase = declarative_base()
+class Model:
+    db:  providers.Dependency 
+    dto: providers.Dependency
