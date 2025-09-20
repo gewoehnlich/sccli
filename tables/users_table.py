@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
@@ -20,7 +21,7 @@ class UsersTable(Table):
         String,
         nullable = True,
     )
-    created_at: Mapped[DateTime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime,
     )
     description: Mapped[Optional[str]] = mapped_column(
@@ -37,7 +38,7 @@ class UsersTable(Table):
         primary_key = True,
         nullable = False,
     )
-    last_modified: Mapped[DateTime] = mapped_column(
+    last_modified: Mapped[datetime] = mapped_column(
         DateTime,
     )
     permalink: Mapped[str] = mapped_column(

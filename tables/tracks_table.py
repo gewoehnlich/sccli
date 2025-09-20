@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from sqlalchemy import DateTime, Enum, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
@@ -19,7 +20,7 @@ class TracksTable(Table):
     comments_count: Mapped[int] = mapped_column(
         Integer,
     )
-    created_at: Mapped[DateTime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime,
     )
     description: Mapped[Optional[str]] = mapped_column(

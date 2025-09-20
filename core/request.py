@@ -35,7 +35,7 @@ class Request(
     def send(
         self,
     ) -> Dto:
-        response: Response = self.request(
+        response: Response = requests.request(
             method  = self.method,
             url     = self.url,
             headers = self.headers,

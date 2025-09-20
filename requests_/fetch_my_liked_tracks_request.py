@@ -1,3 +1,5 @@
+from core.auth import Auth
+from core.dto import Dto
 from core.request import Request
 from utils.links import SOUNDCLOUD_API_LINK
 
@@ -7,7 +9,8 @@ class FetchMyLikedTracksRequest(Request):
     def __init__(
         self,
         # access_token: str,
-        auth,
+        auth: Auth,
+        dto: Dto,
         url: str | None = None,
     ) -> None:
         super().__init__(
