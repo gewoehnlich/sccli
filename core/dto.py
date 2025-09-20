@@ -1,8 +1,6 @@
 import json
-from typing import Self
+from typing import Any, Self
 from pydantic import BaseModel
-
-from core.request import Request
 
 
 class Dto(BaseModel):
@@ -22,8 +20,18 @@ class Dto(BaseModel):
 
             return data
 
-    def from_request(
+    def from_dict(
         self,
-        request: Request,
+        data: dict[str, Any],
     ) -> Self:
         pass
+
+    def validate_kind(
+        self,
+        actual_kind: str,
+        expected_kind: str,
+    ) -> bool:
+        if actual_kind != expected_kind:
+            raise Exception("to-do message wrong kind")
+
+        return True

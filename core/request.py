@@ -1,22 +1,41 @@
+from typing import Any
 import requests
 
-class Request(requests.Request):
-    def __init__(self, access_token: str | None = None) -> None:
-        self.method:  str = str()
-        self.url:     str = str()
-        self.headers: dict[str, str] = {
-            "Accept": "application/json; charset=utf-8",
-            "Content-Type": "application/x-www-form-urlencoded",
-        }
+from core.dto import Dto
+from core.response import Response
 
+
+class Request(
+    requests.Request
+):
+    method:  str = str()
+    url:     str = str()
+    headers: dict[str, str] = {
+        "Accept": "application/json; charset=utf-8",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+    params: dict[str, str] = {}
+    data:   dict[str, str] = {}
+
+    dto: Dto | None = None
+
+
+    def __init__(
+        self,
+        access_token: str | None = None,
+        dto: Dto | None = None,
+    ) -> None:
         if access_token:
             self.headers['Authorization'] = f"OAuth {access_token}"
 
-        self.params: dict[str, str] = dict()
-        self.data:   dict[str, str] = dict()
+        if dto:
+            self.dto = dto
 
-    def send(self) -> requests.Response:
-        response: requests.Response = requests.request(
+
+    def send(
+        self,
+    ) -> Dto:
+        response: Response = self.request(
             method  = self.method,
             url     = self.url,
             headers = self.headers,
@@ -25,4 +44,10 @@ class Request(requests.Request):
             timeout = 30,
         )
 
-        return response
+        data: dict[str, Any] = response.json()
+
+        self.dto = self.dto.from_dict(
+            data = data,
+        )
+
+        return self.dto

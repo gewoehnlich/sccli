@@ -4,14 +4,14 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import Boolean
 
 from core.table import Table
-from enums.track_access import TrackAccess
+from enums.track_access import TrackAccessEnum
 
 
 class TracksTable(Table):
     __tablename__ = "tracks"
 
-    access: Mapped[TrackAccess] = mapped_column(
-        Enum(TrackAccess),
+    access: Mapped[TrackAccessEnum] = mapped_column(
+        Enum(TrackAccessEnum),
     )
     artwork_url: Mapped[Optional[str]] = mapped_column(
         String,

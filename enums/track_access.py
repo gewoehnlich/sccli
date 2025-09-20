@@ -1,7 +1,7 @@
 import enum
 
 
-class TrackAccess(enum.Enum):
+class TrackAccessEnum(enum.Enum):
     PLAYABLE = "playable"
     PREVIEW = "preview"
     BLOCKED = "blocked"
