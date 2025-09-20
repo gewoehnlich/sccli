@@ -2,7 +2,6 @@ from typing import Any, Self
 from time import sleep
 from pprint import pprint
 from requests import Response
-from commands import welcome_command
 from core.database import Database
 from utils.keys import _COLLECTION, _NEXT_HREF
 from core.action import Action

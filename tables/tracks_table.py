@@ -16,7 +16,6 @@ class TracksTable(Table):
     )
     artwork_url: Mapped[Optional[str]] = mapped_column(
         String,
-        nullable = True,
     )
     comments_count: Mapped[int] = mapped_column(
         Integer,

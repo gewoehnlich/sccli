@@ -1,11 +1,14 @@
 import json
 from typing import Self
+from pydantic import BaseModel
+
+from core.request import Request
 
 
-class Dto:
-    def fromFile(
+class Dto(BaseModel):
+    def from_file(
         self,
-        filepath: str
+        filepath: str,
     ) -> Self:
         with open(
             file = filepath,
@@ -17,3 +20,10 @@ class Dto:
                     file.read().strip()
                 )
 
+            return data
+
+    def from_request(
+        self,
+        request: Request,
+    ) -> Self:
+        pass
