@@ -1,8 +1,9 @@
-from core.request import Request
-from utils.links import SOUNDCLOUD_API_LINK
+from core.requests.soundcloud_request import SoundcloudRequest
 
 
-class GetTrackRequest(Request):
+class GetTrackRequest(
+    SoundcloudRequest
+):
     def __init__(
         self,
         access_token: str,

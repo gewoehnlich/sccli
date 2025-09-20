@@ -1,8 +1,9 @@
-from core.request import Request
-from utils.links import SOUNDCLOUD_API_LINK
+from core.requests.soundcloud_request import SoundcloudRequest
 
 
-class UserInfoRequest(Request):
+class UserInfoRequest(
+    SoundcloudRequest
+):
     def __init__(
         self,
         access_token: str
@@ -11,4 +12,4 @@ class UserInfoRequest(Request):
 
         self.method = "GET"
 
-        self.url = SOUNDCLOUD_API_LINK + '/me'
+        self.url = self.SOUNDCLOUD_API_LINK + '/me'

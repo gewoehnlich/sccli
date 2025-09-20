@@ -10,8 +10,7 @@ from requests import Response
 
 from core.request import Request
 from core.server import Server
-from di.auth_requests import AuthRequestsContainer
-from di.dto_container import DtoContainer
+from di.auth_requests_container import AuthRequestsContainer
 
 
 class Auth:

@@ -1,11 +1,11 @@
 from core.auth import Auth
 from core.dto import Dto
-from core.request import Request
-from utils.links import SOUNDCLOUD_API_LINK
+from core.requests.soundcloud_request import SoundcloudRequest
 
-class FetchMyLikedTracksRequest(Request):
-    _API_ENDPOINT: str = "/me/likes/tracks"
 
+class FetchMyLikedTracksRequest(
+    SoundcloudRequest
+):
     def __init__(
         self,
         auth: Auth,
@@ -21,7 +21,7 @@ class FetchMyLikedTracksRequest(Request):
         if url:
             self.url = url
         else:
-            self.url = SOUNDCLOUD_API_LINK + self._API_ENDPOINT
+            self.url = self.SOUNDCLOUD_API_LINK + "/me/likes/tracks"
 
         self.params["limit"] = "1"
         self.params["access"] = "playable"

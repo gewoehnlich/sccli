@@ -1,6 +1,9 @@
-from core.request import Request
+from core.requests.auth_request import AuthRequest
 
-class RefreshTokenRequest(Request):
+
+class RefreshTokenRequest(
+    AuthRequest
+):
     def __init__(
         self,
         client_id:     str | None = None,
