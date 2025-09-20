@@ -1,5 +1,7 @@
 import requests
 
 
-class Response(requests.Response):
+class Response(
+    requests.Response
+):
     pass

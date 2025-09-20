@@ -4,14 +4,14 @@ from typing import Self
 from core.auth     import Auth
 from core.database import Database
 from core.server   import Server
-from di.actions_container   import ActionsContainer
-from di.auth_requests       import AuthRequestsContainer
-from di.commands_container  import CommandsContainer
-from di.dto_container       import DtoContainer
-from di.models_container    import ModelsContainer
-from di.requests_container  import RequestsContainer
-from di.resources_container import ResourcesContainer
-from di.tables_container    import TablesContainer
+from di.actions_container       import ActionsContainer
+from di.auth_requests_container import AuthRequestsContainer
+from di.commands_container      import CommandsContainer
+from di.dto_container           import DtoContainer
+from di.models_container        import ModelsContainer
+from di.requests_container      import RequestsContainer
+from di.resources_container     import ResourcesContainer
+from di.tables_container        import TablesContainer
 
 
 class DiContainer(containers.DeclarativeContainer):
@@ -26,12 +26,19 @@ class DiContainer(containers.DeclarativeContainer):
         tables = tables,
     )
 
+    dto = providers.Singleton(
+        DtoContainer,
+    )
+
     server = providers.Singleton(
         Server,
         server_port = config.server.port,
         server_path = config.server.path,
     )
-    auth_requests = providers.Singleton(AuthRequestsContainer)
+    auth_requests = providers.Singleton(
+        AuthRequestsContainer,
+        dto = dto,
+    )
     auth = providers.Singleton(
         Auth,
         client_id     = config.soundcloud.client_id,
@@ -43,9 +50,6 @@ class DiContainer(containers.DeclarativeContainer):
         auth_requests = auth_requests,
     )
 
-    dto = providers.Singleton(
-        DtoContainer,
-    )
     models = providers.Singleton(
         ModelsContainer,
         db_models  = tables,

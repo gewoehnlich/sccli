@@ -1,12 +1,12 @@
 from dependency_injector import containers, providers
 
-from requests_.fetch_my_liked_tracks_request   import FetchMyLikedTracksRequest
-from requests_.followings_request              import FollowingsRequest
-from requests_.followings_tracks_request       import FollowingsTracksRequest
-from requests_.get_track_request               import GetTrackRequest
-from requests_.get_track_streaming_url_request import GetTrackStreamingUrlRequest
-from requests_.me_tracks_request               import MeTracksRequest
-from requests_.user_info_request               import UserInfoRequest
+from api_requests.fetch_my_liked_tracks_request   import FetchMyLikedTracksRequest
+from api_requests.followings_request              import FollowingsRequest
+from api_requests.followings_tracks_request       import FollowingsTracksRequest
+from api_requests.get_track_request               import GetTrackRequest
+from api_requests.get_track_streaming_url_request import GetTrackStreamingUrlRequest
+from api_requests.me_tracks_request               import MeTracksRequest
+from api_requests.user_info_request               import UserInfoRequest
 
 
 class RequestsContainer(containers.DeclarativeContainer):

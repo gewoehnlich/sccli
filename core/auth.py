@@ -11,6 +11,7 @@ from requests import Response
 from core.request import Request
 from core.server import Server
 from di.auth_requests import AuthRequestsContainer
+from di.dto_container import DtoContainer
 
 
 class Auth:
@@ -19,7 +20,7 @@ class Auth:
 
     def __new__(
         cls: type[Self],
-        *args, 
+        *args,
         **kwargs,
     ) -> Self:
         if cls._instance is None:
@@ -98,13 +99,12 @@ class Auth:
 
     def refresh_token(
         self,
-        refresh_token: str
+        refresh_token: str,
     ) -> str:
-        print(type(self.refresh_token_request))
         response: Response = self.refresh_token_request(
             client_id      = self.client_id,
             client_secret  = self.client_secret,
-            refresh_token  = refresh_token
+            refresh_token  = refresh_token,
         ).send()
 
         if not response:
@@ -113,7 +113,6 @@ class Auth:
         try:
             token_data = response.json()
             token_data["timestamp"] = int(time.time())
-
         except Exception as e:
             raise e
 

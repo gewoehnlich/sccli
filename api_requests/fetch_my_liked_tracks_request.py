@@ -8,7 +8,6 @@ class FetchMyLikedTracksRequest(Request):
 
     def __init__(
         self,
-        # access_token: str,
         auth: Auth,
         dto: Dto,
         url: str | None = None,
