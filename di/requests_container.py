@@ -11,10 +11,12 @@ from requests_.user_info_request import UserInfoRequest
 
 class RequestsContainer(containers.DeclarativeContainer):
     auth = providers.Dependency()
+    dto  = providers.DependenciesContainer()
 
     fetch_my_liked_tracks   = providers.Factory(
         FetchMyLikedTracksRequest,
         auth = auth,
+        dto  = dto,
     )
     followings              = providers.Factory(FollowingsRequest)
     followings_tracks       = providers.Factory(FollowingsTracksRequest)

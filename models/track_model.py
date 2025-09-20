@@ -1,7 +1,8 @@
+from dependency_injector import providers
 from core.model import Model
 
 
-class User(
+class TrackModel(
     Model
 ):
     db  = providers.Dependency()

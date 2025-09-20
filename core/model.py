@@ -1,6 +1,7 @@
-from core.dto import Dto
+from dependency_injector import providers
+from core.table import Table
 
 
 class Model:
-    db:  providers.Dependency 
+    db:  Table
     dto: providers.Dependency

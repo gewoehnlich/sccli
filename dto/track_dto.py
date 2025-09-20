@@ -1,4 +1,5 @@
 from core.dto import Dto
+from dto.user_dto import UserDto
 
 
 class TrackDto(Dto):
@@ -18,6 +19,6 @@ class TrackDto(Dto):
     title:               str
     uri:                 str
     urn:                 str
-    user:                User
+    user:                UserDto
     user_favorite:       bool
     user_playback_count: int
