@@ -1,3 +1,4 @@
+from core.dto import Dto
 from core.requests.auth_request import AuthRequest
 
 
@@ -11,6 +12,7 @@ class AuthenticationRequest(
         redirect_uri:  str,
         code_verifier: str,
         auth_code:     str,
+        dto: Dto,
     ) -> None:
         super().__init__()
 
@@ -26,3 +28,5 @@ class AuthenticationRequest(
             "code_verifier": code_verifier,
             "code":          auth_code,
         }
+
+        self.dto = dto

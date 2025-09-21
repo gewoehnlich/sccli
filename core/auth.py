@@ -6,9 +6,8 @@ import json
 import asyncio
 import webbrowser
 from typing import Any, Self
-from requests import Response
 
-from api_requests.refresh_token_request import RefreshTokenRequest
+from core.dto import Dto
 from core.request import Request
 from core.server import Server
 from di.auth_requests_container import AuthRequestsContainer
@@ -101,12 +100,12 @@ class Auth:
         self,
         refresh_token: str,
     ) -> str:
-        request: RefreshTokenRequest = self.refresh_token_request(
+        request: Request = self.refresh_token_request(
             client_id      = self.client_id,
             client_secret  = self.client_secret,
             refresh_token  = refresh_token,
         )
-        response: Response = request.send()
+        response: Dto = request.send()
         print(response)
 
         if not response:

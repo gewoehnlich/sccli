@@ -1,12 +1,13 @@
 from typing import Any
-from aiohttp.web import Response
-import requests
+from requests import Request as BaseRequest
+from requests import request as send_request
 
-from core.dto import Dto
+from core.dto      import Dto
+from core.response import Response
 
 
 class Request(
-    requests.Request
+    BaseRequest
 ):
     method:  str = str()
     url:     str = str()
@@ -29,7 +30,7 @@ class Request(
     def send(
         self,
     ) -> Dto:
-        response: Response = request(
+        response: Response = send_request(
             method  = self.method,
             url     = self.url,
             headers = self.headers,

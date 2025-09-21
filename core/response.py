@@ -1,7 +1,6 @@
-import requests
-
+from requests import Response as BaseResponse
 
 class Response(
-    requests.Response
+    BaseResponse
 ):
     pass

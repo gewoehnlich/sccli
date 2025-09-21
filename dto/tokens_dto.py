@@ -1,6 +1,6 @@
 import json
 from time import time
-from typing import Self
+from typing import Any, Self
 from core.dto import Dto
 
 
@@ -15,6 +15,27 @@ class TokensDto(
     timestamp:         int | None
     current_timestamp: int | None
     expire_timestamp:  int | None
+
+
+    def __init__(
+        self,
+    ) -> None:
+        super().__init__()
+
+
+    def from_dict(
+        self,
+        data: dict[str, Any],
+    ) -> Self:
+        # make it static? so the cls would be passed instead of self
+
+        self.access_token  = data["access_token"]
+        self.token_type    = data["token_type"]
+        self.expires_in    = int(data["expires_in"])
+        self.refresh_token = data["refresh_token"]
+        self.timestamp     = int(time())
+
+        return self
 
 
     def from_json(
