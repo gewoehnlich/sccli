@@ -6,7 +6,9 @@ from default_settings.app import AppSettings
 # from core.shell import Shell
 
 
-def main(di_container: DiContainer = Provide[DiContainer]) -> None:
+def main(
+    di_container: DiContainer = Provide[DiContainer],
+) -> None:
     di_container.commands().welcome().run()
     di_container.commands().my_liked_tracks().run()
 

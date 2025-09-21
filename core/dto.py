@@ -3,28 +3,20 @@ from typing import Any, Self
 from pydantic import BaseModel
 
 
-class Dto(BaseModel):
+class Dto(
+    BaseModel
+):
     def from_file(
         self,
-        filepath: str,
+        file: str,
     ) -> Self:
-        with open(
-            file = filepath,
-            mode = "r",
-            encoding = "utf-8",
-        ) as file:
-            if filepath.endswith(".json"):
-                data: dict[str, str] = json.loads(
-                    file.read().strip()
-                )
-
-            return data
+        return self
 
     def from_dict(
         self,
         data: dict[str, Any],
     ) -> Self:
-        pass
+        return self
 
     def validate_kind(
         self,

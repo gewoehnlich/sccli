@@ -6,9 +6,9 @@ class RefreshTokenRequest(
 ):
     def __init__(
         self,
-        client_id:     str | None = None,
-        client_secret: str | None = None,
-        refresh_token: str | None = None,
+        client_id:     str,
+        client_secret: str,
+        refresh_token: str,
     ) -> None:
         super().__init__()
 

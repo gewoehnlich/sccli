@@ -11,9 +11,9 @@ class AuthRequestsContainer(
 
     authentication = providers.Factory(
         AuthenticationRequest,
-        dto = dto.authentication,
+        dto = dto.tokens,
     )
     refresh_token = providers.Factory(
         RefreshTokenRequest,
-        dto = dto.refresh_token
+        dto = dto.tokens,
     )

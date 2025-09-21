@@ -6,11 +6,11 @@ class AuthenticationRequest(
 ):
     def __init__(
         self,
-        client_id:     str | None = None,
-        client_secret: str | None = None,
-        redirect_uri:  str | None = None,
-        code_verifier: str | None = None,
-        auth_code:     str | None = None,
+        client_id:     str,
+        client_secret: str,
+        redirect_uri:  str,
+        code_verifier: str,
+        auth_code:     str,
     ) -> None:
         super().__init__()
 

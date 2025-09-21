@@ -8,6 +8,7 @@ import webbrowser
 from typing import Any, Self
 from requests import Response
 
+from api_requests.refresh_token_request import RefreshTokenRequest
 from core.request import Request
 from core.server import Server
 from di.auth_requests_container import AuthRequestsContainer
@@ -100,11 +101,13 @@ class Auth:
         self,
         refresh_token: str,
     ) -> str:
-        response: Response = self.refresh_token_request(
+        request: RefreshTokenRequest = self.refresh_token_request(
             client_id      = self.client_id,
             client_secret  = self.client_secret,
             refresh_token  = refresh_token,
-        ).send()
+        )
+        response: Response = request.send()
+        print(response)
 
         if not response:
             raise Exception("finish later. NO RESPONSE")
