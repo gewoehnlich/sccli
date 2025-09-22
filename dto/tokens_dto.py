@@ -16,24 +16,14 @@ class TokensDto(
     expire_timestamp:  int
 
 
-    def __init__(
-        self,
-    ) -> None:
-        super().__init__()
-
-
     @classmethod
     def from_dict(
         cls,
         data: dict[str, Any],
     ) -> Self:
-        data_copy = data.copy()
-        data_copy["expires_in"] = int(data_copy["expires_in"])
-
-        instance = cls(**data_copy)
-        instance.timestamp = int(time())
-
-        return instance
+        return cls.__create(
+            data = data,
+        )
 
 
     @classmethod
@@ -45,7 +35,9 @@ class TokensDto(
             s = json_string,
         )
 
-        return cls.from_dict(data)
+        return cls.__create(
+            data = data,
+        )
 
 
     @classmethod
@@ -63,9 +55,32 @@ class TokensDto(
                 f.read().strip()
             )
 
-            instance = cls.from_dict(data)
-            instance.timestamp = int(data["timestamp"])
-            instance.current_timestamp = int(time())
-            instance.expire_timestamp = instance.timestamp + instance.expires_in
+            return cls.__create(
+                data = data,
+            )
 
-            return instance
+
+    @classmethod
+    def __create(
+        cls,
+        data: dict[str, Any],
+    ) -> Self:
+        access_token:      str = data["access_token"]
+        token_type:        str = data["token_type"]
+        expires_in:        int = int(data["expires_in"])
+        refresh_token:     str = data["refresh_token"]
+        timestamp:         int = data.get("timestamp", int(time()))
+        current_timestamp: int = int(time())
+        expire_timestamp:  int = current_timestamp + expires_in
+
+        instance: Self = cls(
+            access_token      = access_token,
+            token_type        = token_type,
+            expires_in        = expires_in,
+            refresh_token     = refresh_token,
+            timestamp         = timestamp,
+            current_timestamp = current_timestamp,
+            expire_timestamp  = expire_timestamp,
+        )
+
+        return instance
