@@ -14,7 +14,9 @@ from di.resources_container     import ResourcesContainer
 from di.tables_container        import TablesContainer
 
 
-class DiContainer(containers.DeclarativeContainer):
+class DiContainer(
+    containers.DeclarativeContainer
+):
     config = providers.Configuration()
 
     tables = providers.Singleton(
