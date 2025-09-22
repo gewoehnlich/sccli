@@ -7,14 +7,13 @@ from core.dto import Dto
 class TokensDto(
     Dto
 ):
-    access_token:  str
-    token_type:    str
-    expires_in:    int
-    refresh_token: str
-
-    timestamp:         int | None
-    current_timestamp: int | None
-    expire_timestamp:  int | None
+    access_token:      str
+    token_type:        str
+    expires_in:        int
+    refresh_token:     str
+    timestamp:         int
+    current_timestamp: int
+    expire_timestamp:  int
 
 
     def __init__(
@@ -23,39 +22,35 @@ class TokensDto(
         super().__init__()
 
 
+    @classmethod
     def from_dict(
-        self,
+        cls,
         data: dict[str, Any],
     ) -> Self:
-        # make it static? so the cls would be passed instead of self
+        data_copy = data.copy()
+        data_copy["expires_in"] = int(data_copy["expires_in"])
 
-        self.access_token  = data["access_token"]
-        self.token_type    = data["token_type"]
-        self.expires_in    = int(data["expires_in"])
-        self.refresh_token = data["refresh_token"]
-        self.timestamp     = int(time())
+        instance = cls(**data_copy)
+        instance.timestamp = int(time())
 
-        return self
+        return instance
 
 
+    @classmethod
     def from_json(
-        self,
+        cls,
         json_string: str,
     ) -> Self:
         data: dict[str, str] = json.loads(
             s = json_string,
         )
 
-        self.access_token  = data["access_token"]
-        self.token_type    = data["token_type"]
-        self.expires_in    = int(data["expires_in"])
-        self.refresh_token = data["refresh_token"]
-
-        return self
+        return cls.from_dict(data)
 
 
+    @classmethod
     def from_file(
-        self,
+        cls,
         file: str,
     ) -> Self:
         with open(
@@ -68,13 +63,9 @@ class TokensDto(
                 f.read().strip()
             )
 
-            self.access_token  = data["access_token"]
-            self.token_type    = data["token_type"]
-            self.expires_in    = int(data["expires_in"])
-            self.refresh_token = data["refresh_token"]
-            self.timestamp     = int(data["timestamp"])
+            instance = cls.from_dict(data)
+            instance.timestamp = int(data["timestamp"])
+            instance.current_timestamp = int(time())
+            instance.expire_timestamp = instance.timestamp + instance.expires_in
 
-            self.current_timestamp = int(time())
-            self.expire_timestamp  = self.timestamp + self.expires_in
-
-            return self
+            return instance

@@ -41,8 +41,8 @@ class Request(
 
         data: dict[str, Any] = response.json()
 
-        self.dto = self.dto.from_dict(
+        dto = self.dto().from_dict(
             data = data,
         )
 
-        return self.dto
+        return dto
