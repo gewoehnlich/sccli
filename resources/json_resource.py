@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from core.dto import Dto
 from core.resource import Resource
@@ -11,3 +12,9 @@ class JsonResource(
         self,
         dto: Dto,
     ) -> str:
+        model_dict: dict[str, Any] = dto.model_dump()
+
+        return json.dumps(
+            obj = model_dict,
+            indent = 4,
+        )

@@ -11,6 +11,7 @@ from core.dto import Dto
 from core.request import Request
 from core.server import Server
 from di.auth_requests_container import AuthRequestsContainer
+from resources.json_resource import JsonResource
 
 
 class Auth:
@@ -105,28 +106,33 @@ class Auth:
             client_secret  = self.client_secret,
             refresh_token  = refresh_token,
         )
-        response: Dto = request.send()
-        print(response)
-
-        if not response:
-            raise Exception("finish later. NO RESPONSE")
 
         try:
-            token_data = response.json()
-            token_data["timestamp"] = int(time.time())
+            response: Dto = request.send()
         except Exception as e:
             raise e
 
-        with open(
-            file = self.tokens_file,
-            mode = "w",
-            encoding = "utf-8",
-        ) as file:
-            file.write(
-                json.dumps(token_data, indent=4)
+        try:
+            token_data: dict[str, Any] = JsonResource.from_dto(
+                dto = response,
             )
 
-        access_token: Any = token_data.get("access_token")
+            with open(
+                file = self.tokens_file,
+                mode = "w",
+                encoding = "utf-8",
+            ) as file:
+                file.write(
+                    json.dumps(
+                        obj = token_data,
+                        indent = 4,
+                    )
+                )
+
+        except Exception as e:
+            raise e
+
+        access_token: str = response.access_token
         if not isinstance(access_token, str):
             raise ValueError("access_token is not a string.")
 
@@ -152,25 +158,28 @@ class Auth:
         if state != returned_state:
             raise Exception("State mismatch!")
 
-        response = self.authentication_request(
+        request: Request = self.authentication_request(
             self.client_id,
             self.client_secret,
             self.redirect_uri,
             code_verifier,
             auth_code
-        ).send()
+        )
 
-        token_data: dict[str, Any] = response.json()
-        token_data["timestamp"] = int(time.time())
+        response: Dto = request.send()
+
+        token_data: dict[str, Any] = JsonResource().from_dto(
+            dto = response,
+        )
 
         with open(
             file = self.tokens_file,
             mode = "w",
             encoding = "utf-8",
         ) as file:
-            file.write(json.dumps(token_data, indent=4))
+            file.write(token_data)
 
-        access_token: Any = token_data.get("access_token")
+        access_token: Any = response.access_token
         if not isinstance(access_token, str):
             raise ValueError("access_token is not a string.")
 
