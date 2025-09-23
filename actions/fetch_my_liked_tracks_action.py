@@ -2,14 +2,17 @@ from typing import Any, Self
 from time import sleep
 from pprint import pprint
 from requests import Response
+
 from core.database import Database
-from utils.keys import _COLLECTION, _NEXT_HREF
 from core.action import Action
 from core.request import Request
 from core.table import Table
+from enums.response_keys_enum import ResponseKeysEnum
 
 
-class FetchMyLikedTracksAction(Action):
+class FetchMyLikedTracksAction(
+    Action
+):
     _instance:    Self | None = None
     _initialized: bool        = False
 
@@ -23,6 +26,7 @@ class FetchMyLikedTracksAction(Action):
 
         return cls._instance
 
+
     def __init__(
         self,
         request:  Request  | None = None,
@@ -34,6 +38,7 @@ class FetchMyLikedTracksAction(Action):
             database = database,
             table    = table,
         )
+
 
     def run(
         self,
@@ -59,8 +64,8 @@ class FetchMyLikedTracksAction(Action):
             response: Response = request.send()
             result: dict[str, Any] = response.json()
 
-            collection: list[dict[str, Any]] = result[_COLLECTION]
-            next_href = result[_NEXT_HREF]
+            collection: list[dict[str, Any]] = result[ResponseKeysEnum.COLLECTION]
+            next_href = result[ResponseKeysEnum.NEXT_HREF]
 
             if collection:
                 pprint(collection)
