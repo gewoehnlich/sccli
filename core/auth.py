@@ -113,7 +113,7 @@ class Auth:
             raise e
 
         try:
-            token_data: dict[str, Any] = JsonResource.from_dto(
+            token_data: dict[str, Any] = JsonResource().from_dto(
                 dto = response,
             )
 
@@ -139,7 +139,9 @@ class Auth:
         return access_token
 
 
-    def authenticate_user(self) -> str:
+    def authenticate_user(
+        self,
+    ) -> str:
         code_verifier, code_challenge = self.generate_pkce()
         state = self.generate_state()
 

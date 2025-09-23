@@ -17,7 +17,9 @@ if __name__ == "__main__":
     settings: AppSettings = Settings().load()
 
     di_container: DiContainer = DiContainer()
-    di_container.config.from_pydantic(settings)
+    di_container.config.from_pydantic(
+        settings = settings
+    )
 
     di_container.database().initialize_tables()
 
