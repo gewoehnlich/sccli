@@ -7,13 +7,9 @@ from api_requests.refresh_token_request import RefreshTokenRequest
 class AuthRequestsContainer(
     containers.DeclarativeContainer
 ):
-    dto = providers.DependenciesContainer()
-
     authentication = providers.Factory(
         AuthenticationRequest,
-        dto = dto.tokens.provider,
     )
     refresh_token = providers.Factory(
         RefreshTokenRequest,
-        dto = dto.tokens.provider,
     )

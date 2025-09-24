@@ -24,8 +24,6 @@ class DiContainer(
     )
     database = providers.Singleton(
         Database,
-        database_name = config.database.name,
-        tables = tables,
     )
 
     dto = providers.Singleton(
@@ -34,47 +32,28 @@ class DiContainer(
 
     server = providers.Singleton(
         Server,
-        server_port = config.server.port,
-        server_path = config.server.path,
     )
     auth_requests = providers.Singleton(
         AuthRequestsContainer,
-        dto = dto,
     )
     auth = providers.Singleton(
         Auth,
-        client_id     = config.soundcloud.client_id,
-        client_secret = config.soundcloud.client_secret,
-        server_port   = config.server.port,
-        server_path   = config.server.path,
-        tokens_file   = config.tokens.file,
-        server        = server,
-        auth_requests = auth_requests,
     )
 
     models = providers.Singleton(
         ModelsContainer,
-        db_models  = tables,
-        dto_models = dto,
     )
     requests = providers.Singleton(
         RequestsContainer,
-        auth = auth,
-        dto  = dto,
     )
     actions = providers.Singleton(
         ActionsContainer,
-        requests = requests,
-        database = database,
-        tables   = tables,
     )
     resources = providers.Singleton(
         ResourcesContainer,
     )
     commands = providers.Singleton(
         CommandsContainer,
-        actions   = actions,
-        resources = resources,
     )
 
 
