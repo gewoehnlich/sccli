@@ -7,10 +7,13 @@ import asyncio
 import webbrowser
 from typing import Any, Self
 
+from dependency_injector.wiring import Provide, inject
+
 from core.dto import Dto
 from core.request import Request
 from core.server import Server
-from di.auth_requests_container import AuthRequestsContainer
+from di.requests_container import RequestsContainer
+from di.resources_container import ResourcesContainer
 from resources.json_resource import JsonResource
 
 
@@ -36,8 +39,6 @@ class Auth:
         server_port: int,
         server_path: str,
         tokens_file: str,
-        server: Server,
-        auth_requests: AuthRequestsContainer,
     ) -> None:
         if self._initialized:
             return
@@ -49,8 +50,8 @@ class Auth:
 
         self.server: Server = server
 
-        self.authentication_request: Request = auth_requests.authentication
-        self.refresh_token_request:  Request = auth_requests.refresh_token
+        self.authentication_request: Request = authentication_request
+        self.refresh_token_request:  Request = refresh_token_request
 
         self._initialized = True
 
@@ -100,8 +101,10 @@ class Auth:
     def refresh_token(
         self,
         refresh_token: str,
+        request:       Request  = Provide[RequestsContainer.refresh_token],
+        resource:      Resource = Provide[ResourcesContainer.json],
     ) -> str:
-        request: Request = self.refresh_token_request(
+        request: Request = request(
             client_id      = self.client_id,
             client_secret  = self.client_secret,
             refresh_token  = refresh_token,
@@ -113,7 +116,7 @@ class Auth:
             raise e
 
         try:
-            token_data: dict[str, Any] = JsonResource().from_dto(
+            token_data: dict[str, Any] = resource().from_dto(
                 dto = response,
             )
 
@@ -139,8 +142,11 @@ class Auth:
         return access_token
 
 
+    @inject
     def authenticate_user(
         self,
+        server: Server,
+        authentication_request: Request = Provide[RequestsContainer.authentication],
     ) -> str:
         code_verifier, code_challenge = self.generate_pkce()
         state = self.generate_state()
@@ -156,11 +162,11 @@ class Auth:
         )
 
         webbrowser.open(auth_url)
-        auth_code, returned_state = asyncio.run(self.server.run())
+        auth_code, returned_state = asyncio.run(server.run())
         if state != returned_state:
             raise Exception("State mismatch!")
 
-        request: Request = self.authentication_request(
+        request: Request = authentication_request(
             self.client_id,
             self.client_secret,
             self.redirect_uri,
