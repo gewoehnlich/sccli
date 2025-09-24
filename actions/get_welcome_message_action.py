@@ -2,10 +2,11 @@ from dependency_injector.wiring import Provide
 from core.action import Action
 
 
-class GetWelcomeMessageAction(Action):
+class GetWelcomeMessageAction(
+    Action
+):
     def run(
         self,
-        # config
+        message: str = Provide[DiContainer.actions.get_welcome_command_message],
     ) -> str:
-        return "123"
-        # return config.welcome_command_message
+        return message

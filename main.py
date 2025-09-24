@@ -1,4 +1,4 @@
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import Provide, inject
 
 from core.di_container import DiContainer
 from core.settings import Settings
@@ -6,6 +6,7 @@ from default_settings.app import AppSettings
 # from core.shell import Shell
 
 
+@inject
 def main(
     di_container: DiContainer = Provide[DiContainer],
 ) -> None:
@@ -23,6 +24,8 @@ if __name__ == "__main__":
 
     di_container.database().initialize_tables()
 
-    di_container.wire(modules = [__name__])
+    di_container.wire(
+        modules = [__name__],
+    )
 
     main()

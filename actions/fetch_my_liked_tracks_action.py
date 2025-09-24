@@ -1,10 +1,12 @@
 from typing import Any, Self
 from time import sleep
 from pprint import pprint
+from dependency_injector.wiring import Provide, inject
 from requests import Response
 
 from core.database import Database
 from core.action import Action
+from core.di_container import DiContainer
 from core.request import Request
 from core.table import Table
 from enums.response_keys_enum import ResponseKeysEnum
@@ -27,11 +29,12 @@ class FetchMyLikedTracksAction(
         return cls._instance
 
 
+    @inject
     def __init__(
         self,
-        request:  Request  | None = None,
-        database: Database | None = None,
-        table:    Table    | None = None,
+        request:  Request  = Provide[DiContainer.requests.my_liked_tracks_request],
+        database: Database = Provide[DiContainer.database],
+        table:    Table    = Provide[DiContainer.tables.tracks],
     ) -> None:
         super().__init__(
             request  = request,
