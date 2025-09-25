@@ -8,8 +8,6 @@ from core.database            import Database
 from core.action              import Action
 from core.request             import Request
 from core.table               import Table
-from di.requests_container    import RequestsContainer
-from di.tables_container      import TablesContainer
 from enums.response_keys_enum import ResponseKeysEnum
 from main                     import DiContainer
 

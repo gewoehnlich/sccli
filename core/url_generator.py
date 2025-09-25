@@ -20,7 +20,7 @@ class UrlGenerator(
 
         return cls._instance
 
-    
+
     @classmethod
     def auth_url(
         cls,
