@@ -1,7 +1,5 @@
-from dependency_injector import providers
-from core.table import Table
+from sqlalchemy.orm import DeclarativeBase
 
 
-class Model:
-    db:  Table
-    dto: providers.Dependency
+class Model(DeclarativeBase):
+    pass

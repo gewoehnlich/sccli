@@ -7,10 +7,13 @@ import asyncio
 import webbrowser
 from typing import Any, Self
 
+from core.database import Database
 from core.dto import Dto
 from core.request import Request
 from core.resource import Resource
 from core.server import Server
+from models.account import Account
+from repositories.account_repository import AccountRepository
 
 
 class Auth:
@@ -33,25 +36,23 @@ class Auth:
         self,
         client_id: str,
         client_secret: str,
-        server_port: int,
-        server_path: str,
-        tokens_file: str,
         server: Server,
+        database: Database,
         authentication_request: Request,
         refresh_token_request: Request,
     ) -> None:
         if self._initialized:
             return
 
-        self.client_id: str     = client_id
+        self.client_id:     str = client_id
         self.client_secret: str = client_secret
-        self.redirect_uri: str  = f"http://localhost:{server_port}{server_path}"
-        self.tokens_file: str   = tokens_file
+        self.redirect_uri:  str = f"http://localhost:{ server.port }{ server.path }"
 
         self.server: Server = server
+        self.database: Database = database
 
-        self.authentication_request = authentication_request
-        self.refresh_token_request = refresh_token_request
+        self.authentication_request: Request = authentication_request
+        self.refresh_token_request:  Request = refresh_token_request
 
         self._initialized = True
 
@@ -59,12 +60,19 @@ class Auth:
     def get_access_token(
         self,
     ) -> str:
-        access_token = self.__load_token()
+        with self.database.session_factory() as session:
+            account: Account | None = AccountRepository(session).get_by_client_id(
+                client_id = self.client_id,
+            )
 
-        if not access_token:
-            access_token = self.__authenticate_user()
+        if not account:
+            return self.__authenticate_user()
 
-        return access_token
+        current_timestamp = int(time.time())
+        if current_timestamp > account.expire_timestamp - 100:
+            return self.__refresh_token()
+
+        return account.access_token
 
 
     def __load_token(
@@ -177,26 +185,16 @@ class Auth:
 
         response: dict[str, Any] = request.send()
 
-        # token_data: dict[str, Any] = JsonResource().from_dto(
-        #     dto = response,
-        # )
-
-        with open(
-            file = self.tokens_file,
-            mode = "w",
-            encoding = "utf-8",
-        ) as file:
-            # file.write(token_data)
-            file.write(
-                json.dumps(
-                    obj = response,
-                    indent = 4,
-                )
+        with self.database.session_factory() as session:
+            account: Account = AccountRepository(session).write(
+                client_id = self.client_id,
+                client_secret = self.client_secret,
+                access_token = str(response["access_token"]),
+                refresh_token = str(response["refresh_token"]),
+                expire_timestamp = int(time.time()) + int(response["expires_in"]),
             )
 
-        access_token: str = str(response["access_token"])
-
-        return access_token
+        return account.access_token
 
 
     def __generate_pkce(self) -> tuple[str, str]:

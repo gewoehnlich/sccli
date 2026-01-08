@@ -22,15 +22,15 @@ class Server:
 
     def __init__(
         self,
-        server_port: int,
-        server_path: str,
+        port: int,
+        path: str,
     ) -> None:
         if self._initialized:
             return
 
-        self.server_port: int = server_port
-        self.server_path: str = server_path
-        self.url: str = f"http://localhost:{self.server_port}{self.server_path}"
+        self.port: int = port
+        self.path: str = path
+        self.url: str = f"http://localhost:{ self.port }{ self.path }"
 
         self._initialized = True
 
@@ -50,7 +50,7 @@ class Server:
     async def start_server(self) -> None:
         app = web.Application()
         app.router.add_get(
-            self.server_path,
+            self.path,
             self.callback_handler,
         )
 
@@ -60,7 +60,7 @@ class Server:
         site = web.TCPSite(
             self.runner,
             "localhost",
-            self.server_port
+            self.port
         )
 
         await site.start()

@@ -4,10 +4,10 @@ from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import String, Integer, Text
 
-from core.table import Table
+from core.model import Model
 
 
-class UsersTable(Table):
+class User(Model):
     __tablename__: str = "users"
 
     avatar_url: Mapped[Optional[str]] = mapped_column(

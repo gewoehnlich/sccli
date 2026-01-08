@@ -3,14 +3,14 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 import sqlalchemy
 
 from core.dto import Dto
-from di.tables_container import TablesContainer
+from core.model import Model
+from di.models_container import ModelsContainer
 
 
 class Database:
-    database_name: str = ""
-
     _instance: Self | None = None
     _initialized: bool = False
+
 
     def __new__(
         cls: type[Self],
@@ -22,10 +22,11 @@ class Database:
 
         return cls._instance
 
+
     def __init__(
         self,
         database_name: str,
-        tables:        TablesContainer,
+        models:        ModelsContainer,
     ) -> None:
         if self._initialized:
             return
@@ -35,23 +36,28 @@ class Database:
         self.engine: sqlalchemy.Engine = sqlalchemy.create_engine(
             f"sqlite+pysqlite:///{self.database_name}"
         )
-        # self.session = sessionmaker(bind = self.engine)
 
-        self.tables: TablesContainer = tables
-        self.table_base: DeclarativeBase = self.tables.table_base()
+        self.session_factory = sessionmaker(
+            bind = self.engine,
+            expire_on_commit = False,
+        )
+
+        self.models:     ModelsContainer = models 
+        self.model_base: DeclarativeBase = self.models.model()
 
         self._initialized = True
+
 
     def initialize_tables(
         self,
     ) -> None:
-        self.table_base.metadata.create_all(self.engine)
+        self.model_base.metadata.create_all(self.engine)
+
 
     def insert(
         self,
-        dto:   Dto,
+        model: Model,
     ) -> None:
         with sessionmaker(bind = self.engine) as session:
-            session.add(dto)
+            session.add(model)
             session.commit()
-            print(session.query(dto).all())

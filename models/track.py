@@ -4,11 +4,11 @@ from sqlalchemy import DateTime, Enum, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import Boolean
 
-from core.table import Table
+from core.model import Model
 from enums.track_access import TrackAccessEnum
 
 
-class TracksTable(Table):
+class Track(Model):
     __tablename__ = "tracks"
 
     access: Mapped[TrackAccessEnum] = mapped_column(
@@ -73,4 +73,4 @@ class TracksTable(Table):
 
 
     def __repr__(self) -> str:
-        return f"<TracksTable(id={self.id}, title='{self.title}')>"
+        return f"<Track(id={self.id}, title='{self.title}')>"

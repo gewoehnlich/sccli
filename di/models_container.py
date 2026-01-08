@@ -1,15 +1,24 @@
 from dependency_injector import containers, providers
 
-from models.track_model import TrackModel
-from models.user_model import UserModel
+from core.model     import Model
+from models.account import Account
+from models.track   import Track
+from models.user    import User
 
 
 class ModelsContainer(
     containers.DeclarativeContainer
 ):
+    model = providers.Singleton(
+        Model,
+    )
+
     track = providers.Singleton(
-        TrackModel,
+        Track,
     )
     user = providers.Singleton(
-        UserModel,
+        User,
+    )
+    account = providers.Singleton(
+        Account,
     )
