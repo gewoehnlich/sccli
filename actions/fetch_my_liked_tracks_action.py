@@ -9,7 +9,6 @@ from core.action              import Action
 from core.request             import Request
 from core.table               import Table
 from enums.response_keys_enum import ResponseKeysEnum
-from main                     import DiContainer
 
 
 class FetchMyLikedTracksAction(
@@ -32,9 +31,9 @@ class FetchMyLikedTracksAction(
     @inject
     def __init__(
         self,
-        request:  Request  = Provide[DiContainer.requests.fetch_my_liked_tracks],
-        database: Database = Provide[DiContainer.database],
-        table:    Table    = Provide[DiContainer.tables.tracks],
+        request: Request,
+        database: Database,
+        table: Table,
     ) -> None:
         super().__init__(
             request  = request,

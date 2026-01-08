@@ -1,8 +1,9 @@
 import asyncio
-from aiohttp import web
-from aiohttp.web_request import Request
 from asyncio import Future
 from typing import Tuple, Optional, Any, Self
+from aiohttp import web
+from aiohttp.web_request import Request
+
 
 class Server:
     future: Optional[Future[Any]] = None
@@ -11,11 +12,13 @@ class Server:
     _instance: Self | None = None
     _initialized: bool = False
 
+
     def __new__(cls: type[Self], *args, **kwargs) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
         return cls._instance
+
 
     def __init__(
         self,
@@ -31,6 +34,7 @@ class Server:
 
         self._initialized = True
 
+
     async def run(self) -> tuple[str, str]:
         self.future = asyncio.get_event_loop().create_future()
         asyncio.create_task(self.start_server())
@@ -41,6 +45,7 @@ class Server:
         await self.shutdown()
 
         return result
+
 
     async def start_server(self) -> None:
         app = web.Application()
@@ -65,10 +70,12 @@ class Server:
         if self.future is not None:
             await self.future
 
+
     async def shutdown(self) -> None:
         if self.runner:
             print("Shutting down the temporary server...")
             await self.runner.cleanup()
+
 
     async def callback_handler(
         self,

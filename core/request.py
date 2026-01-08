@@ -10,15 +10,19 @@ class Request(
     BaseRequest
 ):
     method:  str = str()
+
     url:     str = str()
+
     headers: dict[str, str] = {
         "Accept": "application/json; charset=utf-8",
         "Content-Type": "application/x-www-form-urlencoded",
     }
+
     params: dict[str, str] = {}
+
     data:   dict[str, str] = {}
 
-    dto: Dto
+    # dto: Dto
 
 
     def __init__(
@@ -29,20 +33,22 @@ class Request(
 
     def send(
         self,
-    ) -> Dto:
+    ) -> dict[str, Any]:
         response: Response = send_request(
             method  = self.method,
             url     = self.url,
             headers = self.headers,
             params  = self.params,
             data    = self.data,
-            timeout = 30,
+            timeout = 10,
         )
 
         data: dict[str, Any] = response.json()
 
-        dto = self.dto().from_dict(
-            data = data,
-        )
+        return data
 
-        return dto
+        # dto = self.dto().from_dict(
+        #     data = data,
+        # )
+        #
+        # return dto

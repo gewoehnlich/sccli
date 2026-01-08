@@ -5,7 +5,7 @@ from core.dto import Dto
 
 
 class TokensDto(
-    Dto
+#    Dto
 ):
     access_token:      str
     token_type:        str

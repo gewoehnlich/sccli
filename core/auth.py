@@ -7,19 +7,16 @@ import asyncio
 import webbrowser
 from typing import Any, Self
 
-from dependency_injector.wiring import Provide, inject
-
 from core.dto import Dto
 from core.request import Request
+from core.resource import Resource
 from core.server import Server
-from di.requests_container import RequestsContainer
-from di.resources_container import ResourcesContainer
-from resources.json_resource import JsonResource
 
 
 class Auth:
     _instance:    Self | None = None
     _initialized: bool        = False
+
 
     def __new__(
         cls: type[Self],
@@ -39,6 +36,9 @@ class Auth:
         server_port: int,
         server_path: str,
         tokens_file: str,
+        server: Server,
+        authentication_request: Request,
+        refresh_token_request: Request,
     ) -> None:
         if self._initialized:
             return
@@ -50,22 +50,26 @@ class Auth:
 
         self.server: Server = server
 
-        self.authentication_request: Request = authentication_request
-        self.refresh_token_request:  Request = refresh_token_request
+        self.authentication_request = authentication_request
+        self.refresh_token_request = refresh_token_request
 
         self._initialized = True
 
 
-    def get_access_token(self) -> str:
-        access_token = self.load_token()
+    def get_access_token(
+        self,
+    ) -> str:
+        access_token = self.__load_token()
 
         if not access_token:
-            access_token = self.authenticate_user()
+            access_token = self.__authenticate_user()
 
         return access_token
 
 
-    def load_token(self) -> str | None:
+    def __load_token(
+        self,
+    ) -> str | None:
         try:
             with open(
                 file = self.tokens_file,
@@ -85,7 +89,7 @@ class Auth:
                 if "refresh_token" not in token_data:
                     return None
 
-                access_token = self.refresh_token(
+                access_token = self.__refresh_token(
                     refresh_token = token_data["refresh_token"]
                 )
 
@@ -98,11 +102,11 @@ class Auth:
             return None
 
 
-    def refresh_token(
+    def __refresh_token(
         self,
         refresh_token: str,
-        request:       Request  = Provide[RequestsContainer.refresh_token],
-        resource:      Resource = Provide[ResourcesContainer.json],
+        request:       Request,
+        resource:      Resource,
     ) -> str:
         request: Request = request(
             client_id      = self.client_id,
@@ -142,14 +146,11 @@ class Auth:
         return access_token
 
 
-    @inject
-    def authenticate_user(
+    def __authenticate_user(
         self,
-        server: Server,
-        authentication_request: Request = Provide[RequestsContainer.authentication],
     ) -> str:
-        code_verifier, code_challenge = self.generate_pkce()
-        state = self.generate_state()
+        code_verifier, code_challenge = self.__generate_pkce()
+        state = self.__generate_state()
 
         auth_url = (
             "https://secure.soundcloud.com/authorize"
@@ -162,11 +163,11 @@ class Auth:
         )
 
         webbrowser.open(auth_url)
-        auth_code, returned_state = asyncio.run(server.run())
+        auth_code, returned_state = asyncio.run(self.server.run())
         if state != returned_state:
             raise Exception("State mismatch!")
 
-        request: Request = authentication_request(
+        request: Request = self.authentication_request(
             self.client_id,
             self.client_secret,
             self.redirect_uri,
@@ -174,30 +175,35 @@ class Auth:
             auth_code
         )
 
-        response: Dto = request.send()
+        response: dict[str, Any] = request.send()
 
-        token_data: dict[str, Any] = JsonResource().from_dto(
-            dto = response,
-        )
+        # token_data: dict[str, Any] = JsonResource().from_dto(
+        #     dto = response,
+        # )
 
         with open(
             file = self.tokens_file,
             mode = "w",
             encoding = "utf-8",
         ) as file:
-            file.write(token_data)
+            # file.write(token_data)
+            file.write(
+                json.dumps(
+                    obj = response,
+                    indent = 4,
+                )
+            )
 
-        access_token: Any = response.access_token
-        if not isinstance(access_token, str):
-            raise ValueError("access_token is not a string.")
+        access_token: str = str(response["access_token"])
 
         return access_token
 
 
-    def generate_pkce(self) -> tuple[str, str]:
+    def __generate_pkce(self) -> tuple[str, str]:
         code_verifier: str = base64.urlsafe_b64encode(
             os.urandom(40)
         ).decode("utf-8").rstrip("=")
+
         code_challenge: str = base64.urlsafe_b64encode(
             hashlib.sha256(code_verifier.encode()).digest()
         ).decode("utf-8").rstrip("=")
@@ -205,7 +211,7 @@ class Auth:
         return code_verifier, code_challenge
 
 
-    def generate_state(self) -> str:
+    def __generate_state(self) -> str:
         state: str = base64.urlsafe_b64encode(
             os.urandom(16)
         ).decode().rstrip("=")

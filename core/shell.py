@@ -34,6 +34,7 @@ class Shell:
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")
 
+
     @inject
     def process_command(
         self,
@@ -67,6 +68,7 @@ class Shell:
                 commands.exit().run()
             case _:
                 commands.unknown_command().run()
+
 
     def parse_input(
         self,

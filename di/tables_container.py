@@ -1,6 +1,7 @@
 from dependency_injector import containers, providers
 
 from core.table          import Table
+from tables.tokens_table import TokensTable
 from tables.tracks_table import TracksTable
 from tables.users_table  import UsersTable
 
@@ -17,4 +18,7 @@ class TablesContainer(
     )
     users = providers.Singleton(
         UsersTable,
+    )
+    tokens = providers.Singleton(
+        TokensTable,
     )
