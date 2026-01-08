@@ -27,10 +27,6 @@ class DiContainer(
         )
     )
 
-    # dto = providers.Singleton(
-    #     DtoContainer,
-    # )
-
     auth_requests = providers.Singleton(
         AuthRequestsContainer
     )
@@ -47,6 +43,11 @@ class DiContainer(
         authentication_request = auth_requests().authentication.provider,
         refresh_token_request  = auth_requests().refresh_token.provider,
     )
+
+    # dto = providers.Singleton(
+    #     DtoContainer,
+    # )
+
     #
     # models = providers.Singleton(
     #     ModelsContainer,

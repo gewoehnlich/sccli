@@ -6,6 +6,8 @@ import json
 import asyncio
 import webbrowser
 from typing import Any, Self
+from rich import inspect
+from rich.pretty import pprint
 
 from core.database import Database
 from core.dto import Dto
@@ -70,88 +72,35 @@ class Auth:
 
         current_timestamp = int(time.time())
         if current_timestamp > account.expire_timestamp - 100:
-            return self.__refresh_token()
+            return self.__refresh_token(
+                account = account,
+            )
 
         return account.access_token
 
 
-    def __load_token(
-        self,
-    ) -> str | None:
-        try:
-            with open(
-                file = self.tokens_file,
-                mode = "r",
-                encoding = "utf-8",
-            ) as file:
-                token_data = json.loads(
-                    file.read().strip()
-                )
-
-                current_timestamp = int(time.time())
-                expire_timestamp = (
-                    int(token_data["timestamp"]) + int(token_data["expires_in"])
-                )
-
-            if current_timestamp > expire_timestamp - 100:
-                if "refresh_token" not in token_data:
-                    return None
-
-                access_token = self.__refresh_token(
-                    refresh_token = token_data["refresh_token"]
-                )
-
-            else:
-                access_token = token_data["access_token"]
-
-            return access_token
-
-        except (FileNotFoundError, KeyError):
-            return None
-
-
     def __refresh_token(
         self,
-        refresh_token: str,
-        request:       Request,
-        resource:      Resource,
+        account: Account,
     ) -> str:
-        request: Request = request(
-            client_id      = self.client_id,
-            client_secret  = self.client_secret,
-            refresh_token  = refresh_token,
+        request: Request = self.refresh_token_request(
+            client_id      = account.client_id,
+            client_secret  = account.client_secret,
+            refresh_token  = account.refresh_token,
         )
 
-        try:
-            response: Dto = request.send()
-        except Exception as e:
-            raise e
+        response: dict[str, Any] = request.send()
 
-        try:
-            token_data: dict[str, Any] = resource().from_dto(
-                dto = response,
+        with self.database.session_factory() as session:
+            account: Account = AccountRepository(session).update(
+                client_id = self.client_id,
+                client_secret = self.client_secret,
+                access_token = str(response["access_token"]),
+                refresh_token = str(response["refresh_token"]),
+                expire_timestamp = int(time.time()) + int(response["expires_in"]),
             )
 
-            with open(
-                file = self.tokens_file,
-                mode = "w",
-                encoding = "utf-8",
-            ) as file:
-                file.write(
-                    json.dumps(
-                        obj = token_data,
-                        indent = 4,
-                    )
-                )
-
-        except Exception as e:
-            raise e
-
-        access_token: str = response.access_token
-        if not isinstance(access_token, str):
-            raise ValueError("access_token is not a string.")
-
-        return access_token
+        return account.access_token
 
 
     def __authenticate_user(
@@ -186,7 +135,7 @@ class Auth:
         response: dict[str, Any] = request.send()
 
         with self.database.session_factory() as session:
-            account: Account = AccountRepository(session).write(
+            account: Account = AccountRepository(session).create(
                 client_id = self.client_id,
                 client_secret = self.client_secret,
                 access_token = str(response["access_token"]),

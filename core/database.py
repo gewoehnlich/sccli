@@ -42,8 +42,7 @@ class Database:
             expire_on_commit = False,
         )
 
-        self.models:     ModelsContainer = models 
-        self.model_base: DeclarativeBase = self.models.model()
+        self.models: ModelsContainer = models
 
         self._initialized = True
 
@@ -51,13 +50,4 @@ class Database:
     def initialize_tables(
         self,
     ) -> None:
-        self.model_base.metadata.create_all(self.engine)
-
-
-    def insert(
-        self,
-        model: Model,
-    ) -> None:
-        with sessionmaker(bind = self.engine) as session:
-            session.add(model)
-            session.commit()
+        self.models.model().metadata.create_all(self.engine)
