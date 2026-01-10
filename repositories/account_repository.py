@@ -1,21 +1,24 @@
-from sqlalchemy import delete
-from sqlalchemy.orm import Session
+from core.database import Database
 from models.account import Account
 
 
 class AccountRepository:
+    database: Database
+
+
     def __init__(
         self,
-        session: Session
+        database: Database
     ) -> None:
-        self._session = session
+        self.database = database
 
 
-    def get_by_client_id(
+    def get(
         self,
         client_id: str,
     ) -> Account | None:
-        return self._session.get(Account, client_id)
+        with self.database.session_factory() as session:
+            return session.get(Account, client_id)
 
 
     def create(
@@ -34,10 +37,12 @@ class AccountRepository:
             expire_timestamp = expire_timestamp,
         )
 
-        self._session.add(instance = account)
-        self._session.commit()
+        with self.database.session_factory() as session:
+            session.add(instance = account)
+            session.commit()
 
         return account
+
 
     def update(
         self,
@@ -47,17 +52,18 @@ class AccountRepository:
         refresh_token: str,
         expire_timestamp: int,
     ) -> Account:
-        account = self._session.get(Account, client_id)
+        with self.database.session_factory() as session:
+            account = session.get(Account, client_id)
 
-        if account is None:
-            raise ValueError(f"Account {client_id} not found")
+            if account is None:
+                raise ValueError(f"Account { client_id } not found")
 
-        account.client_secret = client_secret
-        account.access_token = access_token
-        account.refresh_token = refresh_token
-        account.expire_timestamp = expire_timestamp
+            account.client_secret    = client_secret
+            account.access_token     = access_token
+            account.refresh_token    = refresh_token
+            account.expire_timestamp = expire_timestamp
 
-        self._session.commit()
+            session.commit()
 
         return account
 
@@ -66,10 +72,11 @@ class AccountRepository:
         self,
         client_id: str,
     ) -> None:
-        account = self._session.get(Account, client_id)
+        with self.database.session_factory() as session:
+            account = session.get(Account, client_id)
 
-        if account is None:
-            raise ValueError("Account not found")
+            if account is None:
+                raise ValueError("Account not found")
 
-        self._session.delete(account)
-        self._session.commit()
+            session.delete(account)
+            session.commit()

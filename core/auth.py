@@ -11,6 +11,7 @@ from rich.pretty import pprint
 
 from core.database import Database
 from core.dto import Dto
+from core.repository import Repository
 from core.request import Request
 from core.resource import Resource
 from core.server import Server
@@ -19,53 +20,32 @@ from repositories.account_repository import AccountRepository
 
 
 class Auth:
-    _instance:    Self | None = None
-    _initialized: bool        = False
-
-
-    def __new__(
-        cls: type[Self],
-        *args,
-        **kwargs,
-    ) -> Self:
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-
-        return cls._instance
-
-
     def __init__(
         self,
         client_id: str,
         client_secret: str,
         server: Server,
-        database: Database,
+        account_repository: Repository,
         authentication_request: Request,
         refresh_token_request: Request,
     ) -> None:
-        if self._initialized:
-            return
-
         self.client_id:     str = client_id
         self.client_secret: str = client_secret
         self.redirect_uri:  str = f"http://localhost:{ server.port }{ server.path }"
 
         self.server: Server = server
-        self.database: Database = database
+        self.account_repository: Repository = account_repository
 
         self.authentication_request: Request = authentication_request
         self.refresh_token_request:  Request = refresh_token_request
-
-        self._initialized = True
 
 
     def get_access_token(
         self,
     ) -> str:
-        with self.database.session_factory() as session:
-            account: Account | None = AccountRepository(session).get_by_client_id(
-                client_id = self.client_id,
-            )
+        account: Account | None = self.account_repository.get(
+            client_id = self.client_id,
+        )
 
         if not account:
             return self.__authenticate_user()

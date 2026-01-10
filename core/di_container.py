@@ -2,13 +2,14 @@ from typing import Self
 from dependency_injector import containers, providers
 
 from core.auth              import Auth
-from core.database          import Database
 from core.server            import Server
+from databases.sqlite_database import SqliteDatabase
 # from di.actions_container   import ActionsContainer
 from di.auth_requests_container import AuthRequestsContainer
 # from di.commands_container  import CommandsContainer
 # from di.dto_container       import DtoContainer
 from di.models_container    import ModelsContainer
+from di.repository_container import RepositoryContainer
 # from di.requests_container  import RequestsContainer
 # from di.resources_container import ResourcesContainer
 # from di.tables_container    import TablesContainer
@@ -20,11 +21,16 @@ class DiContainer(
     config = providers.Configuration()
 
     database = providers.Singleton(
-        Database,
+        SqliteDatabase,
         database_name = config.database.name,
         models = providers.Singleton(
             ModelsContainer,
         )
+    )
+
+    repositories = providers.Singleton(
+        RepositoryContainer,
+        database = database,
     )
 
     auth_requests = providers.Singleton(
@@ -39,7 +45,7 @@ class DiContainer(
             port = config.server.port,
             path = config.server.path,
         ),
-        database = database,
+        account_repository     = repositories.account,
         authentication_request = auth_requests().authentication.provider,
         refresh_token_request  = auth_requests().refresh_token.provider,
     )
@@ -73,27 +79,3 @@ class DiContainer(
     #     actions   = actions,
     #     resources = resources,
     # )
-
-
-    _instance:    Self | None = None
-    _initialized: bool        = False
-
-
-    def __new__(
-        cls: type[Self],
-        *args,
-        **kwargs,
-    ) -> Self:
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-
-        return cls._instance
-
-
-    def __init__(
-        self,
-    ) -> None:
-        if self._initialized:
-            return
-
-        self._initialized = True
