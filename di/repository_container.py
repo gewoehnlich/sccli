@@ -6,9 +6,9 @@ from repositories.account_repository import AccountRepository
 class RepositoryContainer(
     containers.DeclarativeContainer
 ):
-    database = providers.Dependency()
+    session_factory = providers.Dependency()
 
     account = providers.Singleton(
         AccountRepository,
-        database = database,
+        session_factory = session_factory,
     )

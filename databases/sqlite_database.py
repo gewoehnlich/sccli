@@ -13,7 +13,6 @@ class SqliteDatabase(
         database_name: str,
         models:        ModelsContainer,
     ) -> None:
-        print(database_name)
         self.database_name: str = database_name
 
         self.engine: sqlalchemy.Engine = sqlalchemy.create_engine(

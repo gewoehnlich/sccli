@@ -2,18 +2,14 @@ import os
 import base64
 import hashlib
 import time
-import json
 import asyncio
 import webbrowser
-from typing import Any, Self
+from typing import Any
 from rich import inspect
-from rich.pretty import pprint
 
-from core.database import Database
-from core.dto import Dto
-from core.repository import Repository
+from api_requests.authentication_request import AuthenticationRequest
+from api_requests.refresh_token_request import RefreshTokenRequest
 from core.request import Request
-from core.resource import Resource
 from core.server import Server
 from models.account import Account
 from repositories.account_repository import AccountRepository
@@ -25,19 +21,19 @@ class Auth:
         client_id: str,
         client_secret: str,
         server: Server,
-        account_repository: Repository,
-        authentication_request: Request,
-        refresh_token_request: Request,
+        account_repository: AccountRepository,
+        authentication_request: AuthenticationRequest,
+        refresh_token_request: RefreshTokenRequest,
     ) -> None:
         self.client_id:     str = client_id
         self.client_secret: str = client_secret
         self.redirect_uri:  str = f"http://localhost:{ server.port }{ server.path }"
 
         self.server: Server = server
-        self.account_repository: Repository = account_repository
+        self.account_repository: AccountRepository = account_repository
 
-        self.authentication_request: Request = authentication_request
-        self.refresh_token_request:  Request = refresh_token_request
+        self.authentication_request: AuthenticationRequest = authentication_request
+        self.refresh_token_request:  RefreshTokenRequest   = refresh_token_request
 
 
     def get_access_token(
@@ -70,15 +66,15 @@ class Auth:
         )
 
         response: dict[str, Any] = request.send()
+        inspect(response)
 
-        with self.database.session_factory() as session:
-            account: Account = AccountRepository(session).update(
-                client_id = self.client_id,
-                client_secret = self.client_secret,
-                access_token = str(response["access_token"]),
-                refresh_token = str(response["refresh_token"]),
-                expire_timestamp = int(time.time()) + int(response["expires_in"]),
-            )
+        account: Account = self.account_repository.update(
+            client_id = self.client_id,
+            client_secret = self.client_secret,
+            access_token = str(response["access_token"]),
+            refresh_token = str(response["refresh_token"]),
+            expire_timestamp = int(time.time()) + int(response["expires_in"]),
+        )
 
         return account.access_token
 
@@ -114,14 +110,13 @@ class Auth:
 
         response: dict[str, Any] = request.send()
 
-        with self.database.session_factory() as session:
-            account: Account = AccountRepository(session).create(
-                client_id = self.client_id,
-                client_secret = self.client_secret,
-                access_token = str(response["access_token"]),
-                refresh_token = str(response["refresh_token"]),
-                expire_timestamp = int(time.time()) + int(response["expires_in"]),
-            )
+        account: Account = self.account_repository.create(
+            client_id = self.client_id,
+            client_secret = self.client_secret,
+            access_token = str(response["access_token"]),
+            refresh_token = str(response["refresh_token"]),
+            expire_timestamp = int(time.time()) + int(response["expires_in"]),
+        )
 
         return account.access_token
 

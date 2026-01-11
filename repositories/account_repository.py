@@ -1,23 +1,24 @@
+from sqlalchemy.orm import Session, sessionmaker
 from core.database import Database
 from models.account import Account
 
 
 class AccountRepository:
-    database: Database
+    session_factory: sessionmaker[Session]
 
 
     def __init__(
         self,
-        database: Database
+        session_factory: sessionmaker[Session],
     ) -> None:
-        self.database = database
+        self.session_factory = session_factory
 
 
     def get(
         self,
         client_id: str,
     ) -> Account | None:
-        with self.database.session_factory() as session:
+        with self.session_factory() as session:
             return session.get(Account, client_id)
 
 
@@ -37,7 +38,7 @@ class AccountRepository:
             expire_timestamp = expire_timestamp,
         )
 
-        with self.database.session_factory() as session:
+        with self.session_factory() as session:
             session.add(instance = account)
             session.commit()
 
@@ -52,7 +53,7 @@ class AccountRepository:
         refresh_token: str,
         expire_timestamp: int,
     ) -> Account:
-        with self.database.session_factory() as session:
+        with self.session_factory() as session:
             account = session.get(Account, client_id)
 
             if account is None:
@@ -72,7 +73,7 @@ class AccountRepository:
         self,
         client_id: str,
     ) -> None:
-        with self.database.session_factory() as session:
+        with self.session_factory() as session:
             account = session.get(Account, client_id)
 
             if account is None:

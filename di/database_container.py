@@ -1,11 +1,12 @@
 from dependency_injector import containers, providers
 
 from core.database import Database
+from databases.sqlite_database import SqliteDatabase
 
 
 class DatabaseContainer(
     containers.DeclarativeContainer
 ):
-    database = providers.Singleton(
-        Database,
+    sqlite = providers.Singleton(
+        SqliteDatabase,
     )

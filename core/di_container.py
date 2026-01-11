@@ -28,9 +28,9 @@ class DiContainer(
         )
     )
 
-    repositories = providers.Singleton(
+    repositories = providers.Container(
         RepositoryContainer,
-        database = database,
+        session_factory = database.provided.session_factory,
     )
 
     auth_requests = providers.Singleton(
@@ -45,7 +45,7 @@ class DiContainer(
             port = config.server.port,
             path = config.server.path,
         ),
-        account_repository     = repositories.account,
+        account_repository     = repositories().account,
         authentication_request = auth_requests().authentication.provider,
         refresh_token_request  = auth_requests().refresh_token.provider,
     )
