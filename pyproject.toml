@@ -1,29 +1,28 @@
 [project]
 name = "sccli"
 version = "0.1.0"
-description = "A command-line interface for SoundCloud."
+description = "a command-line interface for soundcloud"
 authors = [
-    { name = "gewoehnlich", email = "gewoehnlich@gewoehnlich.org" },
+    { name = "gewoehnlich", email = "gewoehnlich@disroot.org" }
 ]
+readme = "README.md"
+requires-python = ">=3.14"
 dependencies = [
-    "requests>=2.32.4",
-    "python-dotenv>=1.1.1",
-    "aiohttp>=3.12.14",
+    "aiohttp (>=3.13.3,<4.0.0)",
+    "asyncio (>=4.0.0,<5.0.0)",
+    "mypy (>=1.19.1,<2.0.0)",
+    "python-dotenv (>=1.2.1,<2.0.0)",
+    "pydantic (>=2.12.5,<3.0.0)",
+    "pydantic-settings (>=2.12.0,<3.0.0)",
+    "pylint (>=4.0.4,<5.0.0)",
+    "pyright (>=1.1.408,<2.0.0)",
+    "pyyaml (>=6.0.3,<7.0.0)",
+    "requests (>=2.32.5,<3.0.0)",
+    "rich (>=14.2.0,<15.0.0)",
+    "sqlalchemy (>=2.0.45,<3.0.0)"
 ]
-requires-python = ">=3.8"
+
 
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project.optional-dependencies]
-dev = [
-    "pytest",
-    "black",
-    "flake8",
-]
-
-[tool.pytest.ini_options]
-pythonpath = [
-  "."
-]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

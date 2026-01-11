@@ -66,7 +66,6 @@ class Auth:
         )
 
         response: dict[str, Any] = request.send()
-        inspect(response)
 
         account: Account = self.account_repository.update(
             client_id = self.client_id,
