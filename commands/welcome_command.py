@@ -5,7 +5,9 @@ from core.command import Command
 from core.resource import Resource
 
 
-class WelcomeCommand(Command):
+class WelcomeCommand(
+    Command
+):
     _instance:    Self | None = None
     _initialized: bool        = False
 
@@ -22,9 +24,10 @@ class WelcomeCommand(Command):
     def __init__(
         self,
         action: Action,
-        resource: Resource,
+        # resource: Resource | None,
     ) -> None:
         super().__init__(
             action = action,
-            resource = resource,
+            resource = None,
+            # resource = resource,
         )

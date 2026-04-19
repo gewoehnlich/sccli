@@ -15,15 +15,17 @@ from models.account import Account
 from repositories.account_repository import AccountRepository
 
 
-class Auth:
+class Auth(
+
+):
     def __init__(
         self,
         client_id: str,
         client_secret: str,
         server: Server,
         account_repository: AccountRepository,
-        authentication_request: AuthenticationRequest,
-        refresh_token_request: RefreshTokenRequest,
+        authentication_request: type[AuthenticationRequest],
+        refresh_token_request: type[RefreshTokenRequest],
     ) -> None:
         self.client_id:     str = client_id
         self.client_secret: str = client_secret
@@ -32,8 +34,8 @@ class Auth:
         self.server: Server = server
         self.account_repository: AccountRepository = account_repository
 
-        self.authentication_request: AuthenticationRequest = authentication_request
-        self.refresh_token_request:  RefreshTokenRequest   = refresh_token_request
+        self.authentication_request: type[AuthenticationRequest] = authentication_request
+        self.refresh_token_request:  type[RefreshTokenRequest]   = refresh_token_request
 
 
     def get_access_token(

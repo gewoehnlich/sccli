@@ -1,12 +1,18 @@
-from dependency_injector.wiring import Provide
 from core.action import Action
 
 
 class GetWelcomeMessageAction(
     Action
 ):
+    message: str
+
+    def __init__(
+        self,
+        message: str,
+    ) -> None:
+        self.message = message
+
     def run(
         self,
-        message: str = Provide[DiContainer.actions.get_welcome_command_message],
     ) -> str:
-        return message
+        return self.message

@@ -14,6 +14,7 @@ class FetchMyLikedTracksRequest(
     ) -> None:
         super().__init__(
             access_token = auth.get_access_token(),
+            dto = dto,
         )
 
         self.method = "GET"

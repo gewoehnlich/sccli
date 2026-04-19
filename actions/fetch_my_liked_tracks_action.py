@@ -1,7 +1,6 @@
 from typing import Any, Self
 from time   import sleep
 from pprint import pprint
-from dependency_injector.wiring import Provide, inject
 from requests import Response
 
 from core.database            import Database

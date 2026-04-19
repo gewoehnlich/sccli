@@ -1,5 +1,3 @@
-from dependency_injector import containers, providers
-
 from commands.exit_command                import ExitCommand
 from commands.my_liked_tracks_command     import MyLikedTracksCommand
 from commands.followings_command          import FollowingsCommand
@@ -11,23 +9,19 @@ from commands.my_tracks_command           import MyTracksCommand
 from commands.unknown_command             import UnknownCommand
 from commands.user_command                import UserCommand
 from commands.welcome_command             import WelcomeCommand
+from di.actions_container import ActionsContainer
+from di.resources_container import ResourcesContainer
 
 
 class CommandsContainer(
-    containers.DeclarativeContainer
+
 ):
-    # exit                = providers.Singleton(ExitCommand)
-    my_liked_tracks = providers.Singleton(
-        MyLikedTracksCommand,
-    )
-    # followings          = providers.Singleton(FollowingsCommand)
-    # followings_tracks   = providers.Singleton(FollowingsTracksCommand)
-    # track               = providers.Singleton(TrackCommand)
-    # track_streaming_url = providers.Singleton(TrackStreamingUrlCommand)
-    # help                = providers.Singleton(HelpCommand)
-    # my_tracks           = providers.Singleton(MyTracksCommand)
-    # unknown_command     = providers.Singleton(UnknownCommand)
-    # user                = providers.Singleton(UserCommand)
-    welcome = providers.Singleton(
-        WelcomeCommand,
-    )
+    def __init__(
+        self,
+        actions: ActionsContainer,
+        resources: ResourcesContainer,
+    ):
+        self.welcome = WelcomeCommand(
+            action = actions.get_welcome_message,
+            # resource = resources.pprint(),
+        )

@@ -2,14 +2,16 @@ from core.action import Action
 from core.resource import Resource
 
 
-class Command:
+class Command(
+
+):
     action: Action
-    resource: Resource
+    resource: Resource | None
 
     def __init__(
         self,
         action: Action,
-        resource: Resource,
+        resource: Resource | None,
     ) -> None:
         if action:
             self.action = action
@@ -21,5 +23,7 @@ class Command:
         if self.action:
             result = self.action.run()
 
-        if result and self.resource:
-            response = self.resource.print(result)
+        if result:
+            print(result)
+        # if result and self.resource:
+        #     response = self.resource.print(result)

@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from core.database import Database
 from core.table import Table
 from core.request import Request
@@ -23,7 +24,8 @@ class Action:
         if table:
             self.table = table
 
-    def run(
-        self,
-    ) -> bool:
-        return False
+    # @abstractmethod
+    # def run(
+    #     self,
+    # ) -> bool:
+    #     return False
