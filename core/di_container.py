@@ -1,9 +1,9 @@
 from api_requests.authentication_request import AuthenticationRequest
 from api_requests.refresh_token_request import RefreshTokenRequest
 from core.auth              import Auth
+from core.config import Config
 from core.database import Database
 from core.server            import Server
-from core.settings import Settings
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container   import ActionsContainer
 from default_settings.app import AppSettings
@@ -18,7 +18,7 @@ from di.resources_container import ResourcesContainer
 class DiContainer(
 
 ):
-    config: AppSettings = Settings().load()
+    config: AppSettings = Config().load()
 
     database: Database = SqliteDatabase(
         database_name = config.database.name,
