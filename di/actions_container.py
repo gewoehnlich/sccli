@@ -1,6 +1,7 @@
+from core.auth import Auth
 from default_settings.messages import MessagesSettings
 
-# from actions.fetch_my_liked_tracks_action       import FetchMyLikedTracksAction
+from actions.fetch_my_liked_tracks_action       import FetchMyLikedTracksAction
 from actions.get_exit_message_action            import GetExitMessageAction
 from actions.get_help_message_action            import GetHelpMessageAction
 from actions.get_unknown_command_message_action import GetUnknownCommandMessageAction
@@ -14,6 +15,7 @@ class ActionsContainer(
 ):
     def __init__(
         self,
+        auth: Auth,
         requests: RequestsContainer,
         repositories: RepositoryContainer,
         messages: MessagesSettings,
@@ -32,4 +34,9 @@ class ActionsContainer(
 
         self.get_unknown_message = GetUnknownCommandMessageAction(
             message = messages.unknown
+        )
+
+        self.fetch_my_liked_tracks = FetchMyLikedTracksAction(
+            auth = auth,
+            request = requests.fetch_my_liked_tracks,
         )

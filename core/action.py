@@ -1,31 +1,32 @@
 from abc import abstractmethod
+from core.auth import Auth
 from core.database import Database
-from core.table import Table
 from core.request import Request
 
 
-class Action:
-    request:  Request  | None = None
-    database: Database | None = None
-    table:    Table    | None = None
+class Action(
+
+):
+    auth: Auth
+    request:  type[Request] | None = None
 
     def __init__(
         self,
-        request:  Request  | None = None,
-        database: Database | None = None,
-        table:    Table    | None = None,
+        auth: Auth | None = None,
+        request:  type[Request]  | None = None,
+        # repository = None,
     ) -> None:
+        if auth:
+            self.auth = auth
+
         if request:
             self.request = request
 
-        if database:
-            self.database = database
+        # if repository:
+        #     self.repository = database
 
-        if table:
-            self.table = table
-
-    # @abstractmethod
-    # def run(
-    #     self,
-    # ) -> bool:
-    #     return False
+    @abstractmethod
+    def run(
+        self,
+    ):
+        return None

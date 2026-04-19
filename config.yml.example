@@ -15,9 +15,6 @@ server:
   port:
   path:
 
-tokens:
-  file:
-
 tests:
   database:
     name:

@@ -16,18 +16,5 @@ class RequestsContainer(
 ):
     def __init__(
         self,
-        auth: Auth,
-        dto: DtoContainer
     ):
-        print(123)
-        #
-        # self.fetch_my_liked_tracks = FetchMyLikedTracksRequest(
-        #     auth = auth,
-        #     # dto = dto.fetch_my_liked_tracks,
-        # )
-    # followings = FollowingsRequest
-    # followings_tracks = FollowingsTracksRequest
-    # get_track = GetTrackRequest
-    # get_track_streaming_url = GetTrackStreamingUrlRequest
-    # me_tracks = MeTracksRequest
-    # user_info = UserInfoRequest
+        self.fetch_my_liked_tracks = FetchMyLikedTracksRequest

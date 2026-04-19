@@ -7,8 +7,7 @@ from core.shell import Shell
 def main(
     di_container: DiContainer,
 ) -> None:
-    # print(di_container.auth.get_access_token())
-    # print(di_container.commands.welcome.run())
+    print(di_container.commands.liked_tracks.run())
 
     shell = Shell(commands = di_container.commands)
     shell.run()

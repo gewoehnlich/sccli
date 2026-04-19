@@ -3,7 +3,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 from core.model import Model
 
 
-class Account(Model):
+class Account(
+    Model
+):
     __tablename__ = "accounts"
 
     client_id: Mapped[str] = mapped_column(

@@ -47,7 +47,7 @@ class Shell:
             case "me" | "user":
                 self.commands.user().run()
             case "liked:tracks" | "lt":
-                self.commands.my_liked_tracks(args).run()
+                self.commands.liked_tracks.run()
             case "me:followings":
                 self.commands.followings(args).run()
             case "me:followings:tracks":

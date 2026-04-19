@@ -90,7 +90,7 @@ class Settings():
             settings = AppSettings.model_validate(config)
 
         except ValidationError as e:
-            print(f"ERROR: Invalid configuration in '{ CONFIG_PATH }':\n{e}", file=sys.stderr)
+            print(f"ERROR: Invalid configuration in '{ self.CONFIG_PATH }':\n{e}", file=sys.stderr)
             sys.exit(1)
 
         return settings

@@ -1,5 +1,3 @@
-from typing import Self
-
 from api_requests.authentication_request import AuthenticationRequest
 from api_requests.refresh_token_request import RefreshTokenRequest
 from core.auth              import Auth
@@ -45,12 +43,10 @@ class DiContainer(
 
     dto = DtoContainer()
 
-    requests = RequestsContainer(
-        auth = auth,
-        dto  = dto,
-    )
+    requests = RequestsContainer()
 
     actions = ActionsContainer(
+        auth = auth,
         requests = requests,
         repositories = repositories,
         messages = config.messages,

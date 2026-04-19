@@ -10,19 +10,13 @@ class Request(
     BaseRequest
 ):
     method:  str = str()
-
     url:     str = str()
-
     headers: dict[str, str] = {
         "Accept": "application/json; charset=utf-8",
         "Content-Type": "application/x-www-form-urlencoded",
     }
-
     params: dict[str, str] = {}
-
     data:   dict[str, str] = {}
-
-    # dto: Dto
 
 
     def __init__(
@@ -46,9 +40,3 @@ class Request(
         data: dict[str, Any] = response.json()
 
         return data
-
-        # dto = self.dto().from_dict(
-        #     data = data,
-        # )
-        #
-        # return dto

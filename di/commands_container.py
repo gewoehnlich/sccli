@@ -41,3 +41,7 @@ class CommandsContainer(
             resource = resources.pprint,
         )
 
+        self.liked_tracks = MyLikedTracksCommand(
+            action = actions.fetch_my_liked_tracks,
+            resource = resources.pprint,
+        )

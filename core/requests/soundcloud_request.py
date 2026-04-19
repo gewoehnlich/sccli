@@ -10,12 +10,8 @@ class SoundcloudRequest(
     def __init__(
         self,
         access_token: str,
-        dto: Dto,
     ) -> None:
         super().__init__()
 
         if access_token:
             self.headers['Authorization'] = f"OAuth {access_token}"
-
-        if dto:
-            self.dto = dto
