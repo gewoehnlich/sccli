@@ -1,8 +1,0 @@
-{
-  "pythonVersion": "3.13",
-  "typeCheckingMode": "strict",
-  "venvPath": ".",
-  "venv": ".venv",
-  "reportMissingImports": true,
-  "reportUnusedImport": true
-}
