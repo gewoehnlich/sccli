@@ -1,26 +1,22 @@
 import shlex
 from typing import Tuple, List
-from dependency_injector.wiring import Provide, inject
-from core.di_container import DiContainer
 from di.commands_container import CommandsContainer
 
 
 class Shell:
-    _instance = None
+    commands: CommandsContainer
 
-    def __new__(cls) -> None:
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
+    def __init__(
+        self,
+        commands: CommandsContainer,
+    ) -> None:
+        self.commands = commands
 
-        return cls._instance
-
-    @inject
     def run(
         self,
-        commands: CommandsContainer = Provide[DiContainer.commands]
     ) -> None:
         """Starts the interactive shell session."""
-        commands.welcome().run()
+        self.commands.welcome.run()
 
         while True:
             try:
@@ -28,18 +24,16 @@ class Shell:
                 self.process_command(command_line = command_line)
 
             except KeyboardInterrupt:
-                commands.exit().run()
+                self.commands.exit.run()
                 break
 
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")
 
 
-    @inject
     def process_command(
         self,
         command_line: str = "",
-        commands: CommandsContainer = Provide[DiContainer.commands],
     ) -> None:
         """Parses and executes the command."""
         if not command_line:
@@ -49,25 +43,25 @@ class Shell:
 
         match command:
             case "help":
-                commands.help().run()
+                self.commands.help.run()
             case "me" | "user":
-                commands.user().run()
+                self.commands.user().run()
             case "liked:tracks" | "lt":
-                commands.my_liked_tracks(args).run()
+                self.commands.my_liked_tracks(args).run()
             case "me:followings":
-                commands.followings(args).run()
+                self.commands.followings(args).run()
             case "me:followings:tracks":
-                commands.followings_tracks(args).run()
+                self.commands.followings_tracks(args).run()
             case "me:tracks":
-                commands.my_tracks(args).run()
+                self.commands.my_tracks(args).run()
             case "track":
-                commands.track(args).run()
+                self.commands.track(args).run()
             case "track_streaming_url":
-                commands.track_streaming_url(args).run()
+                self.commands.track_streaming_url(args).run()
             case "exit" | "quit" | "q":
-                commands.exit().run()
+                self.commands.exit.run()
             case _:
-                commands.unknown_command().run()
+                self.commands.unknown_command.run()
 
 
     def parse_input(

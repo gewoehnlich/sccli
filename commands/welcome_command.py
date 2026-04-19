@@ -24,10 +24,9 @@ class WelcomeCommand(
     def __init__(
         self,
         action: Action,
-        # resource: Resource | None,
+        resource: Resource,
     ) -> None:
         super().__init__(
             action = action,
-            resource = None,
-            # resource = resource,
+            resource = resource,
         )

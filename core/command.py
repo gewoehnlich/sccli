@@ -1,3 +1,4 @@
+from rich import inspect
 from core.action import Action
 from core.resource import Resource
 
@@ -19,11 +20,13 @@ class Command(
         if resource:
             self.resource = resource
 
-    def run(self) -> None:
+    def run(
+        self,
+    ) -> None:
         if self.action:
             result = self.action.run()
 
         if result:
             print(result)
-        # if result and self.resource:
-        #     response = self.resource.print(result)
+            # and self.resource:
+            # response = self.resource.print(result)

@@ -1,4 +1,3 @@
-from dependency_injector.wiring import Provide
 from core.action import Action
 
 

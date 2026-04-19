@@ -1,9 +1,20 @@
 from core.action import Action
-from core.di_container import DiContainer
 
 
-class GetUnknownCommandMessageAction(Action):
+class GetUnknownCommandMessageAction(
+    Action
+):
+    message: str
+
+
+    def __init__(
+        self,
+        message: str,
+    ):
+        self.message = message
+
+
     def run(
-        config: str = Provide[DiContainer.config]
+        self,
     ) -> str:
-        return config.unknown_command_message
+        return self.message
