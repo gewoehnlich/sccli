@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session, sessionmaker
-from core.database import Database
+from core.repository import Repository
 from models.account import Account
 
 
-class AccountRepository:
+class AccountRepository(
+    Repository
+):
     session_factory: sessionmaker[Session]
 
 

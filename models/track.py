@@ -8,7 +8,9 @@ from core.model import Model
 from enums.track_access import TrackAccessEnum
 
 
-class Track(Model):
+class Track(
+    Model
+):
     __tablename__ = "tracks"
 
     access: Mapped[TrackAccessEnum] = mapped_column(
@@ -17,11 +19,11 @@ class Track(Model):
     artwork_url: Mapped[Optional[str]] = mapped_column(
         String,
     )
-    comments_count: Mapped[int] = mapped_column(
+    comment_count: Mapped[int] = mapped_column(
         Integer,
     )
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
+    created_at: Mapped[str] = mapped_column(
+        String,
     )
     description: Mapped[Optional[str]] = mapped_column(
         Text,

@@ -18,5 +18,3 @@ server:
 tests:
   database:
     name:
-  tokens:
-    file:

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from core.auth import Auth
-from core.database import Database
+from core.repository import Repository
 from core.request import Request
 
 
@@ -14,7 +14,7 @@ class Action(
         self,
         auth: Auth | None = None,
         request:  type[Request]  | None = None,
-        # repository = None,
+        repository: Repository | None = None,
     ) -> None:
         if auth:
             self.auth = auth
@@ -22,8 +22,8 @@ class Action(
         if request:
             self.request = request
 
-        # if repository:
-        #     self.repository = database
+        if repository:
+            self.repository = repository
 
     @abstractmethod
     def run(

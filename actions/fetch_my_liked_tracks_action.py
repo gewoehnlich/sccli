@@ -10,6 +10,7 @@ from core.database            import Database
 from core.action              import Action
 from core.request             import Request
 from enums.response_keys_enum import ResponseKeysEnum
+from repositories.track_repository import TrackRepository
 
 
 class FetchMyLikedTracksAction(
@@ -19,10 +20,12 @@ class FetchMyLikedTracksAction(
         self,
         auth: Auth,
         request: type[Request],
+        repository: TrackRepository,
     ) -> None:
         super().__init__(
             auth = auth,
             request = request,
+            repository = repository,
         )
 
 
@@ -57,9 +60,25 @@ class FetchMyLikedTracksAction(
             if collection:
                 pprint(collection)
                 for track in collection:
-                    self.database.insert(
-                        table = table,
-                        data = track,
+                    self.repository.create(
+                        access = track['access'],
+                        artwork_url = track['artwork_url'],
+                        comment_count = track['comment_count'],
+                        created_at = track['created_at'],
+                        description = track['description'],
+                        duration = track['duration'],
+                        favoritings_count = track['favoritings_count'],
+                        id = track['id'],
+                        metadata_artist = track['metadata_artist'],
+                        permalink_url = track['permalink_url'],
+                        playback_count = track['playback_count'],
+                        reposts_count = track['reposts_count'],
+                        stream_url = track['stream_url'],
+                        title = track['title'],
+                        uri = track['uri'],
+                        urn = track['urn'],
+                        user_favorite = track['user_favorite'],
+                        user_playback_count = track['user_playback_count'],
                     )
 
             if not next_href:

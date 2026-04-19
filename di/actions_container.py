@@ -39,4 +39,5 @@ class ActionsContainer(
         self.fetch_my_liked_tracks = FetchMyLikedTracksAction(
             auth = auth,
             request = requests.fetch_my_liked_tracks,
+            repository = repositories.track,
         )
