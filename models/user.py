@@ -15,18 +15,18 @@ class User(Model):
     )
     city: Mapped[Optional[str]] = mapped_column(
         String,
-        nullable = True,
+        nullable=True,
     )
     country: Mapped[Optional[str]] = mapped_column(
         String,
-        nullable = True,
+        nullable=True,
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
     )
     description: Mapped[Optional[str]] = mapped_column(
         Text,
-        nullable = True,
+        nullable=True,
     )
     followers_count: Mapped[int] = mapped_column(
         Integer,
@@ -35,8 +35,8 @@ class User(Model):
         Integer,
     )
     id: Mapped[int] = mapped_column(
-        primary_key = True,
-        nullable = False,
+        primary_key=True,
+        nullable=False,
     )
     last_modified: Mapped[datetime] = mapped_column(
         DateTime,
@@ -61,7 +61,7 @@ class User(Model):
     )
     uri: Mapped[str] = mapped_column(
         String,
-        unique = True,
+        unique=True,
     )
     urn: Mapped[str] = mapped_column(
         String,
@@ -69,7 +69,6 @@ class User(Model):
     username: Mapped[str] = mapped_column(
         String,
     )
-
 
     def __repr__(self) -> str:
         return f"<UsersTable(id={self.id}, username='{self.username}')>"

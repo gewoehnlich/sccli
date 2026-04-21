@@ -14,7 +14,4 @@ class MessagesSettings(BaseSettings):
         "  help           - Show this help message.\n"
         "  exit, quit     - Exit the shell.\n"
     )
-    unknown: str = (
-        "Unknown command.\n"
-        "Type 'help' for a list of commands.\n"
-    )
+    unknown: str = "Unknown command.\nType 'help' for a list of commands.\n"

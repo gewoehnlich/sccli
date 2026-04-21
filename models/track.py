@@ -1,6 +1,5 @@
-from datetime import datetime
 from typing import Optional
-from sqlalchemy import DateTime, Enum, Integer, String, Text
+from sqlalchemy import Enum, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import Boolean
 
@@ -8,9 +7,7 @@ from core.model import Model
 from enums.track_access import TrackAccessEnum
 
 
-class Track(
-    Model
-):
+class Track(Model):
     __tablename__ = "tracks"
 
     access: Mapped[TrackAccessEnum] = mapped_column(
@@ -27,7 +24,7 @@ class Track(
     )
     description: Mapped[Optional[str]] = mapped_column(
         Text,
-        nullable = True,
+        nullable=True,
     )
     duration: Mapped[int] = mapped_column(
         Integer,
@@ -36,12 +33,12 @@ class Track(
         Integer,
     )
     id: Mapped[int] = mapped_column(
-        primary_key = True,
-        nullable = False,
+        primary_key=True,
+        nullable=False,
     )
     metadata_artist: Mapped[Optional[str]] = mapped_column(
         String,
-        nullable = True,
+        nullable=True,
     )
     permalink_url: Mapped[str] = mapped_column(
         String,
@@ -60,7 +57,7 @@ class Track(
     )
     uri: Mapped[str] = mapped_column(
         String,
-        unique = True,
+        unique=True,
     )
     urn: Mapped[str] = mapped_column(
         String,
@@ -72,7 +69,6 @@ class Track(
     user_playback_count: Mapped[int] = mapped_column(
         Integer,
     )
-
 
     def __repr__(self) -> str:
         return f"<Track(id={self.id}, title='{self.title}')>"

@@ -1,4 +1,2 @@
-class Repository(
-
-):
+class Repository:
     pass

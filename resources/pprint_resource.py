@@ -1,9 +1,7 @@
 from pprint import pprint
 
 
-class PprintResource(
-
-):
+class PprintResource:
     def __init__(
         self,
     ) -> None:

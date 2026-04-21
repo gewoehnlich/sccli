@@ -5,27 +5,24 @@ from core.database import Database
 from di.models_container import ModelsContainer
 
 
-class SqliteDatabase(
-    Database
-):
+class SqliteDatabase(Database):
     def __init__(
         self,
         database_name: str,
-        models:        ModelsContainer,
+        models: ModelsContainer,
     ) -> None:
         self.database_name: str = database_name
 
         self.engine: sqlalchemy.Engine = sqlalchemy.create_engine(
-            f"sqlite+pysqlite:///{ self.database_name }"
+            f"sqlite+pysqlite:///{self.database_name}"
         )
 
         self.session_factory = sessionmaker(
-            bind = self.engine,
-            expire_on_commit = False,
+            bind=self.engine,
+            expire_on_commit=False,
         )
 
         self.models: ModelsContainer = models
-
 
     def initialize_tables(
         self,

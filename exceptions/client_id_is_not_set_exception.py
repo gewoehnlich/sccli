@@ -1,6 +1,4 @@
-class ClientIdIsNotSetException(
-    Exception
-):
+class ClientIdIsNotSetException(Exception):
     def __init__(
         self,
     ):

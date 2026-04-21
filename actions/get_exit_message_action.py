@@ -1,9 +1,7 @@
 from core.action import Action
 
 
-class GetExitMessageAction(
-    Action
-):
+class GetExitMessageAction(Action):
     def __init__(
         self,
         message: str,

@@ -1,11 +1,8 @@
-from rich import inspect
 from core.action import Action
 from core.resource import Resource
 
 
-class Command(
-
-):
+class Command:
     action: Action
     resource: Resource | None
 

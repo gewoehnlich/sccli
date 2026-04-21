@@ -5,8 +5,8 @@ from core.resource import Resource
 
 
 class UnknownCommand(Command):
-    _instance:    Self | None = None
-    _initialized: bool        = False
+    _instance: Self | None = None
+    _initialized: bool = False
 
     def __new__(
         cls: type[Self],
@@ -24,6 +24,6 @@ class UnknownCommand(Command):
         resource: Resource,
     ) -> None:
         super().__init__(
-            action = action,
-            resource = resource,
+            action=action,
+            resource=resource,
         )

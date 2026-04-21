@@ -1,13 +1,10 @@
 from abc import abstractmethod
 from typing import Protocol
-from sqlalchemy.orm import Session, sessionmaker
 
 from di.models_container import ModelsContainer
 
 
-class Database(
-    Protocol
-):
+class Database(Protocol):
     database_name: str
     models: ModelsContainer
 
@@ -20,5 +17,4 @@ class Database(
     @abstractmethod
     def initialize_tables(
         self,
-    ) -> None:
-        ...
+    ) -> None: ...

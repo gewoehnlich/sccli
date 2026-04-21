@@ -1,18 +1,14 @@
 from core.action import Action
 
 
-class GetHelpMessageAction(
-    Action
-):
+class GetHelpMessageAction(Action):
     message: str
-
 
     def __init__(
         self,
         message: str,
     ):
         self.message = message
-
 
     def run(
         self,

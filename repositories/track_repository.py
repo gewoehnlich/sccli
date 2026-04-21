@@ -1,15 +1,11 @@
-from datetime import date, datetime
 from sqlalchemy.orm import Session, sessionmaker
 from core.repository import Repository
 from enums.track_access import TrackAccessEnum
 from models.track import Track
 
 
-class TrackRepository(
-    Repository
-):
+class TrackRepository(Repository):
     session_factory: sessionmaker[Session]
-
 
     def __init__(
         self,
@@ -17,13 +13,11 @@ class TrackRepository(
     ) -> None:
         self.session_factory = session_factory
 
-
     def get(
         self,
     ) -> Track | None:
         with self.session_factory() as session:
             return session.get(Track, None)
-
 
     def create(
         self,
@@ -47,32 +41,31 @@ class TrackRepository(
         user_playback_count: int,
     ) -> Track:
         track = Track(
-            access = access,
-            artwork_url = artwork_url,
-            comment_count = comment_count,
-            created_at = created_at,
-            description = description,
-            duration = duration,
-            favoritings_count = favoritings_count,
-            id = id,
-            metadata_artist = metadata_artist,
-            permalink_url = permalink_url,
-            playback_count = playback_count,
-            reposts_count = reposts_count,
-            stream_url = stream_url,
-            title = title,
-            uri = uri,
-            urn = urn,
-            user_favorite = user_favorite,
-            user_playback_count = user_playback_count,
+            access=access,
+            artwork_url=artwork_url,
+            comment_count=comment_count,
+            created_at=created_at,
+            description=description,
+            duration=duration,
+            favoritings_count=favoritings_count,
+            id=id,
+            metadata_artist=metadata_artist,
+            permalink_url=permalink_url,
+            playback_count=playback_count,
+            reposts_count=reposts_count,
+            stream_url=stream_url,
+            title=title,
+            uri=uri,
+            urn=urn,
+            user_favorite=user_favorite,
+            user_playback_count=user_playback_count,
         )
 
         with self.session_factory() as session:
-            session.add(instance = track)
+            session.add(instance=track)
             session.commit()
 
         return track
-
 
     def update(
         self,
@@ -99,7 +92,7 @@ class TrackRepository(
             track = session.get(Track, id)
 
             if track is None:
-                raise ValueError(f"Track { id } not found")
+                raise ValueError(f"Track {id} not found")
 
             track.access = access
             track.artwork_url = artwork_url
@@ -123,7 +116,6 @@ class TrackRepository(
             session.commit()
 
         return track
-
 
     def delete(
         self,

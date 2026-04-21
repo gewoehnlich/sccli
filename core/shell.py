@@ -21,7 +21,7 @@ class Shell:
         while True:
             try:
                 command_line: str = input("sccli> ")
-                self.process_command(command_line = command_line)
+                self.process_command(command_line=command_line)
 
             except KeyboardInterrupt:
                 self.commands.exit.run()
@@ -29,7 +29,6 @@ class Shell:
 
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")
-
 
     def process_command(
         self,
@@ -63,11 +62,7 @@ class Shell:
             case _:
                 self.commands.unknown_command.run()
 
-
-    def parse_input(
-        self,
-        command_line: str
-    ) -> Tuple[str, List[str]]:
+    def parse_input(self, command_line: str) -> Tuple[str, List[str]]:
         parts: List[str] = shlex.split(command_line)
         if not parts:
             raise Exception("finish later. NO PARTS")

@@ -4,11 +4,9 @@ from urllib.parse import urlencode
 from enums.url_enum import UrlEnum
 
 
-class UrlGenerator(
-    BaseModel
-):
-    _instance:    Self | None = None
-    _initialized: bool        = False
+class UrlGenerator(BaseModel):
+    _instance: Self | None = None
+    _initialized: bool = False
 
     def __new__(
         cls: type[Self],
@@ -20,14 +18,13 @@ class UrlGenerator(
 
         return cls._instance
 
-
     @classmethod
     def auth_url(
         cls,
-        client_id:      str,
-        redirect_uri:   str,
+        client_id: str,
+        redirect_uri: str,
         code_challenge: str,
-        state:          str,
+        state: str,
     ) -> str:
         params: dict[str, str] = {
             "client_id": client_id,
@@ -40,4 +37,4 @@ class UrlGenerator(
 
         link: str = UrlEnum.AUTH
 
-        return f"{link}?{urlencode(query = params)}"
+        return f"{link}?{urlencode(query=params)}"

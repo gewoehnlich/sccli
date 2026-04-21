@@ -5,9 +5,7 @@ from core.dto import Dto
 from core.resource import Resource
 
 
-class JsonResource(
-    Resource
-):
+class JsonResource(Resource):
     def from_dto(
         self,
         dto: Dto,
@@ -15,6 +13,6 @@ class JsonResource(
         model_dict: dict[str, Any] = dto.model_dump()
 
         return json.dumps(
-            obj = model_dict,
-            indent = 4,
+            obj=model_dict,
+            indent=4,
         )

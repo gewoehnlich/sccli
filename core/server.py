@@ -12,13 +12,11 @@ class Server:
     _instance: Self | None = None
     _initialized: bool = False
 
-
     def __new__(cls: type[Self], *args, **kwargs) -> Self:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
         return cls._instance
-
 
     def __init__(
         self,
@@ -30,10 +28,9 @@ class Server:
 
         self.port: int = port
         self.path: str = path
-        self.url: str = f"http://localhost:{ self.port }{ self.path }"
+        self.url: str = f"http://localhost:{self.port}{self.path}"
 
         self._initialized = True
-
 
     async def run(self) -> tuple[str, str]:
         self.future = asyncio.get_event_loop().create_future()
@@ -46,7 +43,6 @@ class Server:
 
         return result
 
-
     async def start_server(self) -> None:
         app = web.Application()
         app.router.add_get(
@@ -57,11 +53,7 @@ class Server:
         self.runner = web.AppRunner(app)
         await self.runner.setup()
 
-        site = web.TCPSite(
-            self.runner,
-            "localhost",
-            self.port
-        )
+        site = web.TCPSite(self.runner, "localhost", self.port)
 
         await site.start()
 
@@ -70,28 +62,16 @@ class Server:
         if self.future is not None:
             await self.future
 
-
     async def shutdown(self) -> None:
         if self.runner:
             print("Shutting down the temporary server...")
             await self.runner.cleanup()
 
-
-    async def callback_handler(
-        self,
-        request: Request
-    ) -> web.Response:
+    async def callback_handler(self, request: Request) -> web.Response:
         auth_code = request.query.get("code")
         state = request.query.get("state")
 
-        if (
-            auth_code
-            and state
-            and self.future is not None
-            and not self.future.done()
-        ):
+        if auth_code and state and self.future is not None and not self.future.done():
             self.future.set_result((auth_code, state))
 
-        return web.Response(
-            text="Callback received. You may close this window."
-        )
+        return web.Response(text="Callback received. You may close this window.")
