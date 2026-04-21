@@ -3,5 +3,5 @@ from resources.pprint_resource import PprintResource
 
 
 class ResourcesContainer:
-    json = JsonResource
-    pprint = PprintResource
+    json = JsonResource()
+    pprint = PprintResource()

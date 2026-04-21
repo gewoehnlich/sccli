@@ -1,2 +1,11 @@
+from abc import abstractmethod
+from typing import Any
+
+
 class Resource:
-    pass
+    @abstractmethod
+    def print(
+        self,
+        data: Any,
+    ) -> None:
+        pass

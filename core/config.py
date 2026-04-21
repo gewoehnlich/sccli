@@ -14,7 +14,6 @@ class Config:
     def load(
         self,
     ) -> AppSettings:
-        print(self.CONFIG_PATH)
         user_config_data: dict[str, Any] = self.__read_user_config_data()
 
         self.__ensure_client_credentials_are_set(

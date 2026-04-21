@@ -4,15 +4,14 @@ from core.resource import Resource
 
 class Command:
     action: Action
-    resource: Resource | None
+    resource: Resource | None = None
 
     def __init__(
         self,
         action: Action,
-        resource: Resource | None,
+        resource: Resource | None = None,
     ) -> None:
-        if action:
-            self.action = action
+        self.action = action
 
         if resource:
             self.resource = resource
@@ -20,10 +19,9 @@ class Command:
     def run(
         self,
     ) -> None:
-        if self.action:
-            result = self.action.run()
+        result = self.action.run()
 
-        if result:
+        if self.resource:
+            self.resource.print(data=result)
+        else:
             print(result)
-            # and self.resource:
-            # response = self.resource.print(result)

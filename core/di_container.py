@@ -5,8 +5,8 @@ from core.config import Config
 from core.database import Database
 from core.server import Server
 from databases.sqlite_database import SqliteDatabase
-from di.actions_container import ActionsContainer
 from default_settings.app import AppSettings
+from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from di.dto_container import DtoContainer
 from di.models_container import ModelsContainer
