@@ -15,7 +15,7 @@ class FetchMyLikedTracksAction(Action):
     def __init__(
         self,
         auth: Auth,
-        request: type[FetchMyLikedTracksRequest],
+        request: type[Request],
         repository: TrackRepository,
     ) -> None:
         super().__init__(

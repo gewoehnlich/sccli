@@ -1,6 +1,7 @@
 from commands.exit_command import ExitCommand
 from commands.my_liked_tracks_command import MyLikedTracksCommand
 from commands.help_command import HelpCommand
+from commands.play_track_command import PlayTrackCommand
 from commands.unknown_command import UnknownCommand
 from commands.welcome_command import WelcomeCommand
 from core.command import Command
@@ -33,4 +34,8 @@ class CommandsContainer:
         self.liked_tracks: Command = MyLikedTracksCommand(
             action=actions.fetch_my_liked_tracks,
             resource=resources.pprint,
+        )
+
+        self.play: Command = PlayTrackCommand(
+            action=actions.play_track,
         )

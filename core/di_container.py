@@ -13,6 +13,7 @@ from di.models_container import ModelsContainer
 from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
+from di.tasks_container import TasksContainer
 
 
 class DiContainer:
@@ -43,11 +44,19 @@ class DiContainer:
 
     requests = RequestsContainer()
 
+    tasks = TasksContainer(
+        auth=auth,
+        requests=requests,
+        repositories=repositories,
+        messages=config.messages,
+    )
+
     actions = ActionsContainer(
         auth=auth,
         requests=requests,
         repositories=repositories,
         messages=config.messages,
+        tasks=tasks,
     )
 
     resources = ResourcesContainer()

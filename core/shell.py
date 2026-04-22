@@ -43,6 +43,8 @@ class Shell:
                 self.commands.help.run()
             case "liked:tracks" | "lt":
                 self.commands.liked_tracks.run()
+            case "track:play" | "tp":
+                self.commands.play.run()
             case "exit" | "quit" | "q":
                 self.commands.exit.run()
 

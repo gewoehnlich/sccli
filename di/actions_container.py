@@ -1,3 +1,4 @@
+from actions.play_track_action import PlayTrackAction
 from core.action import Action
 from core.auth import Auth
 from default_settings.messages import MessagesSettings
@@ -9,6 +10,7 @@ from actions.get_unknown_command_message_action import GetUnknownCommandMessageA
 from actions.get_welcome_message_action import GetWelcomeMessageAction
 from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
+from di.tasks_container import TasksContainer
 
 
 class ActionsContainer:
@@ -18,6 +20,7 @@ class ActionsContainer:
         requests: RequestsContainer,
         repositories: RepositoryContainer,
         messages: MessagesSettings,
+        tasks: TasksContainer,
     ) -> None:
         self.get_welcome_message: Action = GetWelcomeMessageAction(
             message=messages.welcome,
@@ -39,4 +42,10 @@ class ActionsContainer:
             auth=auth,
             request=requests.fetch_my_liked_tracks,
             repository=repositories.track,
+        )
+
+        self.play_track: Action = PlayTrackAction(
+            auth=auth,
+            fetch_track_streams_task=tasks.fetch_track_streams,
+            fetch_track_streaming_url_task=tasks.fetch_track_streaming_url,
         )

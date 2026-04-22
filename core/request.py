@@ -1,5 +1,6 @@
 from typing import Any
 from requests import Session, Request as BaseRequest
+from rich import inspect
 
 
 class Request:
@@ -30,6 +31,7 @@ class Request:
         response = self.__session.send(
             request=self.__request.prepare()
         )
+        inspect(response)
 
         data: dict[str, Any] = response.json()
 
