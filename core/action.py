@@ -7,7 +7,8 @@ from core.request import Request
 
 class Action:
     auth: Auth
-    request: type[Request] | None = None
+    request: type[Request]
+    repository: Repository
 
     def __init__(
         self,

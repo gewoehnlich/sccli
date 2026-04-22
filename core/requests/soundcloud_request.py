@@ -7,8 +7,19 @@ class SoundcloudRequest(Request):
     def __init__(
         self,
         access_token: str,
+        method: str,
+        url: str,
+        headers: dict[str, str] = {},
+        params: dict[str, str] = {},
+        data: dict[str, str] = {},
     ) -> None:
-        super().__init__()
-
         if access_token:
-            self.headers["Authorization"] = f"OAuth {access_token}"
+            headers["Authorization"] = f"OAuth {access_token}"
+
+        super().__init__(
+            method=method,
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )

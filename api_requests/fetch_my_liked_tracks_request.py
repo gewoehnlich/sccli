@@ -1,3 +1,4 @@
+from typing import Any
 from core.requests.soundcloud_request import SoundcloudRequest
 
 
@@ -7,17 +8,18 @@ class FetchMyLikedTracksRequest(SoundcloudRequest):
         access_token: str,
         url: str | None = None,
     ) -> None:
+        if not url:
+            url = self.SOUNDCLOUD_API_LINK + "/me/likes/tracks"
+
+        params: dict[str, Any] = {
+            "limit": 50,
+            "access": "playable",
+            "linked_partitioning": True,
+        }
+
         super().__init__(
+            method="GET",
+            url=url,
+            params=params,
             access_token=access_token,
         )
-
-        self.method = "GET"
-
-        if url:
-            self.url = url
-        else:
-            self.url = self.SOUNDCLOUD_API_LINK + "/me/likes/tracks"
-
-        self.params["limit"] = "1"
-        self.params["access"] = "playable"
-        self.params["linked_partitioning"] = "true"

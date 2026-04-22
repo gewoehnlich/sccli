@@ -10,14 +10,11 @@ from enums.track_access import TrackAccessEnum
 class Track(Model):
     __tablename__ = "tracks"
 
-    access: Mapped[TrackAccessEnum] = mapped_column(
-        Enum(TrackAccessEnum),
+    access: Mapped[str] = mapped_column(
+        String,
     )
     artwork_url: Mapped[Optional[str]] = mapped_column(
         String,
-    )
-    comment_count: Mapped[int] = mapped_column(
-        Integer,
     )
     created_at: Mapped[str] = mapped_column(
         String,
@@ -29,27 +26,11 @@ class Track(Model):
     duration: Mapped[int] = mapped_column(
         Integer,
     )
-    favoritings_count: Mapped[int] = mapped_column(
-        Integer,
-    )
     id: Mapped[int] = mapped_column(
         primary_key=True,
         nullable=False,
     )
-    metadata_artist: Mapped[Optional[str]] = mapped_column(
-        String,
-        nullable=True,
-    )
     permalink_url: Mapped[str] = mapped_column(
-        String,
-    )
-    playback_count: Mapped[int] = mapped_column(
-        Integer,
-    )
-    reposts_count: Mapped[int] = mapped_column(
-        Integer,
-    )
-    stream_url: Mapped[str] = mapped_column(
         String,
     )
     title: Mapped[str] = mapped_column(
@@ -62,7 +43,6 @@ class Track(Model):
     urn: Mapped[str] = mapped_column(
         String,
     )
-    # user: Mapped[User]
     user_favorite: Mapped[bool] = mapped_column(
         Boolean,
     )

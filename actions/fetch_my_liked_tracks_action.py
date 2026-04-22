@@ -3,9 +3,11 @@ from time import sleep
 from pprint import pprint
 from rich import inspect
 
+from api_requests.fetch_my_liked_tracks_request import FetchMyLikedTracksRequest
 from core.auth import Auth
 from core.action import Action
 from core.request import Request
+from enums.track_access import TrackAccessEnum
 from repositories.track_repository import TrackRepository
 
 
@@ -13,7 +15,7 @@ class FetchMyLikedTracksAction(Action):
     def __init__(
         self,
         auth: Auth,
-        request: type[Request],
+        request: type[FetchMyLikedTracksRequest],
         repository: TrackRepository,
     ) -> None:
         super().__init__(
@@ -25,27 +27,21 @@ class FetchMyLikedTracksAction(Action):
     def run(
         self,
     ) -> bool:
-        request_factory = self.request
-        inspect(request_factory)
-
-        if not request_factory:
-            raise Exception("no table. to-do later")
-
         fetched: bool = False
-        next_href: str = str()
+        next_href: str | None = None
 
         while not fetched:
             if next_href:
-                request: Request = request_factory(
+                request = self.request(
                     access_token=self.auth.get_access_token(),
                     url=next_href,
                 )
             else:
-                request: Request = request_factory(
+                request = self.request(
                     access_token=self.auth.get_access_token(),
                 )
 
-            response: dict[str, dict[str, str | int] | str] = request.send()
+            response: dict[str, Any] = request.send()
 
             collection: list[dict[str, Any]] = response["collection"]
             next_href = response["next_href"]
@@ -53,20 +49,14 @@ class FetchMyLikedTracksAction(Action):
             if collection:
                 pprint(collection)
                 for track in collection:
-                    self.repository.create(
+                    self.repository.store(
                         access=track["access"],
                         artwork_url=track["artwork_url"],
-                        comment_count=track["comment_count"],
                         created_at=track["created_at"],
                         description=track["description"],
                         duration=track["duration"],
-                        favoritings_count=track["favoritings_count"],
                         id=track["id"],
-                        metadata_artist=track["metadata_artist"],
                         permalink_url=track["permalink_url"],
-                        playback_count=track["playback_count"],
-                        reposts_count=track["reposts_count"],
-                        stream_url=track["stream_url"],
                         title=track["title"],
                         uri=track["uri"],
                         urn=track["urn"],

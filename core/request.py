@@ -1,35 +1,34 @@
 from typing import Any
-from requests import Request as BaseRequest
-from requests import request as send_request
-
-from core.response import Response
+from requests import Session, Request as BaseRequest
 
 
-class Request(BaseRequest):
-    method: str = str()
-    url: str = str()
-    headers: dict[str, str] = {
-        "Accept": "application/json; charset=utf-8",
-        "Content-Type": "application/x-www-form-urlencoded",
-    }
-    params: dict[str, str] = {}
-    data: dict[str, str] = {}
+class Request:
+    __session = Session()
 
     def __init__(
         self,
+        method: str = "",
+        url: str = "",
+        headers: dict[str, str] = {
+            "Accept": "application/json; charset=utf-8",
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        params: dict[str, str] = {},
+        data: dict[str, str] = {},
     ) -> None:
-        pass
+        self.__request = BaseRequest(
+            method=method,
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
 
     def send(
         self,
     ) -> dict[str, Any]:
-        response: Response = send_request(
-            method=self.method,
-            url=self.url,
-            headers=self.headers,
-            params=self.params,
-            data=self.data,
-            timeout=10,
+        response = self.__session.send(
+            request=self.__request.prepare()
         )
 
         data: dict[str, Any] = response.json()
