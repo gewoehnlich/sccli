@@ -1,5 +1,11 @@
+import sys
 from core.command import Command
 
 
 class ExitCommand(Command):
-    pass
+    def run(
+        self,
+    ) -> None:
+        super().run()
+
+        sys.exit(1)

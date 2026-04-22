@@ -1,3 +1,4 @@
+from core.action import Action
 from core.auth import Auth
 from default_settings.messages import MessagesSettings
 
@@ -17,20 +18,24 @@ class ActionsContainer:
         requests: RequestsContainer,
         repositories: RepositoryContainer,
         messages: MessagesSettings,
-    ):
-        self.get_welcome_message = GetWelcomeMessageAction(
+    ) -> None:
+        self.get_welcome_message: Action = GetWelcomeMessageAction(
             message=messages.welcome,
         )
 
-        self.get_exit_message = GetExitMessageAction(message=messages.exit)
+        self.get_exit_message: Action = GetExitMessageAction(
+            message=messages.exit
+        )
 
-        self.get_help_message = GetHelpMessageAction(message=messages.help)
+        self.get_help_message: Action = GetHelpMessageAction(
+            message=messages.help
+        )
 
-        self.get_unknown_message = GetUnknownCommandMessageAction(
+        self.get_unknown_message: Action = GetUnknownCommandMessageAction(
             message=messages.unknown
         )
 
-        self.fetch_my_liked_tracks = FetchMyLikedTracksAction(
+        self.fetch_my_liked_tracks: Action = FetchMyLikedTracksAction(
             auth=auth,
             request=requests.fetch_my_liked_tracks,
             repository=repositories.track,

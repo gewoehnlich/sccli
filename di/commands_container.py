@@ -15,22 +15,18 @@ class CommandsContainer:
     ):
         self.welcome = WelcomeCommand(
             action=actions.get_welcome_message,
-            resource=resources.pprint,
         )
 
         self.exit = ExitCommand(
             action=actions.get_exit_message,
-            resource=resources.pprint,
         )
 
         self.help = HelpCommand(
             action=actions.get_help_message,
-            resource=resources.pprint,
         )
 
         self.unknown = UnknownCommand(
             action=actions.get_unknown_message,
-            resource=resources.pprint,
         )
 
         self.liked_tracks = MyLikedTracksCommand(

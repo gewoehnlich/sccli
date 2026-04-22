@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Any
 from core.auth import Auth
 from core.repository import Repository
 from core.request import Request
@@ -26,5 +27,5 @@ class Action:
     @abstractmethod
     def run(
         self,
-    ):
-        return None
+    ) -> Any:
+        pass
