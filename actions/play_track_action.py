@@ -30,14 +30,6 @@ class PlayTrackAction(Action):
 
         streaming_url: str = streams["http_mp3_128_url"]
 
-        # response = self.serve_track_task.run(
-        #     streaming_url=streaming_url,
-        # )
-
-        # player = MediaPlayer(streaming_url)
-        # player.play()
-        # player.get_instance()
-
         subprocess.Popen([
             "mpv",
             f"--http-header-fields=Authorization: Bearer {self.auth.get_access_token()}",

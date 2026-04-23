@@ -22,7 +22,6 @@ dependencies = [
     "sqlalchemy (>=2.0.45,<3.0.0)",
     "pytest (>=9.0.3,<10.0.0)",
     "ruff (>=0.15.11,<0.16.0)",
-    "python-vlc (>=3.0.21203,<4.0.0)"
 ]
 
 [build-system]
