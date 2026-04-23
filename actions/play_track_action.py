@@ -1,4 +1,5 @@
 from typing import Any
+import subprocess
 from core.action import Action
 from core.auth import Auth
 from core.task import Task
@@ -21,7 +22,7 @@ class PlayTrackAction(Action):
 
     def run(
         self,
-        track_urn: str = "soundcloud:tracks:2299872500",
+        track_urn: str = "soundcloud:tracks:2306603633",
     ) -> Any:
         streams: dict[str, Any] = self.fetch_track_streams_task.run(
             track_urn=track_urn,
@@ -29,12 +30,18 @@ class PlayTrackAction(Action):
 
         streaming_url: str = streams["http_mp3_128_url"]
 
-        response = self.serve_track_task.run(
-            streaming_url=streaming_url,
-        )
+        # response = self.serve_track_task.run(
+        #     streaming_url=streaming_url,
+        # )
 
         # player = MediaPlayer(streaming_url)
         # player.play()
         # player.get_instance()
+
+        subprocess.Popen([
+            "mpv",
+            f"--http-header-fields=Authorization: Bearer {self.auth.get_access_token()}",
+            streaming_url
+        ])
 
         return streaming_url
