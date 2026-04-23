@@ -1,7 +1,7 @@
 from core.requests.soundcloud_request import SoundcloudRequest
 
 
-class FetchTrackStreamingUrlRequest(SoundcloudRequest):
+class FetchTrackFromStreamingUrlRequest(SoundcloudRequest):
     def __init__(
         self,
         access_token: str,

@@ -28,13 +28,15 @@ class DiContainer:
         session_factory=database.session_factory,
     )
 
+    server = Server(
+        port=config.server.port,
+        path=config.server.path,
+    )
+
     auth = Auth(
         client_id=config.soundcloud.client_id,
         client_secret=config.soundcloud.client_secret,
-        server=Server(
-            port=config.server.port,
-            path=config.server.path,
-        ),
+        server=server,
         account_repository=repositories.account,
         authentication_request=AuthenticationRequest,
         refresh_token_request=RefreshTokenRequest,
@@ -49,6 +51,7 @@ class DiContainer:
         requests=requests,
         repositories=repositories,
         messages=config.messages,
+        server=server,
     )
 
     actions = ActionsContainer(

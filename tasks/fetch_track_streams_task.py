@@ -24,6 +24,5 @@ class FetchTrackStreamsTask(Task):
         )
 
         response: dict[str, Any] = request.send()
-        print({'streams_task': response})
 
         return response

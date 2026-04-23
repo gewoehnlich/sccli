@@ -1,10 +1,11 @@
 from core.auth import Auth
+from core.server import Server
 from core.task import Task
 from default_settings.messages import MessagesSettings
 from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
-from tasks.fetch_track_streaming_url_task import FetchTrackStreamingUrlTask
 from tasks.fetch_track_streams_task import FetchTrackStreamsTask
+from tasks.serve_track_task import ServeTrackTask
 
 
 class TasksContainer:
@@ -14,13 +15,15 @@ class TasksContainer:
         requests: RequestsContainer,
         repositories: RepositoryContainer,
         messages: MessagesSettings,
+        server: Server,
     ) -> None:
         self.fetch_track_streams: Task = FetchTrackStreamsTask(
             auth=auth,
             request=requests.fetch_track_streams,
         )
 
-        self.fetch_track_streaming_url: Task = FetchTrackStreamingUrlTask(
+        self.serve_track: Task = ServeTrackTask(
             auth=auth,
-            request=requests.fetch_track_streaming_url,
+            request=requests.fetch_track_from_streaming_url,
+            server=server,
         )

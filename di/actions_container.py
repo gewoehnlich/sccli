@@ -47,5 +47,5 @@ class ActionsContainer:
         self.play_track: Action = PlayTrackAction(
             auth=auth,
             fetch_track_streams_task=tasks.fetch_track_streams,
-            fetch_track_streaming_url_task=tasks.fetch_track_streaming_url,
+            serve_track_task=tasks.serve_track,
         )

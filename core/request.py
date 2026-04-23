@@ -31,7 +31,6 @@ class Request:
         response = self.__session.send(
             request=self.__request.prepare()
         )
-        inspect(response)
 
         data: dict[str, Any] = response.json()
 
