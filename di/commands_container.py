@@ -1,6 +1,6 @@
 from commands.exit_command import ExitCommand
-from commands.my_liked_tracks_command import MyLikedTracksCommand
 from commands.help_command import HelpCommand
+from commands.my_liked_tracks_command import MyLikedTracksCommand
 from commands.play_track_command import PlayTrackCommand
 from commands.unknown_command import UnknownCommand
 from commands.welcome_command import WelcomeCommand

@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import Optional
+
 from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.types import String, Integer, Text
+from sqlalchemy.types import Integer, String, Text
 
 from core.model import Model
 
@@ -10,21 +10,21 @@ from core.model import Model
 class User(Model):
     __tablename__: str = "users"
 
-    avatar_url: Mapped[Optional[str]] = mapped_column(
+    avatar_url: Mapped[str | None] = mapped_column(
         String,
     )
-    city: Mapped[Optional[str]] = mapped_column(
+    city: Mapped[str | None] = mapped_column(
         String,
         nullable=True,
     )
-    country: Mapped[Optional[str]] = mapped_column(
+    country: Mapped[str | None] = mapped_column(
         String,
         nullable=True,
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
     )
-    description: Mapped[Optional[str]] = mapped_column(
+    description: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
     )

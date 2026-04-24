@@ -1,10 +1,10 @@
 from typing import Any
 
-from rich import inspect
 from core.auth import Auth
 from core.request import Request
 from core.server import Server
 from core.task import Task
+
 
 class ServeTrackTask(Task):
     def __init__(

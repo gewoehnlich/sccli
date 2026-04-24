@@ -1,6 +1,7 @@
 import sys
-import yaml
 from typing import Any
+
+import yaml
 from pydantic import ValidationError
 
 from default_settings.app import AppSettings
@@ -31,7 +32,7 @@ class Config:
     def __read_user_config_data(
         self,
     ) -> dict[str, Any]:
-        with open(file=self.CONFIG_PATH, mode="r", encoding="utf-8") as f:
+        with open(file=self.CONFIG_PATH, encoding="utf-8") as f:
             user_config_data = yaml.safe_load(f)
 
         return user_config_data

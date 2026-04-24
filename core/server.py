@@ -1,13 +1,14 @@
 import asyncio
 from asyncio import Future
-from typing import Tuple, Optional, Any, Self
+from typing import Any, Self
+
 from aiohttp import web
 from aiohttp.web_request import Request
 
 
 class Server:
-    future: Optional[Future[Any]] = None
-    runner: Optional[Any] = None
+    future: Future[Any] | None = None
+    runner: Any | None = None
 
     _instance: Self | None = None
     _initialized: bool = False
@@ -38,7 +39,7 @@ class Server:
 
         print("Server started. Waiting for callback...")
 
-        result: Tuple[str, str] = await self.future
+        result: tuple[str, str] = await self.future
         await self.shutdown()
 
         return result

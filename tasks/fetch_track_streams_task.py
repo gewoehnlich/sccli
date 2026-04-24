@@ -1,7 +1,9 @@
 from typing import Any
+
 from api_requests.fetch_track_streams_request import FetchTrackStreamsRequest
 from core.auth import Auth
 from core.task import Task
+
 
 class FetchTrackStreamsTask(Task):
     def __init__(

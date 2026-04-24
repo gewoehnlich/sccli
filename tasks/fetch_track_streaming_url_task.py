@@ -1,7 +1,10 @@
 from typing import Any
+
 from api_requests.fetch_track_streaming_url_request import FetchTrackStreamingUrlRequest
+
 from core.auth import Auth
 from core.task import Task
+
 
 class FetchTrackStreamingUrlTask(Task):
     def __init__(

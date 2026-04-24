@@ -1,10 +1,9 @@
-from typing import Optional
-from sqlalchemy import Enum, Integer, String, Text
+
+from sqlalchemy import Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import Boolean
 
 from core.model import Model
-from enums.track_access import TrackAccessEnum
 
 
 class Track(Model):
@@ -13,13 +12,13 @@ class Track(Model):
     access: Mapped[str] = mapped_column(
         String,
     )
-    artwork_url: Mapped[Optional[str]] = mapped_column(
+    artwork_url: Mapped[str | None] = mapped_column(
         String,
     )
     created_at: Mapped[str] = mapped_column(
         String,
     )
-    description: Mapped[Optional[str]] = mapped_column(
+    description: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
     )

@@ -1,6 +1,8 @@
 from typing import Self
-from pydantic import BaseModel
 from urllib.parse import urlencode
+
+from pydantic import BaseModel
+
 from enums.url_enum import UrlEnum
 
 

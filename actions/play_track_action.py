@@ -1,9 +1,9 @@
-from typing import Any
 import subprocess
+from typing import Any
+
 from core.action import Action
 from core.auth import Auth
 from core.task import Task
-from rich import inspect
 
 
 class PlayTrackAction(Action):

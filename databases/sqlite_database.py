@@ -1,5 +1,5 @@
-from sqlalchemy.orm import sessionmaker
 import sqlalchemy
+from sqlalchemy.orm import sessionmaker
 
 from core.database import Database
 from di.models_container import ModelsContainer

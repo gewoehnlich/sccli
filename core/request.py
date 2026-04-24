@@ -1,6 +1,7 @@
 from typing import Any
-from requests import Session, Request as BaseRequest
-from rich import inspect
+
+from requests import Request as BaseRequest
+from requests import Session
 
 
 class Request:

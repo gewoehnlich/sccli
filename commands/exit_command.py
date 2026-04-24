@@ -1,4 +1,5 @@
 import sys
+
 from core.command import Command
 
 

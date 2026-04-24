@@ -1,5 +1,5 @@
 import shlex
-from typing import Tuple
+
 from di.commands_container import CommandsContainer
 
 
@@ -54,7 +54,7 @@ class Shell:
     def __parse_input(
         self,
         command_line: str
-    ) -> Tuple[str, list[str]]:
+    ) -> tuple[str, list[str]]:
         parts: list[str] = shlex.split(command_line)
 
         command: str = parts[0].lower()
