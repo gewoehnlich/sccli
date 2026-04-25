@@ -1,5 +1,3 @@
-from api_requests.authentication_request import AuthenticationRequest
-from api_requests.refresh_token_request import RefreshTokenRequest
 from core.auth import Auth
 from core.config import Config
 from core.database import Database
@@ -32,18 +30,18 @@ class DiContainer:
         path=config.server.path,
     )
 
+    requests = RequestsContainer()
+
     auth = Auth(
         client_id=config.soundcloud.client_id,
         client_secret=config.soundcloud.client_secret,
         server=server,
         account_repository=repositories.account,
-        authentication_request=AuthenticationRequest,
-        refresh_token_request=RefreshTokenRequest,
+        authentication_request=requests.authentication,
+        refresh_token_request=requests.refresh_token,
     )
 
     dto = DtoContainer()
-
-    requests = RequestsContainer()
 
     tasks = TasksContainer(
         auth=auth,
