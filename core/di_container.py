@@ -13,6 +13,8 @@ from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
 from di.tasks_container import TasksContainer
+from servers.async_http_server import AsyncHttpServer
+from servers.http_server import HttpServer
 
 
 class DiContainer:
@@ -26,7 +28,7 @@ class DiContainer:
         session_factory=database.session_factory,
     )
 
-    server = Server(
+    server: Server = HttpServer(
         port=config.server.port,
         path=config.server.path,
     )

@@ -6,6 +6,11 @@ def main() -> None:
     di_container = DiContainer()
     di_container.database.initialize_tables()
 
+    print(di_container.auth.get_access_token())
+
+    # print('server')
+    # di_container.server.auth()
+
     shell = Shell(commands=di_container.commands)
     shell.run()
 
