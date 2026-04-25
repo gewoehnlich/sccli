@@ -3,7 +3,7 @@ from core.shell import Shell
 
 
 def main() -> None:
-    di_container: DiContainer = DiContainer()
+    di_container = DiContainer()
     di_container.database.initialize_tables()
 
     shell = Shell(commands=di_container.commands)

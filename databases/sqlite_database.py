@@ -1,30 +1,19 @@
 import sqlalchemy
-from sqlalchemy.orm import sessionmaker
 
 from core.database import Database
-from di.models_container import ModelsContainer
+from core.model import Model
 
 
 class SqliteDatabase(Database):
     def __init__(
         self,
         database_name: str,
-        models: ModelsContainer,
+        base_model: type[Model] = Model,
     ) -> None:
-        self.database_name: str = database_name
-
-        self.engine: sqlalchemy.Engine = sqlalchemy.create_engine(
-            f"sqlite+pysqlite:///{self.database_name}"
+        super().__init__(
+            database_name=database_name,
+            base_model=base_model,
+            engine=sqlalchemy.create_engine(
+                f"sqlite+pysqlite:///{ database_name }"
+            )
         )
-
-        self.session_factory = sessionmaker(
-            bind=self.engine,
-            expire_on_commit=False,
-        )
-
-        self.models: ModelsContainer = models
-
-    def initialize_tables(
-        self,
-    ) -> None:
-        self.models.model().metadata.create_all(self.engine)
