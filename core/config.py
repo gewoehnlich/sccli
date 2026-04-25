@@ -4,7 +4,7 @@ from typing import Any
 import yaml
 from pydantic import ValidationError
 
-from default_settings.app import AppSettings
+from core.settings import Settings
 from exceptions.client_id_is_not_set_exception import ClientIdIsNotSetException
 from exceptions.client_secret_is_not_set_exception import ClientSecretIsNotSetException
 
@@ -14,7 +14,7 @@ class Config:
 
     def load(
         self,
-    ) -> AppSettings:
+    ) -> Settings:
         user_config_data: dict[str, Any] = self.__read_user_config_data()
 
         self.__ensure_client_credentials_are_set(
@@ -25,7 +25,7 @@ class Config:
             config=user_config_data
         )
 
-        settings: AppSettings = self.__add_default_values(config=filtered_config)
+        settings: Settings = self.__add_default_values(config=filtered_config)
 
         return settings
 
@@ -65,9 +65,9 @@ class Config:
     def __add_default_values(
         self,
         config: dict[str, Any],
-    ) -> AppSettings:
+    ) -> Settings:
         try:
-            settings = AppSettings.model_validate(config)
+            settings = Settings.model_validate(config)
         except ValidationError as e:
             print(
                 f"ERROR: Invalid configuration in '{self.CONFIG_PATH}':\n{e}",

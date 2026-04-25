@@ -4,8 +4,8 @@ from core.auth import Auth
 from core.config import Config
 from core.database import Database
 from core.server import Server
+from core.settings import Settings
 from databases.sqlite_database import SqliteDatabase
-from default_settings.app import AppSettings
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from di.dto_container import DtoContainer
@@ -16,7 +16,7 @@ from di.tasks_container import TasksContainer
 
 
 class DiContainer:
-    config: AppSettings = Config().load()
+    config: Settings = Config().load()
 
     database: Database = SqliteDatabase(
         database_name=config.database.name,

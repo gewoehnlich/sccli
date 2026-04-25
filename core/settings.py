@@ -8,7 +8,7 @@ from default_settings.soundcloud import SoundcloudSettings
 from default_settings.tests import TestsSettings
 
 
-class AppSettings(BaseSettings):
+class Settings(BaseSettings):
     soundcloud: SoundcloudSettings = Field(default_factory=SoundcloudSettings)
     messages: MessagesSettings = Field(default_factory=MessagesSettings)
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
