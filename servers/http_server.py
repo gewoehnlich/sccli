@@ -20,6 +20,7 @@ class HttpServer(Server):
             RequestHandlerClass=AuthRequestHandler
         )
 
+        # hack to store the data from response
         self.__server.parent = self
 
         self.auth_code: str | None = None
@@ -57,6 +58,7 @@ class AuthRequestHandler(BaseHTTPRequestHandler):
             if isinstance(state, list):
                 state = state[0]
 
+            # hack to store the data from response
             self.server.parent.auth_code = auth_code
             self.server.parent.state = state
 

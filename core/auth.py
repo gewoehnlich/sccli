@@ -1,8 +1,6 @@
-import asyncio
 import base64
 import hashlib
 import os
-import sys
 import time
 import webbrowser
 from typing import Any
@@ -44,9 +42,8 @@ class Auth:
             client_id=self.client_id,
         )
 
-        # if not account:
-        #     return self.__authenticate_user()
-        return self.__authenticate_user()
+        if not account:
+            return self.__authenticate_user()
 
         current_timestamp = int(time.time())
         if current_timestamp > account.expire_timestamp - 100:
@@ -99,8 +96,6 @@ class Auth:
 
         auth_code: str = self.server.auth_code
         returned_state: str = self.server.state
-        print(auth_code, returned_state)
-        sys.exit(1)
 
         if state != returned_state:
             raise Exception("State mismatch!")
