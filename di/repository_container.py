@@ -1,3 +1,4 @@
+from typing import Callable
 from sqlalchemy.orm import Session, sessionmaker
 
 from di.models_container import ModelsContainer
@@ -9,7 +10,7 @@ class RepositoryContainer:
     def __init__(
         self,
         models: ModelsContainer,
-        session_factory: type[Session],
+        session_factory: Callable[[], Session],
     ) -> None:
         self.account = AccountRepository(
             model=models.account,

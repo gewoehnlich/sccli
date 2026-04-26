@@ -1,3 +1,4 @@
+from typing import Callable
 import sqlalchemy
 from sqlalchemy.orm import Session, sessionmaker
 from core.model import Model
@@ -13,7 +14,7 @@ class Database:
         self.database_name: str = database_name
 
         self.engine: sqlalchemy.Engine = engine
-        self.session_factory: sessionmaker[Session] = sessionmaker(
+        self.session_factory: Callable[[], Session] = sessionmaker(
             bind=self.engine,
             expire_on_commit=False,
         )

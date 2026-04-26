@@ -1,4 +1,4 @@
-from typing import Any, Sequence
+from typing import Any, Callable, Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -9,7 +9,7 @@ class Repository:
     def __init__(
         self,
         model: type[Model],
-        session_factory: type[Session],
+        session_factory: Callable[[], Session],
     ) -> None:
         self.model = model
         self.session_factory = session_factory

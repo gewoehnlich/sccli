@@ -1,3 +1,4 @@
+from typing import Callable
 from sqlalchemy.orm import Session
 
 from core.repository import Repository
@@ -8,7 +9,7 @@ class TrackRepository(Repository):
     def __init__(
         self,
         model: type[Track],
-        session_factory: type[Session],
+        session_factory: Callable[[], Session],
     ) -> None:
         super().__init__(
             model=model,
