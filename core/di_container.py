@@ -13,6 +13,7 @@ from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
 from di.tasks_container import TasksContainer
+from player.player import Player
 from servers.http_server import HttpServer
 
 
@@ -71,4 +72,8 @@ class DiContainer:
     commands = CommandsContainer(
         actions=actions,
         resources=resources,
+    )
+
+    player = Player(
+        track_repository=repositories.track
     )

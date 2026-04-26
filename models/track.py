@@ -1,4 +1,5 @@
 
+from typing import Any
 from sqlalchemy import Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import Boolean
@@ -51,3 +52,8 @@ class Track(Model):
 
     def __repr__(self) -> str:
         return f"<Track(id={self.id}, title='{self.title}')>"
+
+    def to_tuple(
+        self,
+    ) -> tuple[Any]:
+        return (self.id, self.title, self.description, self.urn, self.duration)

@@ -1,11 +1,9 @@
-"""
-An App to show the current time.
-"""
-
-from datetime import datetime
-
+from typing import Any
 from textual.app import App, ComposeResult
-from textual.widgets import Digits
+from textual.widgets import DataTable
+
+from models.track import Track
+from repositories.track_repository import TrackRepository
 
 
 class Player(App):
@@ -14,13 +12,23 @@ class Player(App):
     Digits { width: auto; }
     """
 
+    def __init__(
+        self,
+        track_repository: TrackRepository,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(**kwargs)
+
+        self.track_repository = track_repository
+
     def compose(self) -> ComposeResult:
-        yield Digits("")
+        yield DataTable()
 
-    def on_ready(self) -> None:
-        self.update_clock()
-        self.set_interval(1, self.update_clock)
+    def on_mount(self) -> None:
+        table = self.query_one(DataTable)
 
-    def update_clock(self) -> None:
-        clock = datetime.now().time()
-        self.query_one(Digits).update(f"{clock:%T}")
+        tracks = self.track_repository.get()
+        formatted_tracks = [track.to_tuple() for track in tracks[:100]]
+
+        table.add_columns('id', 'title', 'description', 'urn', 'duration')
+        table.add_rows(formatted_tracks)
