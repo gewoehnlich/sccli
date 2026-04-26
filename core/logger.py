@@ -3,7 +3,7 @@ from typing import Any
 from loguru import logger
 
 
-class Log:
+class Logger:
     def __init__(
         self,
     ) -> None:

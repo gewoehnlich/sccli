@@ -1,7 +1,7 @@
 from core.auth import Auth
 from core.config import Config
 from core.database import Database
-from core.log import Log
+from core.logger import Logger
 from core.server import Server
 from core.settings import Settings
 from databases.sqlite_database import SqliteDatabase
@@ -19,7 +19,7 @@ from servers.http_server import HttpServer
 class DiContainer:
     config: Settings = Config().load()
 
-    log = Log()
+    logger = Logger()
 
     database: Database = SqliteDatabase(
         database_name=config.database.name,
@@ -72,5 +72,6 @@ class DiContainer:
     )
 
     player = Player(
-        track_repository=repositories.track
+        track_repository=repositories.track,
+        logger=logger,
     )
