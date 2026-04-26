@@ -40,7 +40,7 @@ class Auth:
     ) -> str:
         account: Account | None = self.account_repository.get(
             client_id=self.client_id,
-        )
+        )[0]
 
         if not account:
             return self.__authenticate_user()
@@ -65,7 +65,7 @@ class Auth:
 
         response: dict[str, Any] = request.send()
 
-        account: Account = self.account_repository.update(
+        account: Account = self.account_repository.store(
             client_id=self.client_id,
             client_secret=self.client_secret,
             access_token=str(response["access_token"]),
@@ -110,7 +110,7 @@ class Auth:
 
         response: dict[str, Any] = request.send()
 
-        account: Account = self.account_repository.create(
+        account: Account = self.account_repository.store(
             client_id=self.client_id,
             client_secret=self.client_secret,
             access_token=str(response["access_token"]),

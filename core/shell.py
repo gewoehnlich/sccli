@@ -26,7 +26,7 @@ class Shell:
                 self.commands.exit.run()
                 break
             except Exception as e:
-                print(f"An unexpected error occurred: {e}")
+                raise e
 
     def __process_command(
         self,
