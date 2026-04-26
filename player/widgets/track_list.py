@@ -1,11 +1,10 @@
 from typing import Any
-from textual.app import App, ComposeResult
+from textual.widgets import DataTable
 
-from player.widgets.track_list import TrackList
 from repositories.track_repository import TrackRepository
 
 
-class Player(App):
+class TrackList(DataTable):
     def __init__(
         self,
         track_repository: TrackRepository,
@@ -15,10 +14,6 @@ class Player(App):
 
         self.track_repository = track_repository
 
-    def compose(self) -> ComposeResult:
-        yield TrackList(
-            track_repository=self.track_repository,
-        )
-
     def on_mount(self) -> None:
-        pass
+        self.add_columns(*self.track_repository.model.columns())
+        self.add_rows([track.to_tuple() for track in self.track_repository.get()[:100]])
