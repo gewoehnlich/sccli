@@ -6,7 +6,7 @@ authors = [
     { name = "gewoehnlich", email = "gewoehnlich@disroot.org" }
 ]
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.14,<4.0"
 dependencies = [
     "mypy (>=1.19.1,<2.0.0)",
     "python-dotenv (>=1.2.1,<2.0.0)",
@@ -20,6 +20,7 @@ dependencies = [
     "sqlalchemy (>=2.0.45,<3.0.0)",
     "pytest (>=9.0.3,<10.0.0)",
     "ruff (>=0.15.11,<0.16.0)",
+    "loguru (>=0.7.3,<0.8.0)",
 ]
 
 [build-system]

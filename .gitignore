@@ -10,3 +10,4 @@ sccli.db
 test.db
 .test_tokens.json
 config.yml
+logs/
