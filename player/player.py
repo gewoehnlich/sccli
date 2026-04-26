@@ -1,17 +1,12 @@
 from typing import Any
+import rich
 from textual.app import App, ComposeResult
 from textual.widgets import DataTable
 
-from models.track import Track
 from repositories.track_repository import TrackRepository
 
 
 class Player(App):
-    CSS = """
-    Screen { align: center middle; }
-    Digits { width: auto; }
-    """
-
     def __init__(
         self,
         track_repository: TrackRepository,
@@ -27,8 +22,5 @@ class Player(App):
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
 
-        tracks = self.track_repository.get()
-        formatted_tracks = [track.to_tuple() for track in tracks[:100]]
-
-        table.add_columns('id', 'title', 'description', 'urn', 'duration')
-        table.add_rows(formatted_tracks)
+        table.add_columns(*self.track_repository.model.columns())
+        table.add_rows([track.to_tuple() for track in self.track_repository.get()[:100]])

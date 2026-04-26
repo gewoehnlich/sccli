@@ -1,3 +1,5 @@
+import rich
+from sqlalchemy import inspect
 from core.di_container import DiContainer
 from core.shell import Shell
 
