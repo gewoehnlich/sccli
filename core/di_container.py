@@ -7,7 +7,6 @@ from core.settings import Settings
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
-from di.dto_container import DtoContainer
 from di.models_container import ModelsContainer
 from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
@@ -48,8 +47,6 @@ class DiContainer:
         authentication_request=requests.authentication,
         refresh_token_request=requests.refresh_token,
     )
-
-    dto = DtoContainer()
 
     tasks = TasksContainer(
         auth=auth,
