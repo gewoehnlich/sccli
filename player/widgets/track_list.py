@@ -2,6 +2,7 @@ from typing import Any
 from textual import events
 from textual.widgets import DataTable
 
+from player.views.track_view import TrackView
 from repositories.track_repository import TrackRepository
 
 
@@ -23,8 +24,12 @@ class TrackList(DataTable):
     def on_mount(
         self,
     ) -> None:
-        self.add_columns(*self.track_repository.model.columns())
-        self.add_rows([track.to_tuple() for track in self.track_repository.get()[:100]])
+        columns: list[str] = ['id', 'title', 'description', 'duration']
+
+        track_view = TrackView(fields = columns)
+
+        self.add_columns(*tuple(columns))
+        self.add_rows([track_view.to_tuple(track) for track in self.track_repository.get()[:100]])
 
     def on_key(
         self,
