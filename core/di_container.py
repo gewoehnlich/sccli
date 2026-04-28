@@ -12,8 +12,9 @@ from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
 from di.tasks_container import TasksContainer
-from player.player import Player
+# from players.mpv_player import MpvPlayer
 from servers.http_server import HttpServer
+from ui.app import App
 
 
 class DiContainer:
@@ -71,7 +72,12 @@ class DiContainer:
         resources=resources,
     )
 
-    player = Player(
+    app = App(
         track_repository=repositories.track,
         logger=logger,
     )
+
+    # player = MpvPlayer(
+    #     player="mpv"
+    #     auth=auth,
+    # )

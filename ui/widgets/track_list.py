@@ -2,7 +2,7 @@ from typing import Any
 from textual import events
 from textual.widgets import DataTable
 
-from player.views.track_view import TrackView
+from views.track_view import TrackView
 from repositories.track_repository import TrackRepository
 
 

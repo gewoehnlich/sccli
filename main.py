@@ -9,7 +9,7 @@ def main() -> None:
     di_container.database.initialize_tables()
     di_container.logger.info("Starting sccli...")
 
-    di_container.player.run()
+    di_container.app.run()
 
     # di_container.logger.info("Running shell...")
     # shell = Shell(commands=di_container.commands)
