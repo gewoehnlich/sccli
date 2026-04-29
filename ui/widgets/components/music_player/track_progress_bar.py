@@ -14,3 +14,6 @@ class TrackProgressBarComponent(Widget):
 
     def on_mount(self) -> None:
         self.styles.layout = "horizontal"
+        self.styles.dock = "bottom"
+        self.styles.width = "auto"
+        self.styles.height = "auto"

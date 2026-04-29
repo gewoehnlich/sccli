@@ -12,3 +12,7 @@ class TrackTotalTime(Static):
             id="track_total_time",
             **kwargs,
         )
+
+    def on_mount(self) -> None:
+        self.styles.width = "auto"
+        self.styles.margin = (0, 0, 0, 1)

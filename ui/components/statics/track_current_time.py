@@ -12,3 +12,7 @@ class TrackCurrentTime(Static):
             id="track_current_time",
             **kwargs,
         )
+
+    def on_mount(self) -> None:
+        self.styles.width = "auto"
+        self.styles.margin = (0, 1, 0, 0)
