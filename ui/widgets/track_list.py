@@ -2,6 +2,7 @@ from typing import Any
 from textual import events
 from textual.widgets import DataTable
 
+from core.logger import Logger
 from views.track_view import TrackView
 from repositories.track_repository import TrackRepository
 
@@ -9,6 +10,8 @@ from repositories.track_repository import TrackRepository
 class TrackList(DataTable):
     g_pressed_before: bool = False
     number: int | None = None
+    selected_track: int
+    tracks: list[tuple[Any]]
 
     def __init__(
         self,
@@ -29,13 +32,19 @@ class TrackList(DataTable):
         track_view = TrackView(fields = columns)
 
         self.add_columns(*tuple(columns))
-        self.add_rows([track_view.to_tuple(track) for track in self.track_repository.get()[:100]])
+
+        self.tracks = [track_view.to_tuple(track) for track in self.track_repository.get()[:100]]
+        self.add_rows(self.tracks)
+
+        self.cursor_type = "row"
+        self.zebra_stripes = True
 
     def on_key(
         self,
         event: events.Key,
     ) -> None:
         # self.logger.debug(f"Key pressed: {event.key}")
+        # self.logger.debug(f"Key pressed: {event.character}")
 
         if event.key != 'g':
             self.g_pressed_before = False
@@ -91,6 +100,8 @@ class TrackList(DataTable):
                 self.move_cursor(
                     column = len(self.columns) - 1
                 )
+            case 'enter':
+                self.selected_track = self.cursor_row
 
             case _:
                 return None
