@@ -4,6 +4,7 @@ from core.database import Database
 from core.logger import Logger
 from core.server import Server
 from core.settings import Settings
+from core.shell import Shell
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
@@ -12,9 +13,10 @@ from di.repository_container import RepositoryContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
 from di.tasks_container import TasksContainer
-# from players.mpv_player import MpvPlayer
+from players.mpv_player import MpvPlayer
 from servers.http_server import HttpServer
 from ui.app import App
+from views.track_view import TrackView
 
 
 class DiContainer:
@@ -72,12 +74,19 @@ class DiContainer:
         resources=resources,
     )
 
+    player = MpvPlayer(
+        player="mpv",
+        auth=auth,
+    )
+
+    shell = Shell(
+        commands=commands,
+    )
+
     app = App(
         track_repository=repositories.track,
         logger=logger,
+        track_view=TrackView(
+            fields=['urn', 'title', 'duration']
+        ),
     )
-
-    # player = MpvPlayer(
-    #     player="mpv"
-    #     auth=auth,
-    # )

@@ -1,5 +1,6 @@
 from typing import Any
 from textual import events
+from textual.reactive import Reactive, reactive
 from textual.widgets import DataTable
 
 from core.logger import Logger
@@ -11,30 +12,22 @@ class TrackList(DataTable):
     g_pressed_before: bool = False
     number: int | None = None
     selected_track: int
-    tracks: list[tuple[Any]]
+    tracks: Reactive[dict[str, tuple[Any]]] = reactive({})
 
     def __init__(
         self,
-        track_repository: TrackRepository,
+        columns: list[str],
         logger: Logger,
-        **kwargs: Any,
     ) -> None:
-        super().__init__(**kwargs)
-
-        self.track_repository = track_repository
+        self.columns = columns
         self.logger = logger
 
-    def on_mount(
-        self,
-    ) -> None:
-        columns: list[str] = ['id', 'title', 'description', 'duration']
+        super().__init__()
 
-        track_view = TrackView(fields = columns)
-
-        self.add_columns(*tuple(columns))
-
-        self.tracks = [track_view.to_tuple(track) for track in self.track_repository.get()[:100]]
-        self.add_rows(self.tracks)
+    def on_mount(self) -> None:
+        self.add_columns(*tuple(self.columns))
+        self.logger.info(self.tracks)
+        self.add_rows(*self.tracks)
 
         self.cursor_type = "row"
         self.zebra_stripes = True
