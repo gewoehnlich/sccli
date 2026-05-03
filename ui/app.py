@@ -1,9 +1,12 @@
 from typing import Any
 from textual.app import App as BaseApp, ComposeResult
+from textual.containers import Horizontal
+from textual.message import Message
 from textual.reactive import Reactive, reactive
 from textual.widgets import Footer, Header
 
 from core.logger import Logger
+from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
 from ui.widgets.shell import Shell
 from ui.widgets.track_list import TrackList
@@ -16,6 +19,8 @@ class App(BaseApp):
 
     tracks: Reactive[list[tuple[Any]]] = reactive([])
     selected_track_urn: Reactive[str | None] = reactive(None)
+
+    track_selected_event: type[Message] = TrackSelected
 
     def __init__(
         self,
@@ -36,11 +41,14 @@ class App(BaseApp):
             name="sccli",
             id="header"
         )
-        yield MusicPlayer()
-        yield TrackList(
-            track_columns=self.track_view.fields,
-            logger=self.logger,
-        )
+        with Horizontal():
+            yield MusicPlayer()
+            yield TrackList(
+                track_columns=self.track_view.fields,
+                logger=self.logger,
+
+                track_selected_event=self.track_selected_event,
+            )
         yield Shell()
         yield Footer(
             name="sccli",
@@ -54,7 +62,10 @@ class App(BaseApp):
         self.tracks = [
             self.track_view.to_tuple(track) for track in self.track_repository.get()[:41]
         ]
-        self.logger.info(self.tracks)
 
     def watch_tracks(self) -> None:
         self.query_one(TrackList).tracks = self.tracks
+
+    def on_track_selected(self, message: TrackSelected) -> None:
+        self.selected_track_urn = message.urn
+        self.logger.info(self.selected_track_urn)

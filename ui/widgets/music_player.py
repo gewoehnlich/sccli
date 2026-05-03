@@ -10,4 +10,5 @@ class MusicPlayer(Widget):
         yield TrackProgressBarComponent()
 
     def on_mount(self) -> None:
-        self.styles.height = "25%"
+        self.styles.height = "100%"
+        self.styles.width = "50%"
