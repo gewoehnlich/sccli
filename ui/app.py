@@ -7,6 +7,7 @@ from textual.widgets import Footer, Header
 
 from core.di_container import DiContainer
 from core.logger import Logger
+from di.commands_container import CommandsContainer
 from repositories.track_repository import TrackRepository
 from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
@@ -30,6 +31,7 @@ class App(BaseApp):
         self.track_repository: TrackRepository = di_container.repositories.track
         self.track_view: TrackView = di_container.views.track
         self.logger: Logger = di_container.logger
+        self.commands: CommandsContainer = di_container.commands
 
         super().__init__()
 

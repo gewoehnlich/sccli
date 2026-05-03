@@ -12,3 +12,7 @@ class MusicPlayer(Widget):
     def on_mount(self) -> None:
         self.styles.height = "100%"
         self.styles.width = "50%"
+
+    def on_play_button_pressed(self) -> None:
+        self.app.logger.info("play button pressed")
+        self.app.commands.play.run()

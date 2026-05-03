@@ -22,7 +22,7 @@ class MusicPlayerButtonsComponent(Widget):
         self.styles.width = "100%"
 
     def watch_is_playing(self) -> None:
-        if self.is_playing is True:
+        if self.is_playing:
             self.query_one(PlayButton).display = "none"
             self.query_one(PauseButton).display = "block"
         else:
