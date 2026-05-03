@@ -14,7 +14,6 @@ from views.track_view import TrackView
 class App(BaseApp):
     TITLE = 'sccli'
 
-    track_columns: list[str]
     tracks: Reactive[list[tuple[Any]]] = reactive([])
     selected_track_urn: Reactive[str | None] = reactive(None)
 
@@ -31,8 +30,6 @@ class App(BaseApp):
         self.logger = logger
         self.track_view = track_view
 
-        self.tracks = [self.track_view.to_tuple(track) for track in self.track_repository.get()[:41]]
-
     def compose(self) -> ComposeResult:
         yield Header(
             show_clock=True,
@@ -41,10 +38,8 @@ class App(BaseApp):
         )
         yield MusicPlayer()
         yield TrackList(
-            columns=self.track_view.fields,
+            track_columns=self.track_view.fields,
             logger=self.logger,
-        ).data_bind(
-            tracks=App.tracks,
         )
         yield Shell()
         yield Footer(
@@ -55,3 +50,11 @@ class App(BaseApp):
     def on_mount(self) -> None:
         self.theme = "rose-pine"
         self.styles.height = "auto"
+
+        self.tracks = [
+            self.track_view.to_tuple(track) for track in self.track_repository.get()[:41]
+        ]
+        self.logger.info(self.tracks)
+
+    def watch_tracks(self) -> None:
+        self.query_one(TrackList).tracks = self.tracks

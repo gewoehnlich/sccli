@@ -4,33 +4,35 @@ from textual.reactive import Reactive, reactive
 from textual.widgets import DataTable
 
 from core.logger import Logger
-from views.track_view import TrackView
-from repositories.track_repository import TrackRepository
 
 
 class TrackList(DataTable):
     g_pressed_before: bool = False
     number: int | None = None
     selected_track: int
-    tracks: Reactive[dict[str, tuple[Any]]] = reactive({})
+    track_columns: list[str]
+    tracks: Reactive[list[tuple[Any]]] = reactive([])
 
     def __init__(
         self,
-        columns: list[str],
+        track_columns: list[str],
         logger: Logger,
     ) -> None:
-        self.columns = columns
+        self.track_columns = track_columns
         self.logger = logger
 
         super().__init__()
 
     def on_mount(self) -> None:
-        self.add_columns(*tuple(self.columns))
-        self.logger.info(self.tracks)
-        self.add_rows(*self.tracks)
-
         self.cursor_type = "row"
         self.zebra_stripes = True
+
+    def watch_tracks(self) -> None:
+        self.columns = {}
+        self.rows = {}
+
+        self.add_columns(*tuple(self.track_columns))
+        self.add_rows(self.tracks)
 
     def on_key(
         self,
