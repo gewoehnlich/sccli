@@ -1,12 +1,12 @@
 from typing import Callable
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
 
 from di.models_container import ModelsContainer
 from repositories.account_repository import AccountRepository
 from repositories.track_repository import TrackRepository
 
 
-class RepositoryContainer:
+class RepositoriesContainer:
     def __init__(
         self,
         models: ModelsContainer,

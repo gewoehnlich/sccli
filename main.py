@@ -1,4 +1,5 @@
 from core.di_container import DiContainer
+from ui.app import App
 
 
 def main() -> None:
@@ -6,7 +7,8 @@ def main() -> None:
     di_container.database.initialize_tables()
     di_container.logger.info("Starting sccli...")
 
-    di_container.app.run()
+    app = App(di_container=di_container)
+    app.run()
 
 
 if __name__ == "__main__":

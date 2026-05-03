@@ -9,14 +9,13 @@ from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from di.models_container import ModelsContainer
-from di.repository_container import RepositoryContainer
+from di.repositories_container import RepositoriesContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
 from di.tasks_container import TasksContainer
+from di.views_container import ViewsContainer
 from players.mpv_player import MpvPlayer
 from servers.http_server import HttpServer
-from ui.app import App
-from views.track_view import TrackView
 
 
 class DiContainer:
@@ -30,7 +29,7 @@ class DiContainer:
 
     models = ModelsContainer()
 
-    repositories = RepositoryContainer(
+    repositories = RepositoriesContainer(
         session_factory=database.session_factory,
         models=models,
     )
@@ -74,6 +73,8 @@ class DiContainer:
         resources=resources,
     )
 
+    views = ViewsContainer()
+
     player = MpvPlayer(
         player="mpv",
         auth=auth,
@@ -81,12 +82,4 @@ class DiContainer:
 
     shell = Shell(
         commands=commands,
-    )
-
-    app = App(
-        track_repository=repositories.track,
-        logger=logger,
-        track_view=TrackView(
-            fields=['urn', 'title', 'duration']
-        ),
     )

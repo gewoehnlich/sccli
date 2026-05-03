@@ -7,7 +7,7 @@ from actions.play_track_action import PlayTrackAction
 from core.action import Action
 from core.auth import Auth
 from default_settings.messages import MessagesSettings
-from di.repository_container import RepositoryContainer
+from di.repositories_container import RepositoriesContainer
 from di.requests_container import RequestsContainer
 from di.tasks_container import TasksContainer
 
@@ -17,7 +17,7 @@ class ActionsContainer:
         self,
         auth: Auth,
         requests: RequestsContainer,
-        repositories: RepositoryContainer,
+        repositories: RepositoriesContainer,
         messages: MessagesSettings,
         tasks: TasksContainer,
     ) -> None:

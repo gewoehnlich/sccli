@@ -5,12 +5,13 @@ from textual.message import Message
 from textual.reactive import Reactive, reactive
 from textual.widgets import Footer, Header
 
+from core.di_container import DiContainer
 from core.logger import Logger
+from repositories.track_repository import TrackRepository
 from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
 from ui.widgets.shell import Shell
 from ui.widgets.track_list import TrackList
-from repositories.track_repository import TrackRepository
 from views.track_view import TrackView
 
 
@@ -24,16 +25,13 @@ class App(BaseApp):
 
     def __init__(
         self,
-        track_repository: TrackRepository,
-        logger: Logger,
-        track_view: TrackView,
-        **kwargs: Any,
+        di_container: DiContainer,
     ) -> None:
-        super().__init__(**kwargs)
+        self.track_repository: TrackRepository = di_container.repositories.track
+        self.track_view: TrackView = di_container.views.track
+        self.logger: Logger = di_container.logger
 
-        self.track_repository = track_repository
-        self.logger = logger
-        self.track_view = track_view
+        super().__init__()
 
     def compose(self) -> ComposeResult:
         yield Header(

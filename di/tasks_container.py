@@ -2,7 +2,7 @@ from core.auth import Auth
 from core.server import Server
 from core.task import Task
 from default_settings.messages import MessagesSettings
-from di.repository_container import RepositoryContainer
+from di.repositories_container import RepositoriesContainer
 from di.requests_container import RequestsContainer
 from tasks.fetch_track_streams_task import FetchTrackStreamsTask
 from tasks.serve_track_task import ServeTrackTask
@@ -13,7 +13,7 @@ class TasksContainer:
         self,
         auth: Auth,
         requests: RequestsContainer,
-        repositories: RepositoryContainer,
+        repositories: RepositoriesContainer,
         messages: MessagesSettings,
         server: Server,
     ) -> None:
