@@ -36,8 +36,7 @@ class App(BaseApp):
     def compose(self) -> ComposeResult:
         yield Header(
             show_clock=True,
-            name="sccli",
-            id="header"
+            id="header",
         )
         with Horizontal():
             yield MusicPlayer()
@@ -49,7 +48,6 @@ class App(BaseApp):
             )
         yield Shell()
         yield Footer(
-            name="sccli",
             id="footer"
         )
 
@@ -64,6 +62,8 @@ class App(BaseApp):
     def watch_tracks(self) -> None:
         self.query_one(TrackList).tracks = self.tracks
 
-    def on_track_selected(self, message: TrackSelected) -> None:
+    def on_track_selected(
+        self,
+        message: TrackSelected,
+    ) -> None:
         self.selected_track_urn = message.urn
-        self.logger.info(self.selected_track_urn)
