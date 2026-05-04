@@ -8,7 +8,7 @@ class Player:
         pass
 
     @abstractmethod
-    def play(self) -> None:
+    def play(self, filename: str) -> None:
         pass
 
     @abstractmethod

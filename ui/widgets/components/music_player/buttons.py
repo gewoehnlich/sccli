@@ -28,3 +28,9 @@ class MusicPlayerButtonsComponent(Widget):
         else:
             self.query_one(PlayButton).display = "block"
             self.query_one(PauseButton).display = "none"
+
+    def on_play_button_pressed(self) -> None:
+        self.is_playing = True
+
+    def on_pause_button_pressed(self) -> None:
+        self.is_playing = False

@@ -16,3 +16,7 @@ class MusicPlayer(Widget):
     def on_play_button_pressed(self) -> None:
         self.app.logger.info("play button pressed")
         self.app.commands.play.run()
+
+    def on_pause_button_pressed(self) -> None:
+        self.app.logger.info("pause button pressed")
+        self.app.player.stop()

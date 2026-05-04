@@ -35,3 +35,8 @@ class MpvPlayer(Player):
         self.player.play(
             filename=filename
         )
+
+    def stop(
+        self,
+    ) -> None:
+        self.player.stop()
