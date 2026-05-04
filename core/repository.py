@@ -1,5 +1,6 @@
 from typing import Any, Callable, Sequence
 from sqlalchemy import select
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from core.model import Model
@@ -27,15 +28,16 @@ class Repository:
         **kwargs: dict[str, Any],
     ) -> Model:
         with self.session_factory() as session:
-            model = session.get_one(self.model, kwargs[self.model.primary_key()])
+            try:
+                model = session.get_one(self.model, kwargs[self.model.primary_key()])
 
-            if not model:
+                for field, value in kwargs.items():
+                    setattr(model, field, value)
+
+            except NoResultFound:
                 model = self.model(**kwargs)
 
                 session.add(instance=model)
-            else:
-                for field, value in kwargs.items():
-                    setattr(model, field, value)
 
             session.commit()
 

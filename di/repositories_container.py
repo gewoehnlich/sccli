@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from di.models_container import ModelsContainer
 from repositories.account_repository import AccountRepository
 from repositories.track_repository import TrackRepository
+from repositories.user_repository import UserRepository
 
 
 class RepositoriesContainer:
@@ -19,5 +20,10 @@ class RepositoriesContainer:
 
         self.track = TrackRepository(
             model=models.track,
+            session_factory=session_factory,
+        )
+
+        self.user = UserRepository(
+            model=models.user,
             session_factory=session_factory,
         )

@@ -1,11 +1,16 @@
 from pprint import pprint
+import sys
 from time import sleep
 from typing import Any
+
+from rich import inspect
 
 from core.action import Action
 from core.auth import Auth
 from core.request import Request
+from models.user import User
 from repositories.track_repository import TrackRepository
+from repositories.user_repository import UserRepository
 
 
 class FetchMyLikedTracksAction(Action):
@@ -13,13 +18,16 @@ class FetchMyLikedTracksAction(Action):
         self,
         auth: Auth,
         request: type[Request],
-        repository: TrackRepository,
+        track_repository: TrackRepository,
+        user_repository: UserRepository,
     ) -> None:
         super().__init__(
             auth=auth,
             request=request,
-            repository=repository,
         )
+
+        self.track_repository = track_repository
+        self.user_repository = user_repository
 
     def run(
         self,
@@ -44,10 +52,20 @@ class FetchMyLikedTracksAction(Action):
             next_href = response["next_href"]
 
             if collection:
-                pprint(collection)
                 for track in collection:
-                    self.repository.store(
-                        access=track["access"],
+                    user: User = self.user_repository.store(
+                        avatar_url=track["user"]["avatar_url"],
+                        city=track["user"]["city"],
+                        country=track["user"]["country"],
+                        created_at=track["user"]["created_at"],
+                        description=track["user"]["description"],
+                        id=track["user"]["id"],
+                        permalink=track["user"]["permalink"],
+                        permalink_url=track["user"]["permalink_url"],
+                        username=track["user"]["username"],
+                    )
+
+                    self.track_repository.store(
                         artwork_url=track["artwork_url"],
                         created_at=track["created_at"],
                         description=track["description"],
@@ -55,10 +73,7 @@ class FetchMyLikedTracksAction(Action):
                         id=track["id"],
                         permalink_url=track["permalink_url"],
                         title=track["title"],
-                        uri=track["uri"],
-                        urn=track["urn"],
-                        user_favorite=track["user_favorite"],
-                        user_playback_count=track["user_playback_count"],
+                        user_id=user.id,
                     )
 
             if not next_href:

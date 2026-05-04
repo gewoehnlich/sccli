@@ -1,6 +1,5 @@
-from sqlalchemy import Integer, String, Text
+from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.types import Boolean
 
 from core.model import Model
 
@@ -8,9 +7,6 @@ from core.model import Model
 class Track(Model):
     __tablename__ = "tracks"
 
-    access: Mapped[str] = mapped_column(
-        String,
-    )
     artwork_url: Mapped[str | None] = mapped_column(
         String,
     )
@@ -34,19 +30,13 @@ class Track(Model):
     title: Mapped[str] = mapped_column(
         String,
     )
-    uri: Mapped[str] = mapped_column(
-        String,
-        unique=True,
-    )
-    urn: Mapped[str] = mapped_column(
-        String,
-    )
-    user_favorite: Mapped[bool] = mapped_column(
-        Boolean,
-    )
-    user_playback_count: Mapped[int] = mapped_column(
-        Integer,
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id")
     )
 
     def __repr__(self) -> str:
         return f"<Track(id={self.id}, title='{self.title}')>"
+
+    @property
+    def urn(self) -> str:
+        return f"soundcloud:tracks:{self.id}"
