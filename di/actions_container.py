@@ -6,6 +6,7 @@ from actions.get_welcome_message_action import GetWelcomeMessageAction
 from actions.play_track_action import PlayTrackAction
 from core.action import Action
 from core.auth import Auth
+from core.player import Player
 from default_settings.messages import MessagesSettings
 from di.repositories_container import RepositoriesContainer
 from di.requests_container import RequestsContainer
@@ -20,6 +21,7 @@ class ActionsContainer:
         repositories: RepositoriesContainer,
         messages: MessagesSettings,
         tasks: TasksContainer,
+        player: Player,
     ) -> None:
         self.get_welcome_message: Action = GetWelcomeMessageAction(
             message=messages.welcome,
@@ -45,6 +47,7 @@ class ActionsContainer:
 
         self.play_track: Action = PlayTrackAction(
             auth=auth,
+            player=player,
             fetch_track_streams_task=tasks.fetch_track_streams,
             serve_track_task=tasks.serve_track,
         )

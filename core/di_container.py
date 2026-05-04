@@ -58,12 +58,19 @@ class DiContainer:
         server=server,
     )
 
+    player = MpvPlayer(
+        auth=auth,
+        http_proxy=config.proxy.endpoint,
+        logger=logger,
+    )
+
     actions = ActionsContainer(
         auth=auth,
         requests=requests,
         repositories=repositories,
         messages=config.messages,
         tasks=tasks,
+        player=player,
     )
 
     resources = ResourcesContainer()
@@ -74,11 +81,6 @@ class DiContainer:
     )
 
     views = ViewsContainer()
-
-    player = MpvPlayer(
-        player="mpv",
-        auth=auth,
-    )
 
     shell = Shell(
         commands=commands,

@@ -15,6 +15,9 @@ server:
   port:
   path:
 
+proxy:
+  endpoint:
+
 tests:
   database:
     name:

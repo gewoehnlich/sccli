@@ -531,6 +531,22 @@ files = [
 ]
 
 [[package]]
+name = "mpv"
+version = "1.0.8"
+description = "A python interface to the mpv media player"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "mpv-1.0.8-py3-none-any.whl", hash = "sha256:dcf77f612e3f5ce49bd89393f37d286de7ac290db6b0800f1fdcfe0aeb5ba9b8"},
+    {file = "mpv-1.0.8.tar.gz", hash = "sha256:95dbd4d869cd8de7a27914ad33e776accc0f01cb82a6d5b31ca439ade2208ffb"},
+]
+
+[package.extras]
+screenshot-raw = ["Pillow"]
+test = ["PyVirtualDisplay"]
+
+[[package]]
 name = "mypy"
 version = "1.20.1"
 description = "Optional static typing for Python"
@@ -1325,4 +1341,4 @@ dev = ["black (>=19.3b0) ; python_version >= \"3.6\"", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14,<4.0"
-content-hash = "1fe1d005dbf5df4915acec4a27f397723e1be9080fc49fb0f02167a37ab9e831"
+content-hash = "ed241b9aaeedccba5d32dcf048d54d31bdcf6cf090e1689d64c628265c129108"

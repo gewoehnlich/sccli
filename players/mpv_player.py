@@ -1,25 +1,37 @@
-import subprocess
+import mpv
 from core.auth import Auth
+from core.logger import Logger
 from core.player import Player
 
 
 class MpvPlayer(Player):
     def __init__(
         self,
-        player: str,
         auth: Auth,
+        http_proxy: str | None,
+        logger: Logger,
     ) -> None:
         self.auth: Auth = auth
+        self.logger = logger
+        self.player = mpv.MPV(
+            log_handler=self.__log,
+            ytdl=True,
+            http_header_fields=f"Authorization: Bearer { self.auth.get_access_token() }",
+            http_proxy=http_proxy,
+        )
 
-        self.__player = subprocess.Popen([
-            "mpv"
-        ])
-
-    def track(
+    def __log(
         self,
-        link: str,
+        level: str,
+        prefix: str,
+        text: str,
     ) -> None:
-        pass
+        self.logger.debug(f"[{level}] {prefix}: {text}")
 
-    def play(self) -> None:
-        self.__player
+    def play(
+        self,
+        filename: str,
+    ) -> None:
+        self.player.play(
+            filename=filename
+        )
