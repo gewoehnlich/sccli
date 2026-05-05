@@ -30,10 +30,10 @@ class MpvPlayer(Player):
 
     def play(
         self,
-        filename: str,
+        link: str,
     ) -> None:
         self.player.play(
-            filename=filename
+            filename=link,
         )
 
     def stop(

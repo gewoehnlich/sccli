@@ -1,28 +1,28 @@
 from typing import Any
 from textual import events
-from textual.message import Message
 from textual.reactive import Reactive, reactive
 from textual.widgets import DataTable
 
 from core.logger import Logger
+from models.track import Track
 from ui.events.track_selected import TrackSelected
+from views.track_view import TrackView
 
 
 class TrackList(DataTable):
     g_pressed_before: bool = False
     number: int | None = None
 
-    track_columns: list[str]
     tracks: Reactive[list[tuple[Any]]] = reactive([])
-    selected_track_urn: Reactive[str | None] = reactive(None)
+    selected_track: Reactive[Track | None] = reactive(None)
 
     def __init__(
         self,
-        track_columns: list[str],
+        track_view: TrackView,
         logger: Logger,
         track_selected_event: type[TrackSelected],
     ) -> None:
-        self.track_columns = track_columns
+        self.track_view = track_view
         self.logger = logger
 
         self.track_selected_event = track_selected_event
@@ -40,14 +40,19 @@ class TrackList(DataTable):
         self.columns = {}
         self.rows = {}
 
-        self.add_columns(*tuple(self.track_columns))
-        self.add_rows(self.tracks)
+        self.add_columns(*tuple(self.track_view.fields))
+        self.add_rows(self.formatted_tracks())
 
-    def watch_selected_track_urn(self) -> None:
+    def formatted_tracks(self) -> list[tuple[Any]]:
+        return [
+            self.track_view.to_tuple(track) for track in self.tracks
+        ]
+
+    def watch_selected_track(self) -> None:
         self.post_message(
             message=self.track_selected_event(
-                urn=self.selected_track_urn
-            )
+                track=self.selected_track,
+            ),
         )
 
     def on_key(
@@ -109,7 +114,9 @@ class TrackList(DataTable):
                     column = len(self.columns) - 1
                 )
             case 'enter':
-                self.selected_track_urn = self.tracks[self.cursor_row][0]
+                # self.logger.info(self.tracks)
+                # self.logger.info(self.cursor_row)
+                self.selected_track = self.tracks[self.cursor_row]
 
             case _:
                 return None
