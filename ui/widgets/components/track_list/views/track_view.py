@@ -23,11 +23,25 @@ class TrackView(View):
 
     def view(self) -> tuple[Any]:
         return tuple([
-            self.id(),
-            self.username(),
-            self.title(),
-            self.duration(),
+            self.match(field) for field in self.fields
         ])
+
+    def match(
+        self,
+        field: str,
+    ) -> Any:
+        match field:
+            case 'id':
+                return self.id()
+            case 'username':
+                return self.username()
+            case 'title':
+                return self.title()
+            case 'duration':
+                return self.duration()
+
+            case _:
+                return None
 
     def id(self) -> int:
         return self.track.id

@@ -123,10 +123,13 @@ class TrackList(DataTable):
                 self.move_cursor(
                     column = len(self.columns) - 1
                 )
-            case 'enter':
-                # self.logger.info(self.tracks)
-                # self.logger.info(self.cursor_row)
-                self.selected_track = self.tracks[self.cursor_row]
 
             case _:
                 return None
+
+    def on_data_table_row_selected(
+        self,
+        event: DataTable.RowSelected,
+    ) -> None:
+        self.logger.info(event)
+        self.selected_track = self.tracks[event.cursor_row]
