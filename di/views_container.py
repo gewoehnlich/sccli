@@ -1,7 +1,5 @@
-from views.track_view import TrackView
+from ui.widgets.components.track_list.views.track_view import TrackView
 
 
 class ViewsContainer:
-    track = TrackView(
-        fields=['id', 'title', 'duration']
-    )
+    track = TrackView

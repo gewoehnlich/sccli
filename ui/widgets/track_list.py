@@ -6,19 +6,19 @@ from textual.widgets import DataTable
 from core.logger import Logger
 from models.track import Track
 from ui.events.track_selected import TrackSelected
-from views.track_view import TrackView
+from ui.widgets.components.track_list.views.track_view import TrackView
 
 
 class TrackList(DataTable):
     g_pressed_before: bool = False
     number: int | None = None
 
-    tracks: Reactive[list[tuple[Any]]] = reactive([])
+    tracks: Reactive[list[Track]] = reactive([])
     selected_track: Reactive[Track | None] = reactive(None)
 
     def __init__(
         self,
-        track_view: TrackView,
+        track_view: type[TrackView],
         logger: Logger,
         track_selected_event: type[TrackSelected],
     ) -> None:
@@ -44,9 +44,19 @@ class TrackList(DataTable):
         self.add_rows(self.formatted_tracks())
 
     def formatted_tracks(self) -> list[tuple[Any]]:
-        return [
-            self.track_view.to_tuple(track) for track in self.tracks
-        ]
+        tracks: list[tuple[Any]] = []
+
+        for track in self.tracks:
+            view: TrackView = self.track_view(
+                track=track,
+                user=self.app.di_container.repositories.user.get(
+                    id=track.user_id,
+                )[0],
+            )
+
+            tracks.append(view.view())
+
+        return tracks
 
     def watch_selected_track(self) -> None:
         self.post_message(

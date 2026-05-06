@@ -15,7 +15,6 @@ from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
 from ui.widgets.shell import Shell
 from ui.widgets.track_list import TrackList
-from views.track_view import TrackView
 
 
 class App(BaseApp):
@@ -33,7 +32,6 @@ class App(BaseApp):
         self.di_container = di_container
 
         self.track_repository: TrackRepository = di_container.repositories.track
-        self.track_view: TrackView = di_container.views.track
         self.logger: Logger = di_container.logger
         self.commands: CommandsContainer = di_container.commands
         self.player: Player = di_container.player
@@ -48,7 +46,7 @@ class App(BaseApp):
         with Horizontal():
             yield MusicPlayer()
             yield TrackList(
-                track_view=self.track_view,
+                track_view=self.di_container.views.track,
                 logger=self.logger,
 
                 track_selected_event=self.track_selected_event,
