@@ -131,5 +131,4 @@ class TrackList(DataTable):
         self,
         event: DataTable.RowSelected,
     ) -> None:
-        self.logger.info(event)
         self.selected_track = self.tracks[event.cursor_row]
