@@ -9,18 +9,36 @@ from ui.widgets.components.music_player.track_progress_bar import TrackProgressB
 class MusicPlayer(Widget):
     selected_track: Reactive[Track | None] = reactive(None)
 
+    is_playing: Reactive[bool] = reactive(False)
+
+    current_track_playtime: Reactive[int] = reactive(0)
+    current_track_duration: Reactive[int] = reactive(0)
+
     def compose(self) -> ComposeResult:
-        yield MusicPlayerButtonsComponent()
-        yield TrackProgressBarComponent()
+        yield MusicPlayerButtonsComponent().data_bind(
+            is_playing=MusicPlayer.is_playing,
+        )
+        yield TrackProgressBarComponent().data_bind(
+            current_track_playtime=MusicPlayer.current_track_playtime,
+            current_track_duration=MusicPlayer.current_track_duration,
+        )
 
     def on_mount(self) -> None:
-        self.styles.height = "100%"
+        self.styles.height = "10%"
         self.styles.width = "50%"
 
+        self.set_interval(1, self.update_current_track_info)
+
+    def update_current_track_info(self) -> None:
+        self.current_track_playtime = self.app.player.get_current_track_playtime()
+        self.current_track_duration = self.app.player.get_current_track_duration()
+
     def on_play_button_pressed(self) -> None:
-        self.app.logger.info("play button pressed")
+        self.is_playing = True
+
         self.app.di_container.actions.play_track.run(self.selected_track)
 
     def on_pause_button_pressed(self) -> None:
-        self.app.logger.info("pause button pressed")
+        self.is_playing = False
+
         self.app.player.stop()

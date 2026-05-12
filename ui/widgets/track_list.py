@@ -58,13 +58,6 @@ class TrackList(DataTable):
 
         return tracks
 
-    def watch_selected_track(self) -> None:
-        self.post_message(
-            message=self.track_selected_event(
-                track=self.selected_track,
-            ),
-        )
-
     def on_key(
         self,
         event: events.Key,
@@ -131,4 +124,8 @@ class TrackList(DataTable):
         self,
         event: DataTable.RowSelected,
     ) -> None:
-        self.selected_track = self.tracks[event.cursor_row]
+        self.post_message(
+            message=self.track_selected_event(
+                track=self.tracks[event.cursor_row]
+            ),
+        )

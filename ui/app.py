@@ -44,12 +44,17 @@ class App(BaseApp):
             id="header",
         )
         with Horizontal():
-            yield MusicPlayer()
+            yield MusicPlayer().data_bind(
+                selected_track=App.selected_track,
+            )
             yield TrackList(
                 track_view=self.di_container.views.track,
                 logger=self.logger,
 
                 track_selected_event=self.track_selected_event,
+            ).data_bind(
+                selected_track=App.selected_track,
+                tracks=App.tracks,
             )
         yield Shell()
         yield Footer(
@@ -61,12 +66,6 @@ class App(BaseApp):
         self.styles.height = "auto"
 
         self.tracks = self.track_repository.get()
-
-    def watch_tracks(self) -> None:
-        self.query_one(TrackList).tracks = self.tracks
-
-    def watch_selected_track(self) -> None:
-        self.query_one(MusicPlayer).selected_track = self.selected_track
 
     def on_track_selected(
         self,
