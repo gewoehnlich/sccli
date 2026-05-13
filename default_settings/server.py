@@ -2,5 +2,5 @@ from pydantic import BaseModel
 
 
 class ServerSettings(BaseModel):
-    port: int = 8080
+    port: int = 17874
     path: str = "/callback"

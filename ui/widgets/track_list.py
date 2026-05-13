@@ -33,9 +33,6 @@ class TrackList(DataTable):
         self.cursor_type = "row"
         self.zebra_stripes = True
 
-        self.styles.width = "50%"
-        self.styles.height = "100%"
-
     def watch_tracks(self) -> None:
         self.columns = {}
         self.rows = {}

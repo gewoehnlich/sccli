@@ -24,9 +24,6 @@ class MusicPlayer(Widget):
         )
 
     def on_mount(self) -> None:
-        self.styles.height = "10%"
-        self.styles.width = "50%"
-
         self.set_interval(1, self.update_current_track_info)
 
     def update_current_track_info(self) -> None:

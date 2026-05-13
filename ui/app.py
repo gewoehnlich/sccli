@@ -63,7 +63,12 @@ class App(BaseApp):
 
     def on_mount(self) -> None:
         self.theme = "rose-pine"
-        self.styles.height = "auto"
+        self.styles.height = "100%"
+
+        self.query_one(MusicPlayer).styles.max_width = "50%"
+        self.query_one(MusicPlayer).styles.height = "100%"
+        self.query_one(TrackList).styles.max_width = "50%"
+        self.query_one(TrackList).styles.height = "100%"
 
         self.tracks = self.track_repository.get()
 

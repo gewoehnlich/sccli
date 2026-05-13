@@ -12,16 +12,28 @@ class TrackProgressBarComponent(Widget):
     current_track_duration: Reactive[int] = reactive(0)
 
     def compose(self) -> ComposeResult:
-        yield TrackCurrentTime().data_bind(
+        self.track_playtime = TrackCurrentTime()
+        yield self.track_playtime.data_bind(
             seconds=TrackProgressBarComponent.current_track_playtime,
         )
-        yield TrackProgressBar()
-        yield TrackTotalTime().data_bind(
+
+        self.progress_bar = TrackProgressBar()
+        yield self.progress_bar.data_bind(
+            current_track_playtime=TrackProgressBarComponent.current_track_playtime,
+            current_track_duration=TrackProgressBarComponent.current_track_duration,
+        )
+
+        self.track_duration = TrackTotalTime()
+        yield self.track_duration.data_bind(
             seconds=TrackProgressBarComponent.current_track_duration,
         )
 
     def on_mount(self) -> None:
         self.styles.layout = "horizontal"
         self.styles.dock = "bottom"
-        self.styles.width = "auto"
+        self.styles.width = "100%"
         self.styles.height = "auto"
+
+        # self.track_playtime.styles.
+        self.track_playtime.styles.width = "auto"
+        self.track_playtime.styles.margin = (0, 1, 0, 0)
