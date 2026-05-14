@@ -34,6 +34,10 @@ class TrackProgressBarComponent(Widget):
         self.styles.width = "100%"
         self.styles.height = "auto"
 
-        # self.track_playtime.styles.
         self.track_playtime.styles.width = "auto"
         self.track_playtime.styles.margin = (0, 1, 0, 0)
+
+        self.progress_bar.styles.width = "auto"
+
+        self.track_duration.styles.width = "auto"
+        self.track_duration.styles.margin = (0, 0, 0, 1)

@@ -19,9 +19,6 @@ class TrackProgressBar(ProgressBar):
             **kwargs,
         )
 
-    def on_mount(self) -> None:
-        self.styles.width = "auto"
-
     def watch_current_track_playtime(self) -> None:
         self.progress = self.current_track_playtime
 

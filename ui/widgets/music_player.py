@@ -15,10 +15,13 @@ class MusicPlayer(Widget):
     current_track_duration: Reactive[int] = reactive(0)
 
     def compose(self) -> ComposeResult:
-        yield MusicPlayerButtonsComponent().data_bind(
+        self.buttons = MusicPlayerButtonsComponent()
+        yield self.buttons.data_bind(
             is_playing=MusicPlayer.is_playing,
         )
-        yield TrackProgressBarComponent().data_bind(
+
+        self.progress_bar = TrackProgressBarComponent()
+        yield self.progress_bar.data_bind(
             current_track_playtime=MusicPlayer.current_track_playtime,
             current_track_duration=MusicPlayer.current_track_duration,
         )
