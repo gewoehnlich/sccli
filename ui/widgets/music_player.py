@@ -4,10 +4,12 @@ from textual.widget import Widget
 from models.track import Track
 from ui.widgets.components.music_player.buttons import MusicPlayerButtonsComponent
 from ui.widgets.components.music_player.track_progress_bar import TrackProgressBarComponent
+from values.selected_track_index import SelectedTrackIndex
 
 
 class MusicPlayer(Widget):
-    selected_track: Reactive[Track | None] = reactive(None)
+    tracks: Reactive[list[Track]] = reactive([])
+    selected_track_index: Reactive[SelectedTrackIndex] = reactive(SelectedTrackIndex())
 
     is_playing: Reactive[bool] = reactive(False)
 
@@ -33,12 +35,32 @@ class MusicPlayer(Widget):
         self.current_track_playtime = self.app.player.get_current_track_playtime()
         self.current_track_duration = self.app.player.get_current_track_duration()
 
+    def on_previous_track_button_pressed(self) -> None:
+        self.is_playing = True
+
+        self.app.di_container.actions.play_track.run(
+            track=self.tracks[self.selected_track_index.previous(
+                tracks=self.tracks,
+            )]
+        )
+
     def on_play_button_pressed(self) -> None:
         self.is_playing = True
 
-        self.app.di_container.actions.play_track.run(self.selected_track)
+        self.app.di_container.actions.play_track.run(
+            track=self.tracks[self.selected_track_index.value()]
+        )
 
     def on_pause_button_pressed(self) -> None:
         self.is_playing = False
 
         self.app.player.stop()
+
+    def on_next_track_button_pressed(self) -> None:
+        self.is_playing = True
+
+        self.app.di_container.actions.play_track.run(
+            track=self.tracks[self.selected_track_index.next(
+                tracks=self.tracks,
+            )]
+        )

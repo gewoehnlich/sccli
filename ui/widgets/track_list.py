@@ -7,6 +7,7 @@ from core.logger import Logger
 from models.track import Track
 from ui.events.track_selected import TrackSelected
 from ui.widgets.components.track_list.views.track_view import TrackView
+from values.selected_track_index import SelectedTrackIndex
 
 
 class TrackList(DataTable):
@@ -14,7 +15,7 @@ class TrackList(DataTable):
     number: int | None = None
 
     tracks: Reactive[list[Track]] = reactive([])
-    selected_track: Reactive[Track | None] = reactive(None)
+    selected_track_index: Reactive[SelectedTrackIndex] = reactive(SelectedTrackIndex())
 
     def __init__(
         self,
@@ -123,6 +124,6 @@ class TrackList(DataTable):
     ) -> None:
         self.post_message(
             message=self.track_selected_event(
-                track=self.tracks[event.cursor_row]
+                index=event.cursor_row,
             ),
         )

@@ -1,13 +1,11 @@
 from textual.message import Message
 
-from models.track import Track
-
 
 class TrackSelected(Message):
     def __init__(
         self,
-        track: Track,
+        index: int,
     ) -> None:
-        self.track = track
+        self.index = index
 
         super().__init__()

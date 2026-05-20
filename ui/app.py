@@ -15,13 +15,14 @@ from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
 from ui.widgets.shell import Shell
 from ui.widgets.track_list import TrackList
+from values.selected_track_index import SelectedTrackIndex
 
 
 class App(BaseApp):
     TITLE = 'sccli'
 
     tracks: Reactive[list[Track]] = reactive([])
-    selected_track: Reactive[Track | None] = reactive(None)
+    selected_track_index: Reactive[SelectedTrackIndex] = reactive(SelectedTrackIndex())
 
     track_selected_event: type[Message] = TrackSelected
 
@@ -45,7 +46,8 @@ class App(BaseApp):
         )
         with Horizontal():
             yield MusicPlayer().data_bind(
-                selected_track=App.selected_track,
+                selected_track_index=App.selected_track_index,
+                tracks=App.tracks,
             )
             yield TrackList(
                 track_view=self.di_container.views.track,
@@ -53,7 +55,7 @@ class App(BaseApp):
 
                 track_selected_event=self.track_selected_event,
             ).data_bind(
-                selected_track=App.selected_track,
+                selected_track_index=App.selected_track_index,
                 tracks=App.tracks,
             )
         yield Shell()
@@ -76,4 +78,6 @@ class App(BaseApp):
         self,
         message: TrackSelected,
     ) -> None:
-        self.selected_track = message.track
+        self.selected_track_index.with_value(
+            index=message.index,
+        )
