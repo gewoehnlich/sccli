@@ -1,11 +1,24 @@
 from abc import abstractmethod
+from typing import Callable
 
 
 class Player:
     def __init__(
         self,
     ) -> None:
-        pass
+        self._track_finished_callbacks: list[Callable[[], None]] = []
+
+    def on_track_finished(
+        self,
+        callback: Callable[[], None],
+    ) -> None:
+        self._track_finished_callbacks.append(callback)
+
+    def emit_track_finished(
+        self,
+    ) -> None:
+        for callback in self._track_finished_callbacks:
+            callback()
 
     @abstractmethod
     def play(self, filename: str) -> None:

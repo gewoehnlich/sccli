@@ -31,6 +31,8 @@ class MusicPlayer(Widget):
     def on_mount(self) -> None:
         self.set_interval(1, self.update_current_track_info)
 
+        self.register_player_events()
+
     def update_current_track_info(self) -> None:
         self.current_track_playtime = self.app.player.get_current_track_playtime()
         self.current_track_duration = self.app.player.get_current_track_duration()
@@ -59,6 +61,18 @@ class MusicPlayer(Widget):
     def on_next_track_button_pressed(self) -> None:
         self.is_playing = True
 
+        self.app.di_container.actions.play_track.run(
+            track=self.tracks[self.selected_track_index.next(
+                tracks=self.tracks,
+            )]
+        )
+
+    def register_player_events(self) -> None:
+        self.app.player.on_track_finished(
+            self.play_next_track,
+        )
+
+    def play_next_track(self) -> None:
         self.app.di_container.actions.play_track.run(
             track=self.tracks[self.selected_track_index.next(
                 tracks=self.tracks,
