@@ -1,8 +1,10 @@
 from textual.app import ComposeResult
+from textual.containers import Vertical
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 from models.track import Track
 from ui.widgets.components.music_player.buttons import MusicPlayerButtonsComponent
+from ui.widgets.components.music_player.image import Image
 from ui.widgets.components.music_player.track_progress_bar import TrackProgressBarComponent
 from values.selected_track_index import SelectedTrackIndex
 
@@ -17,6 +19,9 @@ class MusicPlayer(Widget):
     current_track_duration: Reactive[int] = reactive(0)
 
     def compose(self) -> ComposeResult:
+        self.image = Image()
+        yield self.image
+
         self.buttons = MusicPlayerButtonsComponent()
         yield self.buttons.data_bind(
             is_playing=MusicPlayer.is_playing,
@@ -29,6 +34,11 @@ class MusicPlayer(Widget):
         )
 
     def on_mount(self) -> None:
+        self.styles.layout = "vertical"
+
+        self.image.styles.width = 30
+        self.image.styles.height = 15
+
         self.set_interval(1, self.update_current_track_info)
 
         self.register_player_events()

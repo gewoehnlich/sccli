@@ -20,6 +20,7 @@ class MusicPlayerButtonsComponent(Widget):
     def on_mount(self) -> None:
         self.styles.layout = "horizontal"
         self.styles.width = "auto"
+        self.styles.height = "auto"
 
     def watch_is_playing(self) -> None:
         if self.is_playing:

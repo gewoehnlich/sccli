@@ -23,6 +23,7 @@ dependencies = [
     "loguru (>=0.7.3,<0.8.0)",
     "textual (>=8.2.4,<9.0.0)",
     "mpv (>=1.0.8,<2.0.0)",
+    "textual-image (>=0.13.2,<0.14.0)",
 ]
 
 [build-system]
