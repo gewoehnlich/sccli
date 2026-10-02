@@ -3,7 +3,7 @@ from textual.app import App as BaseApp, ComposeResult
 from textual.containers import Horizontal
 from textual.message import Message
 from textual.reactive import Reactive, reactive
-from textual.widgets import Footer, Header
+from textual.widgets import Footer, Header, Input
 
 from core.di_container import DiContainer
 from core.logger import Logger
@@ -45,10 +45,12 @@ class App(BaseApp):
             id="header",
         )
         with Horizontal():
-            yield MusicPlayer().data_bind(
-                selected_track_index=App.selected_track_index,
-                tracks=App.tracks,
-            )
+            with Horizontal():
+                yield MusicPlayer().data_bind(
+                    selected_track_index=App.selected_track_index,
+                    tracks=App.tracks,
+                )
+                yield Shell()
             yield TrackList(
                 track_view=self.di_container.views.track,
                 logger=self.logger,
@@ -68,7 +70,9 @@ class App(BaseApp):
         self.styles.height = "100%"
 
         self.query_one(MusicPlayer).styles.max_width = "50%"
-        self.query_one(MusicPlayer).styles.height = "100%"
+        self.query_one(MusicPlayer).styles.height = "90%"
+        self.query_one(Shell).styles.max_width = "50%"
+        self.query_one(Shell).styles.height = "10%"
         self.query_one(TrackList).styles.max_width = "50%"
         self.query_one(TrackList).styles.height = "100%"
 
@@ -81,3 +85,13 @@ class App(BaseApp):
         self.selected_track_index.with_value(
             index=message.index,
         )
+
+    def on_input_submitted(
+        self,
+        message: Input.Submitted,
+    ) -> None:
+        self.logger.info(message.value)
+
+        response = self.di_container.shell.process_command(message.value)
+
+        self.logger.info(response)

@@ -21,14 +21,14 @@ class Shell:
         while True:
             try:
                 command_line: str = input("sccli> ")
-                self.__process_command(command_line=command_line)
+                self.process_command(command_line=command_line)
             except KeyboardInterrupt:
                 self.commands.exit.run()
                 break
             except Exception as e:
                 raise e
 
-    def __process_command(
+    def process_command(
         self,
         command_line: str,
     ) -> None:
