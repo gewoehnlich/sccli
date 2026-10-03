@@ -31,21 +31,21 @@ class Config:
     def load(
         self,
     ) -> Settings:
-        user_config_data: dict[str, Any] = self.__read_user_config_data()
+        user_config_data: dict[str, Any] = self._read_user_config_data()
 
-        self.__ensure_client_credentials_are_set(
+        self._ensure_client_credentials_are_set(
             config_data=user_config_data,
         )
 
-        filtered_config: dict[str, Any] = self.__remove_none_values(
+        filtered_config: dict[str, Any] = self._remove_none_values(
             config=user_config_data
         )
 
-        settings: Settings = self.__add_default_values(config=filtered_config)
+        settings: Settings = self._add_default_values(config=filtered_config)
 
         return settings
 
-    def __read_user_config_data(
+    def _read_user_config_data(
         self,
     ) -> dict[str, Any]:
         try:
@@ -72,13 +72,10 @@ class Config:
                 f"Config must be a mapping of keys to values, got {type(data).__name__}"
             )
 
-        inspect(data);
-        sys.exit(1)
-
         return data
 
 
-    def __ensure_client_credentials_are_set(
+    def _ensure_client_credentials_are_set(
         self,
         config_data: dict[str, Any],
     ) -> None:
@@ -90,20 +87,20 @@ class Config:
         if not isinstance(client_secret, str) or not client_secret:
             raise ClientSecretIsNotSetException
 
-    def __remove_none_values(
+    def _remove_none_values(
         self,
         config: dict[str, Any],
     ) -> dict[str, Any]:
         if isinstance(config, dict):
             return {
-                key: self.__remove_none_values(value)
+                key: self._remove_none_values(value)
                 for key, value in config.items()
                 if value is not None
             }
 
         return config
 
-    def __add_default_values(
+    def _add_default_values(
         self,
         config: dict[str, Any],
     ) -> Settings:
