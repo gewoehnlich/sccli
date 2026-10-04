@@ -1,19 +1,19 @@
 from pathlib import Path
 import sys
-from typing import Any
+from typing import Any, cast
 
 from rich import inspect
 import yaml
 from pydantic import ValidationError
 
 from core.settings import Settings
-from exceptions.config.config_error import ConfigError
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
 from exceptions.config.config_file_is_empty_error import ConfigFileIsEmptyError
 from exceptions.config.config_file_must_be_utf_8_encoded_error import ConfigFileMustBeUtf8EncodedError
 from exceptions.config.config_file_not_found_error import ConfigFileNotFoundError
 from exceptions.config.config_path_is_a_directory_error import ConfigPathIsADirectoryError
 from exceptions.config.invalid_yaml_config_error import InvalidYamlConfigError
+from exceptions.config.invalid_config_file_format_error import InvalidConfigFileFormatError
 from exceptions.config.no_permission_to_read_config_error import NoPermissionToReadConfigError
 from exceptions.client_id_is_not_set_exception import ClientIdIsNotSetException
 from exceptions.client_secret_is_not_set_exception import ClientSecretIsNotSetException
@@ -50,7 +50,7 @@ class Config:
     ) -> dict[str, Any]:
         try:
             with self._path.open(encoding="utf-8") as f:
-                data: dict[str, Any] | None = yaml.safe_load(f)
+                data: Any = yaml.safe_load(f)
         except FileNotFoundError as e:
             raise ConfigFileNotFoundError(path=self._path) from e
         except IsADirectoryError as e:
@@ -68,11 +68,9 @@ class Config:
             raise ConfigFileIsEmptyError(path=self._path)
 
         if not isinstance(data, dict):
-            raise ConfigError(
-                f"Config must be a mapping of keys to values, got {type(data).__name__}"
-            )
+            raise InvalidConfigFileFormatError(datatype=type(data).__name__)
 
-        return data
+        return cast("dict[str, Any]", data)
 
 
     def _ensure_client_credentials_are_set(
