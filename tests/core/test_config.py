@@ -2,7 +2,6 @@ import errno
 from pathlib import Path
 
 import pytest
-import yaml
 
 from core.config import Config
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
@@ -47,9 +46,7 @@ def test_config_no_permission(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    def raise_permission_error(
-        self: Path, *args: object, **kwargs: object
-    ) -> NoReturn:
+    def raise_permission_error(self: Path, *args: object, **kwargs: object):
         raise PermissionError(errno.EACCES, "Permission denied", str(self))
 
     monkeypatch.setattr(Path, "open", raise_permission_error)

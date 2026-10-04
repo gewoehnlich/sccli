@@ -2,22 +2,5 @@ soundcloud:
   client_id:
   client_secret:
 
-database:
-  name:
-
-messages:
-  welcome:
-  exit:
-  help:
-  unknown:
-
-server:
-  port:
-  path:
-
 proxy:
   endpoint:
-
-tests:
-  database:
-    name:

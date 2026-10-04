@@ -6,6 +6,7 @@ from rich import inspect
 import yaml
 from pydantic import ValidationError
 
+from core.logger import Logger
 from core.settings import Settings
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
 from exceptions.config.config_file_is_empty_error import ConfigFileIsEmptyError
@@ -15,8 +16,8 @@ from exceptions.config.config_path_is_a_directory_error import ConfigPathIsADire
 from exceptions.config.invalid_yaml_config_error import InvalidYamlConfigError
 from exceptions.config.invalid_config_file_format_error import InvalidConfigFileFormatError
 from exceptions.config.no_permission_to_read_config_error import NoPermissionToReadConfigError
-from exceptions.client_id_is_not_set_exception import ClientIdIsNotSetException
-from exceptions.client_secret_is_not_set_exception import ClientSecretIsNotSetException
+from exceptions.config.client_id_is_not_set_exception import ClientIdIsNotSetException
+from exceptions.config.client_secret_is_not_set_exception import ClientSecretIsNotSetException
 
 
 class Config:
@@ -24,24 +25,30 @@ class Config:
 
     def __init__(
         self,
+        logger: Logger,
         path: Path = DEFAULT_PATH,
     ) -> None:
-        self._path = path
+        self.logger: Logger = logger
+        self._path: Path = path
 
     def load(
         self,
     ) -> Settings:
         user_config_data: dict[str, Any] = self._read_user_config_data()
-
-        self._ensure_client_credentials_are_set(
-            config_data=user_config_data,
-        )
+        inspect(user_config_data)
 
         filtered_config: dict[str, Any] = self._remove_none_values(
             config=user_config_data
         )
+        inspect(filtered_config)
 
         settings: Settings = self._add_default_values(config=filtered_config)
+        inspect(settings)
+        sys.exit(1)
+
+        self._ensure_client_credentials_are_set(
+            config_data=user_config_data,
+        )
 
         return settings
 
@@ -79,11 +86,11 @@ class Config:
     ) -> None:
         client_id = config_data["soundcloud"]["client_id"]
         if not isinstance(client_id, str) or not client_id:
-            raise ClientIdIsNotSetException
+            raise ClientIdIsNotSetException(config_file=self._path)
 
         client_secret = config_data["soundcloud"]["client_secret"]
         if not isinstance(client_secret, str) or not client_secret:
-            raise ClientSecretIsNotSetException
+            raise ClientSecretIsNotSetException(config_file=self._path)
 
     def _remove_none_values(
         self,
