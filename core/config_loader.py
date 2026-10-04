@@ -19,6 +19,8 @@ from exceptions.config.client_id_is_not_set_exception import ClientIdIsNotSetExc
 from exceptions.config.client_secret_is_not_set_exception import ClientSecretIsNotSetException
 
 
+type ConfigFileData = dict[str, Any]
+
 class ConfigLoader:
     def __init__(
         self,
@@ -29,27 +31,24 @@ class ConfigLoader:
     def load(
         self,
     ) -> Config:
-        user_config_data: dict[str, Any] = self._read_user_config_data()
-        # inspect(user_config_data)
+        user_config_data: ConfigFileData = self._read_user_config_data()
 
-        self._ensure_client_credentials_are_set(
-            config_data=user_config_data,
+        filtered_config: ConfigFileData = cast(
+            "ConfigFileData",
+            self._remove_none_values(
+                value=user_config_data,
+            ),
         )
 
-        filtered_config: dict[str, Any] = self._remove_none_values(
-            config=user_config_data
+        config: Config = self._validate(
+            data=filtered_config,
         )
-        # inspect(filtered_config)
 
-        settings: Config = self._add_default_values(config=filtered_config)
-        # inspect(settings)
-        # sys.exit(1)
-
-        return settings
+        return config
 
     def _read_user_config_data(
         self,
-    ) -> dict[str, Any]:
+    ) -> ConfigFileData:
         try:
             with self._path.open(encoding="utf-8") as f:
                 data: Any = yaml.safe_load(f)
@@ -72,45 +71,29 @@ class ConfigLoader:
         if not isinstance(data, dict):
             raise InvalidConfigFileFormatError(datatype=type(data).__name__)
 
-        return cast("dict[str, Any]", data)
+        return cast("ConfigFileData", data)
 
-
-    def _ensure_client_credentials_are_set(
-        self,
-        config_data: dict[str, Any],
-    ) -> None:
-        client_id = config_data["soundcloud"]["client_id"]
-        if not isinstance(client_id, str) or not client_id:
-            raise ClientIdIsNotSetException(config_file=self._path)
-
-        client_secret = config_data["soundcloud"]["client_secret"]
-        if not isinstance(client_secret, str) or not client_secret:
-            raise ClientSecretIsNotSetException(config_file=self._path)
 
     def _remove_none_values(
         self,
-        config: dict[str, Any],
-    ) -> dict[str, Any]:
-        if isinstance(config, dict):
+        value: object,
+    ) -> object:
+        if isinstance(value, dict):
+            mapping = cast("ConfigFileData", value)
+
             return {
-                key: self._remove_none_values(value)
-                for key, value in config.items()
-                if value is not None
+                key: self._remove_none_values(item)
+                for key, item in mapping.items()
+                if item is not None
             }
 
-        return config
+        return value
 
-    def _add_default_values(
+    def _validate(
         self,
-        config: dict[str, Any],
+        data: ConfigFileData,
     ) -> Config:
         try:
-            settings = Config.model_validate(config)
+            return Config.model_validate(data)
         except ValidationError as e:
-            print(
-                f"ERROR: Invalid configuration in '{self.CONFIG_PATH}':\n{e}",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-        return settings
+            raise ValidationError from e
