@@ -19,11 +19,11 @@ from servers.http_server import HttpServer
 
 
 class DiContainer:
-    logger: Logger = Logger()
+    config: Settings = Config().load()
 
-    config: Settings = Config(
-        logger=logger,
-    ).load()
+    logger: Logger = Logger(
+        directory=config.logs.directory,
+    )
 
     database: Database = SqliteDatabase(
         database_name=config.database.name,

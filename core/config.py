@@ -6,7 +6,6 @@ from rich import inspect
 import yaml
 from pydantic import ValidationError
 
-from core.logger import Logger
 from core.settings import Settings
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
 from exceptions.config.config_file_is_empty_error import ConfigFileIsEmptyError
@@ -25,10 +24,8 @@ class Config:
 
     def __init__(
         self,
-        logger: Logger,
         path: Path = DEFAULT_PATH,
     ) -> None:
-        self.logger: Logger = logger
         self._path: Path = path
 
     def load(

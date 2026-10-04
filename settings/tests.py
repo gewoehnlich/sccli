@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from default_settings.tests_database import TestsDatabaseSettings
+from settings.tests_database import TestsDatabaseSettings
 
 
 class TestsSettings(BaseModel):

@@ -1,12 +1,13 @@
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from default_settings.database import DatabaseSettings
-from default_settings.messages import MessagesSettings
-from default_settings.proxy import ProxySettings
-from default_settings.server import ServerSettings
-from default_settings.soundcloud import SoundcloudSettings
-from default_settings.tests import TestsSettings
+from settings.database import DatabaseSettings
+from settings.logs import LogsSettings
+from settings.messages import MessagesSettings
+from settings.proxy import ProxySettings
+from settings.server import ServerSettings
+from settings.soundcloud import SoundcloudSettings
+from settings.tests import TestsSettings
 
 
 class Settings(BaseSettings):
@@ -16,3 +17,4 @@ class Settings(BaseSettings):
     server: ServerSettings = Field(default_factory=ServerSettings)
     proxy: ProxySettings = Field(default_factory=ProxySettings)
     tests: TestsSettings = Field(default_factory=TestsSettings)
+    logs: LogsSettings = Field(default_factory=LogsSettings)

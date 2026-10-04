@@ -7,7 +7,7 @@ from actions.play_track_action import PlayTrackAction
 from core.action import Action
 from core.auth import Auth
 from core.player import Player
-from default_settings.messages import MessagesSettings
+from settings.messages import MessagesSettings
 from di.repositories_container import RepositoriesContainer
 from di.requests_container import RequestsContainer
 from di.tasks_container import TasksContainer
