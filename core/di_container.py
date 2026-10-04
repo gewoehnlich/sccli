@@ -19,71 +19,75 @@ from servers.http_server import HttpServer
 
 
 class DiContainer:
-    config: Settings = Config().load()
+    def __init__(
+        self,
+        config_file: Path,
+    ) -> None:
+        self.config: Settings = Config().load()
 
-    logger: Logger = Logger(
-        directory=config.logs.directory,
-    )
+        self.logger: Logger = Logger(
+            directory=self.config.logs.directory,
+        )
 
-    database: Database = SqliteDatabase(
-        database_name=config.database.name,
-    )
+        self.database: Database = SqliteDatabase(
+            database_name=self.config.database.name,
+        )
 
-    models = ModelsContainer()
+        self.models = ModelsContainer()
 
-    repositories = RepositoriesContainer(
-        session_factory=database.session_factory,
-        models=models,
-    )
+        self.repositories = RepositoriesContainer(
+            session_factory=self.database.session_factory,
+            models=self.models,
+        )
 
-    server: Server = HttpServer(
-        port=config.server.port,
-        path=config.server.path,
-    )
+        self.server: Server = HttpServer(
+            port=self.config.server.port,
+            path=self.config.server.path,
+        )
 
-    requests = RequestsContainer()
+        self.requests = RequestsContainer()
 
-    auth = Auth(
-        client_id=config.soundcloud.client_id,
-        client_secret=config.soundcloud.client_secret,
-        server=server,
-        account_repository=repositories.account,
-        authentication_request=requests.authentication,
-        refresh_token_request=requests.refresh_token,
-    )
+        self.auth = Auth(
+            client_id=self.config.soundcloud.client_id,
+            client_secret=self.config.soundcloud.client_secret,
+            server=self.server,
+            account_repository=self.repositories.account,
+            authentication_request=self.requests.authentication,
+            refresh_token_request=self.requests.refresh_token,
+        )
 
-    tasks = TasksContainer(
-        auth=auth,
-        requests=requests,
-        repositories=repositories,
-        messages=config.messages,
-        server=server,
-    )
+        self.tasks = TasksContainer(
+            auth=self.auth,
+            requests=self.requests,
+            repositories=self.repositories,
+            messages=self.config.messages,
+            server=self.server,
+        )
 
-    player = MpvPlayer(
-        auth=auth,
-        http_proxy=config.proxy.endpoint,
-        logger=logger,
-    )
+        self.player = MpvPlayer(
+            auth=self.auth,
+            http_proxy=self.config.proxy.endpoint,
+            logger=self.logger,
+        )
 
-    actions = ActionsContainer(
-        auth=auth,
-        requests=requests,
-        repositories=repositories,
-        messages=config.messages,
-        tasks=tasks,
-        player=player,
-    )
+        self.actions = ActionsContainer(
+            auth=self.auth,
+            requests=self.requests,
+            repositories=self.repositories,
+            messages=self.config.messages,
+            tasks=self.tasks,
+            player=self.player,
+        )
 
-    resources = ResourcesContainer()
+        self.resources = ResourcesContainer()
 
-    commands = CommandsContainer(
-        actions=actions,
-        resources=resources,
-    )
+        self.commands = CommandsContainer(
+            actions=self.actions,
+            resources=self.resources,
+        )
 
-    views = ViewsContainer()
+        self.views = ViewsContainer()
 
-    shell = Shell(
-        commands=commands,
-    )
+        self.shell = Shell(
+            commands=self.commands,
+        )

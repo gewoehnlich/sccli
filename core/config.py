@@ -34,6 +34,10 @@ class Config:
         user_config_data: dict[str, Any] = self._read_user_config_data()
         inspect(user_config_data)
 
+        self._ensure_client_credentials_are_set(
+            config_data=user_config_data,
+        )
+
         filtered_config: dict[str, Any] = self._remove_none_values(
             config=user_config_data
         )
@@ -42,10 +46,6 @@ class Config:
         settings: Settings = self._add_default_values(config=filtered_config)
         inspect(settings)
         sys.exit(1)
-
-        self._ensure_client_credentials_are_set(
-            config_data=user_config_data,
-        )
 
         return settings
 
