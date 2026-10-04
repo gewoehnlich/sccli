@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class ProxySettings(BaseModel):
+class ProxyConfig(BaseModel):
     endpoint: str = ""

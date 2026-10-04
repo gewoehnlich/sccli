@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 
 
-class SoundcloudSettings(BaseSettings):
+class SoundcloudConfig(BaseSettings):
     client_id: str = ""
     client_secret: str = ""

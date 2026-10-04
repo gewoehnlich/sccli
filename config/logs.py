@@ -3,5 +3,5 @@ from pathlib import Path
 from pydantic_settings import BaseSettings
 
 
-class LogsSettings(BaseSettings):
+class LogsConfig(BaseSettings):
     directory: Path = Path("logs")

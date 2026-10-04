@@ -1,9 +1,9 @@
 from core.auth import Auth
 from core.config import Config
+from core.config_loader import ConfigLoader
 from core.database import Database
 from core.logger import Logger
 from core.server import Server
-from core.settings import Settings
 from core.shell import Shell
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
@@ -23,7 +23,9 @@ class DiContainer:
         self,
         config_file: Path,
     ) -> None:
-        self.config: Settings = Config().load()
+        self.config: Config = ConfigLoader(
+            path=config_file,
+        ).load()
 
         self.logger: Logger = Logger(
             directory=self.config.logs.directory,

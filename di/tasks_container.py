@@ -1,7 +1,7 @@
 from core.auth import Auth
 from core.server import Server
 from core.task import Task
-from settings.messages import MessagesSettings
+from config.messages import MessagesConfig
 from di.repositories_container import RepositoriesContainer
 from di.requests_container import RequestsContainer
 from tasks.fetch_track_streams_task import FetchTrackStreamsTask
@@ -14,7 +14,7 @@ class TasksContainer:
         auth: Auth,
         requests: RequestsContainer,
         repositories: RepositoriesContainer,
-        messages: MessagesSettings,
+        messages: MessagesConfig,
         server: Server,
     ) -> None:
         self.fetch_track_streams: Task = FetchTrackStreamsTask(
