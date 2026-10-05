@@ -22,16 +22,13 @@ from exceptions.config.client_secret_is_not_set_exception import ClientSecretIsN
 type ConfigFileData = dict[str, Any]
 
 class ConfigLoader:
-    def __init__(
-        self,
-        path: Path,
-    ) -> None:
-        self._path: Path = path
-
     def load(
         self,
+        path: Path,
     ) -> Config:
-        user_config_data: ConfigFileData = self._read_user_config_data()
+        user_config_data: ConfigFileData = self._read_user_config_data(
+            path=path,
+        )
 
         filtered_config: ConfigFileData = cast(
             "ConfigFileData",
@@ -48,25 +45,26 @@ class ConfigLoader:
 
     def _read_user_config_data(
         self,
+        path: Path,
     ) -> ConfigFileData:
         try:
-            with self._path.open(encoding="utf-8") as f:
+            with path.open(encoding="utf-8") as f:
                 data: Any = yaml.safe_load(f)
         except FileNotFoundError as e:
-            raise ConfigFileNotFoundError(path=self._path) from e
+            raise ConfigFileNotFoundError(path=path) from e
         except IsADirectoryError as e:
-            raise ConfigPathIsADirectoryError(path=self._path) from e
+            raise ConfigPathIsADirectoryError(path=path) from e
         except PermissionError as e:
-            raise NoPermissionToReadConfigError(path=self._path) from e
+            raise NoPermissionToReadConfigError(path=path) from e
         except OSError as e:
-            raise CannotReadConfigFileError(path=self._path) from e
+            raise CannotReadConfigFileError(path=path) from e
         except UnicodeDecodeError as e:
-            raise ConfigFileMustBeUtf8EncodedError(path=self._path) from e
+            raise ConfigFileMustBeUtf8EncodedError(path=path) from e
         except yaml.YAMLError as e:
-            raise InvalidYamlConfigError(path=self._path) from e
+            raise InvalidYamlConfigError(path=path) from e
 
         if data is None:
-            raise ConfigFileIsEmptyError(path=self._path)
+            raise ConfigFileIsEmptyError(path=path)
 
         if not isinstance(data, dict):
             raise InvalidConfigFileFormatError(datatype=type(data).__name__)

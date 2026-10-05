@@ -25,9 +25,9 @@ class DiContainer:
         self,
         config_file: Path,
     ) -> None:
-        self.config: Config = ConfigLoader(
+        self.config: Config = ConfigLoader().load(
             path=config_file,
-        ).load()
+        )
 
         self.logger: Logger = Logger(
             directory=self.config.logs.directory,

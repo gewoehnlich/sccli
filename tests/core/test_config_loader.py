@@ -21,17 +21,13 @@ from exceptions.config.no_permission_to_read_config_error import (
 
 
 def test_config_file_not_found(tmp_path: Path) -> None:
-    config = ConfigLoader(path=tmp_path / "missing.yml")
-
     with pytest.raises(ConfigFileNotFoundError):
-        config.load()
+        ConfigLoader().load(path=tmp_path / "missing.yml")
 
 
 def test_config_path_is_a_directory(tmp_path: Path) -> None:
-    config = ConfigLoader(path=tmp_path)  # tmp_path is a directory
-
     with pytest.raises(ConfigPathIsADirectoryError):
-        config.load()
+        ConfigLoader().load(path=tmp_path)
 
 
 def test_config_not_utf8(tmp_path: Path) -> None:
@@ -39,7 +35,7 @@ def test_config_not_utf8(tmp_path: Path) -> None:
     path.write_bytes(b"\xff\xfe\x00")
 
     with pytest.raises(ConfigFileMustBeUtf8EncodedError):
-        ConfigLoader(path=path).load()
+        ConfigLoader().load(path=path)
 
 
 def test_config_no_permission(
@@ -52,7 +48,7 @@ def test_config_no_permission(
     monkeypatch.setattr(Path, "open", raise_permission_error)
 
     with pytest.raises(NoPermissionToReadConfigError):
-        ConfigLoader(path=tmp_path / "config.yml").load()
+        ConfigLoader().load(path=tmp_path / "config.yml")
 
 
 def test_config_cannot_read_generic_os_error(
@@ -65,7 +61,7 @@ def test_config_cannot_read_generic_os_error(
     monkeypatch.setattr(Path, "open", raise_os_error)
 
     with pytest.raises(CannotReadConfigFileError):
-        ConfigLoader(path=tmp_path / "config.yml").load()
+        ConfigLoader().load(path=tmp_path / "config.yml")
 
 
 @pytest.mark.parametrize(
@@ -86,7 +82,7 @@ def test_config_file_is_empty(
     path.write_text(content, encoding="utf-8")
 
     with pytest.raises(ConfigFileIsEmptyError):
-        ConfigLoader(path=path).load()
+        ConfigLoader().load(path=path)
 
 
 @pytest.mark.parametrize(
@@ -106,7 +102,7 @@ def test_config_invalid_yaml(
     path.write_text(content, encoding="utf-8")
 
     with pytest.raises(InvalidYamlConfigError):
-        ConfigLoader(path=path).load()
+        ConfigLoader().load(path=path)
 
 
 @pytest.mark.parametrize(
@@ -126,4 +122,4 @@ def test_config_must_be_a_mapping(
     path.write_text(content, encoding="utf-8")
 
     with pytest.raises(ConfigError):
-        ConfigLoader(path=path).load()
+        ConfigLoader().load(path=path)
