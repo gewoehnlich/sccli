@@ -26,19 +26,12 @@ class ConfigLoader:
         self,
         path: Path,
     ) -> Config:
-        user_config_data: ConfigFileData = self._read_user_config_data(
+        config_data: ConfigFileData = self._read_user_config_data(
             path=path,
         )
 
-        filtered_config: ConfigFileData = cast(
-            "ConfigFileData",
-            self._remove_none_values(
-                value=user_config_data,
-            ),
-        )
-
         config: Config = self._validate(
-            data=filtered_config,
+            data=config_data,
         )
 
         return config
@@ -72,21 +65,6 @@ class ConfigLoader:
         return cast("ConfigFileData", data)
 
 
-    def _remove_none_values(
-        self,
-        value: object,
-    ) -> object:
-        if isinstance(value, dict):
-            mapping = cast("ConfigFileData", value)
-
-            return {
-                key: self._remove_none_values(item)
-                for key, item in mapping.items()
-                if item is not None
-            }
-
-        return value
-
     def _validate(
         self,
         data: ConfigFileData,
@@ -94,4 +72,4 @@ class ConfigLoader:
         try:
             return Config.model_validate(data)
         except ValidationError as e:
-            raise ValidationError from e
+            raise e

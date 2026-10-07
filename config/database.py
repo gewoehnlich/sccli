@@ -1,5 +1,5 @@
-from pydantic_settings import BaseSettings
+from config.base_config_model import BaseConfigModel
 
 
-class DatabaseConfig(BaseSettings):
+class DatabaseConfig(BaseConfigModel):
     name: str = "sccli.db"

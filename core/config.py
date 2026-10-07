@@ -1,6 +1,6 @@
 from pydantic import Field
-from pydantic_settings import BaseSettings
 
+from config.base_config_model import BaseConfigModel
 from config.database import DatabaseConfig
 from config.logs import LogsConfig
 from config.messages import MessagesConfig
@@ -10,8 +10,8 @@ from config.soundcloud import SoundcloudConfig
 from config.tests import TestsConfig
 
 
-class Config(BaseSettings):
-    soundcloud: SoundcloudConfig = Field(default_factory=SoundcloudConfig)
+class Config(BaseConfigModel):
+    soundcloud: SoundcloudConfig
     messages: MessagesConfig = Field(default_factory=MessagesConfig)
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     server: ServerConfig = Field(default_factory=ServerConfig)

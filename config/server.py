@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from config.base_config_model import BaseConfigModel
 
 
-class ServerConfig(BaseModel):
+class ServerConfig(BaseConfigModel):
     port: int = 8080
     path: str = "/callback"

@@ -1,7 +1,7 @@
-from pydantic_settings import BaseSettings
+from config.base_config_model import BaseConfigModel
 
 
-class MessagesConfig(BaseSettings):
+class MessagesConfig(BaseConfigModel):
     welcome: str = (
         "Welcome to the sccli interactive shell!\n"
         "Type 'help' for a list of available commands.\n"

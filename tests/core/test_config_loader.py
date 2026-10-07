@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from core.config import Config
 from core.config_loader import ConfigLoader
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
 from exceptions.config.config_error import ConfigError
@@ -123,3 +124,19 @@ def test_config_must_be_a_mapping(
 
     with pytest.raises(ConfigError):
         ConfigLoader().load(path=path)
+#
+#
+# @pytest.mark.parametrize(
+#     ("content"),
+#     [
+#         ("proxy:\n  endpoint:\n")
+#     ],
+# )
+# def test_config_loader_removes_null_values(
+#     tmp_path: Path,
+#     content: str,
+# ) -> None:
+#     path = tmp_path / "config.yml"
+#     path.write_text(content, encoding="utf-8")
+#
+#     config: Config = ConfigLoader().load(path=path)

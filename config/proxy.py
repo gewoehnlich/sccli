@@ -1,5 +1,5 @@
-from pydantic import BaseModel
+from config.base_config_model import BaseConfigModel
 
 
-class ProxyConfig(BaseModel):
-    endpoint: str = ""
+class ProxyConfig(BaseConfigModel):
+    endpoint: str | None = None

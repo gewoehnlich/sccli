@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from config.base_config_model import BaseConfigModel
 
 
-class TestsDatabaseConfig(BaseModel):
+class TestsDatabaseConfig(BaseConfigModel):
     name: str = Field(default="test.db")

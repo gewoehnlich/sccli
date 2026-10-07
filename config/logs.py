@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from pydantic_settings import BaseSettings
+from config.base_config_model import BaseConfigModel
 
 
-class LogsConfig(BaseSettings):
+class LogsConfig(BaseConfigModel):
     directory: Path = Path("logs")
