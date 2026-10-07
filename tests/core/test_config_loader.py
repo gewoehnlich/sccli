@@ -6,6 +6,10 @@ import pytest
 from core.config import Config
 from core.config_loader import ConfigLoader
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
+from exceptions.config.client_id_invalid_format_error import ClientIdInvalidFormatError
+from exceptions.config.client_id_is_not_set_error import ClientIdIsNotSetError
+from exceptions.config.client_secret_invalid_format_error import ClientSecretInvalidFormatError
+from exceptions.config.client_secret_is_not_set_error import ClientSecretIsNotSetError
 from exceptions.config.config_error import ConfigError
 from exceptions.config.config_file_is_empty_error import ConfigFileIsEmptyError
 from exceptions.config.config_file_must_be_utf_8_encoded_error import (
@@ -124,19 +128,97 @@ def test_config_must_be_a_mapping(
 
     with pytest.raises(ConfigError):
         ConfigLoader().load(path=path)
-#
-#
-# @pytest.mark.parametrize(
-#     ("content"),
-#     [
-#         ("proxy:\n  endpoint:\n")
-#     ],
-# )
-# def test_config_loader_removes_null_values(
-#     tmp_path: Path,
-#     content: str,
-# ) -> None:
-#     path = tmp_path / "config.yml"
-#     path.write_text(content, encoding="utf-8")
-#
-#     config: Config = ConfigLoader().load(path=path)
+
+
+INVALID_FORMAT_SOUNDCLOUD_CREDENTIAL: str = "asdf"
+VALID_FORMAT_SOUNDCLOUD_CREDENTIAL: str = "asdf1234asdf1234asdf1234asdf1234"
+@pytest.mark.parametrize(
+    ("content"),
+    [
+        (
+            "soundcloud:\n"
+            "  client_id:\n"
+            "  client_secret: " + f"{VALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
+            "proxy:\n"
+            "  endpoint:\n"
+        ),
+    ],
+)
+def test_config_client_id_is_none(
+    tmp_path: Path,
+    content: str,
+) -> None:
+    path = tmp_path / "config.yml"
+    path.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ClientIdIsNotSetError):
+        ConfigLoader().load(path=path)
+
+
+@pytest.mark.parametrize(
+    ("content"),
+    [
+        (
+            "soundcloud:\n"
+            "  client_id: " + f"{INVALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
+            "  client_secret: " + f"{VALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
+            "proxy:\n"
+            "  endpoint:\n"
+        ),
+    ],
+)
+def test_invalid_format_config_client_id(
+    tmp_path: Path,
+    content: str,
+) -> None:
+    path = tmp_path / "config.yml"
+    path.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ClientIdInvalidFormatError):
+        ConfigLoader().load(path=path)
+
+
+@pytest.mark.parametrize(
+    ("content"),
+    [
+        (
+            "soundcloud:\n"
+            "  client_id: " + f"{VALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
+            "  client_secret:\n"
+            "proxy:\n"
+            "  endpoint:\n"
+        ),
+    ],
+)
+def test_config_client_secret_is_none(
+    tmp_path: Path,
+    content: str,
+) -> None:
+    path = tmp_path / "config.yml"
+    path.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ClientSecretIsNotSetError):
+        ConfigLoader().load(path=path)
+
+
+@pytest.mark.parametrize(
+    ("content"),
+    [
+        (
+            "soundcloud:\n"
+            "  client_id: " + f"{VALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
+            "  client_secret: " + f"{INVALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
+            "proxy:\n"
+            "  endpoint:\n"
+        ),
+    ],
+)
+def test_invalid_format_config_client_secret(
+    tmp_path: Path,
+    content: str,
+) -> None:
+    path = tmp_path / "config.yml"
+    path.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ClientSecretInvalidFormatError):
+        ConfigLoader().load(path=path)

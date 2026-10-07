@@ -3,7 +3,7 @@ from pathlib import Path
 from exceptions.config.config_error import ConfigError
 
 
-class ClientIdIsNotSetException(ConfigError):
+class ClientIdIsNotSetError(ConfigError):
     def __init__(
         self,
         config_file: Path,
