@@ -6,7 +6,7 @@ from loguru import logger
 class Logger:
     def __init__(
         self,
-        directory: Path = Path("logs"),
+        directory: Path,
         level: str = "INFO",
     ) -> None:
         self._handler_id: int = logger.add(

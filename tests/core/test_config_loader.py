@@ -168,7 +168,6 @@ def test_invalid_format_config_client_id(
 @pytest.mark.parametrize(
     ("content"),
     [
-
         (
             "soundcloud:\n"
             "  client_id: " + f"{VALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
