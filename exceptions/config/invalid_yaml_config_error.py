@@ -7,4 +7,4 @@ class InvalidYamlConfigError(ConfigError):
         self,
         path: Path,
     ) -> None:
-        self.message = f"{self.ERROR_MESSAGE_PREFIX} - Invalid yaml config: {path}"
+        self.message = f"Invalid yaml config: {path}"

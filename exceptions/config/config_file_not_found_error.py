@@ -7,4 +7,4 @@ class ConfigFileNotFoundError(ConfigError):
         self,
         path: Path,
     ) -> None:
-        self.message = f"{self.ERROR_MESSAGE_PREFIX} - Config file not found: {path}"
+        self.message = f"Config file not found: {path}"

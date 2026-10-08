@@ -7,4 +7,4 @@ class CannotReadConfigFileError(ConfigError):
         self,
         path: Path,
     ) -> None:
-        self.message = f"{self.ERROR_MESSAGE_PREFIX} - Cannot read config: {path}"
+        self.message = f"Cannot read config file: {path}"

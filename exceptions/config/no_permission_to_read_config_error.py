@@ -7,6 +7,4 @@ class NoPermissionToReadConfigError(ConfigError):
         self,
         path: Path,
     ) -> None:
-        self.message = (
-            f"{self.ERROR_MESSAGE_PREFIX} - No permission to read config: {path}"
-        )
+        self.message = f"No permission to read config: {path}"

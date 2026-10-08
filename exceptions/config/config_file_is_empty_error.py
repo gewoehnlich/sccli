@@ -7,4 +7,4 @@ class ConfigFileIsEmptyError(ConfigError):
         self,
         path: Path,
     ) -> None:
-        self.message = f"{self.ERROR_MESSAGE_PREFIX} - Config file is empty: {path}"
+        self.message = f"Config file is empty: {path}"

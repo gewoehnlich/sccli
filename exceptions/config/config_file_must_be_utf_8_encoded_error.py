@@ -7,6 +7,4 @@ class ConfigFileMustBeUtf8EncodedError(ConfigError):
         self,
         path: Path,
     ) -> None:
-        self.message = (
-            f"{self.ERROR_MESSAGE_PREFIX} - Config file must be UTF-8 encoded: {path}"
-        )
+        self.message = f"Config file must be UTF-8 encoded: {path}"

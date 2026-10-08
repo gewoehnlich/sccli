@@ -7,6 +7,4 @@ class ConfigPathIsADirectoryError(ConfigError):
         self,
         path: Path,
     ) -> None:
-        self.message = (
-            f"{self.ERROR_MESSAGE_PREFIX} - Config path is a directory: {path}"
-        )
+        self.message = f"Config path is a directory: {path}"

@@ -7,11 +7,9 @@ from core.config import Config
 from core.config_loader import ConfigLoader
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
 from exceptions.config.client_id_invalid_format_error import ClientIdInvalidFormatError
-from exceptions.config.client_id_is_not_set_error import ClientIdIsNotSetError
 from exceptions.config.client_secret_invalid_format_error import (
     ClientSecretInvalidFormatError,
 )
-from exceptions.config.client_secret_is_not_set_error import ClientSecretIsNotSetError
 from exceptions.config.config_error import ConfigError
 from exceptions.config.config_file_is_empty_error import ConfigFileIsEmptyError
 from exceptions.config.config_file_must_be_utf_8_encoded_error import (
@@ -21,6 +19,7 @@ from exceptions.config.config_file_not_found_error import ConfigFileNotFoundErro
 from exceptions.config.config_path_is_a_directory_error import (
     ConfigPathIsADirectoryError,
 )
+from exceptions.config.invalid_config_file_format_error import InvalidConfigFileFormatError
 from exceptions.config.invalid_yaml_config_error import InvalidYamlConfigError
 from exceptions.config.no_permission_to_read_config_error import (
     NoPermissionToReadConfigError,
@@ -37,15 +36,7 @@ def test_config_path_is_a_directory(tmp_path: Path) -> None:
         ConfigLoader().load(path=tmp_path)
 
 
-def test_config_not_utf8(tmp_path: Path) -> None:
-    path = tmp_path / "config.yml"
-    path.write_bytes(b"\xff\xfe\x00")
-
-    with pytest.raises(ConfigFileMustBeUtf8EncodedError):
-        ConfigLoader().load(path=path)
-
-
-def test_config_no_permission(
+def test_config_file_no_permission(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -71,24 +62,11 @@ def test_config_cannot_read_generic_os_error(
         ConfigLoader().load(path=tmp_path / "config.yml")
 
 
-@pytest.mark.parametrize(
-    "content",
-    [
-        "",  # truly empty
-        "   \n\n",  # whitespace only
-        "# just a comment\n",  # comments only
-        "null\n",  # explicit null
-        "~\n",  # YAML null shorthand
-    ],
-)
-def test_config_file_is_empty(
-    tmp_path: Path,
-    content: str,
-) -> None:
+def test_config_not_utf8(tmp_path: Path) -> None:
     path = tmp_path / "config.yml"
-    path.write_text(content, encoding="utf-8")
+    path.write_bytes(b"\xff\xfe\x00")
 
-    with pytest.raises(ConfigFileIsEmptyError):
+    with pytest.raises(ConfigFileMustBeUtf8EncodedError):
         ConfigLoader().load(path=path)
 
 
@@ -113,6 +91,27 @@ def test_config_invalid_yaml(
 
 
 @pytest.mark.parametrize(
+    "content",
+    [
+        "",  # truly empty
+        "   \n\n",  # whitespace only
+        "# just a comment\n",  # comments only
+        "null\n",  # explicit null
+        "~\n",  # YAML null shorthand
+    ],
+)
+def test_config_file_is_empty(
+    tmp_path: Path,
+    content: str,
+) -> None:
+    path = tmp_path / "config.yml"
+    path.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ConfigFileIsEmptyError):
+        ConfigLoader().load(path=path)
+
+
+@pytest.mark.parametrize(
     ("content"),
     [
         ("- a\n- b\n"),
@@ -128,7 +127,7 @@ def test_config_must_be_a_mapping(
     path = tmp_path / "config.yml"
     path.write_text(content, encoding="utf-8")
 
-    with pytest.raises(ConfigError):
+    with pytest.raises(InvalidConfigFileFormatError):
         ConfigLoader().load(path=path)
 
 
@@ -146,22 +145,6 @@ VALID_FORMAT_SOUNDCLOUD_CREDENTIAL: str = "asdf1234asdf1234asdf1234asdf1234"
             "proxy:\n"
             "  endpoint:\n"
         ),
-    ],
-)
-def test_config_client_id_is_none(
-    tmp_path: Path,
-    content: str,
-) -> None:
-    path = tmp_path / "config.yml"
-    path.write_text(content, encoding="utf-8")
-
-    with pytest.raises(ClientIdIsNotSetError):
-        ConfigLoader().load(path=path)
-
-
-@pytest.mark.parametrize(
-    ("content"),
-    [
         (
             "soundcloud:\n"
             "  client_id: " + f"{INVALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
@@ -185,6 +168,7 @@ def test_invalid_format_config_client_id(
 @pytest.mark.parametrize(
     ("content"),
     [
+
         (
             "soundcloud:\n"
             "  client_id: " + f"{VALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
@@ -192,22 +176,6 @@ def test_invalid_format_config_client_id(
             "proxy:\n"
             "  endpoint:\n"
         ),
-    ],
-)
-def test_config_client_secret_is_none(
-    tmp_path: Path,
-    content: str,
-) -> None:
-    path = tmp_path / "config.yml"
-    path.write_text(content, encoding="utf-8")
-
-    with pytest.raises(ClientSecretIsNotSetError):
-        ConfigLoader().load(path=path)
-
-
-@pytest.mark.parametrize(
-    ("content"),
-    [
         (
             "soundcloud:\n"
             "  client_id: " + f"{VALID_FORMAT_SOUNDCLOUD_CREDENTIAL}\n"
@@ -226,3 +194,23 @@ def test_invalid_format_config_client_secret(
 
     with pytest.raises(ClientSecretInvalidFormatError):
         ConfigLoader().load(path=path)
+
+
+def test_load_valid_config(tmp_path: Path) -> None:
+    client_id: str = VALID_FORMAT_SOUNDCLOUD_CREDENTIAL
+    client_secret: str = VALID_FORMAT_SOUNDCLOUD_CREDENTIAL
+
+    path = tmp_path / "config.yml"
+    path.write_text(
+        data=(
+            "soundcloud:\n"
+            "  client_id: " + f"{client_id}\n"
+            "  client_secret: " + f"{client_secret}\n"
+        ),
+        encoding="utf-8",
+    )
+
+    config = ConfigLoader().load(path=path)
+
+    assert config.soundcloud.client_id == client_id
+    assert config.soundcloud.client_secret == client_secret
