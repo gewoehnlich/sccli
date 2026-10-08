@@ -34,7 +34,7 @@ class DiContainer:
         )
 
         self.database: Database = SqliteDatabase(
-            database_name=self.config.database.name,
+            name=self.config.database.name,
         )
 
         self.models = ModelsContainer()

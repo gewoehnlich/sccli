@@ -27,7 +27,7 @@ class Logger:
         logger.debug(message, *args, **kwargs)
 
     def info(self, message: str, *args: object, **kwargs: object) -> None:
-        logger.info(message, *args, **kwargs)
+        logger.opt(depth=1).info(message, *args, **kwargs)
 
     def warning(self, message: str, *args: object, **kwargs: object) -> None:
         logger.warning(message, *args, **kwargs)
