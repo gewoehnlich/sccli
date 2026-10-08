@@ -8,4 +8,6 @@ class ClientIdInvalidFormatError(ConfigError):
         self,
         config_file: Path,
     ) -> None:
-        self.message = f"{self.ERROR_MESSAGE_PREFIX} - invalid client_id format in {config_file}"
+        self.message = (
+            f"{self.ERROR_MESSAGE_PREFIX} - invalid client_id format in {config_file}"
+        )

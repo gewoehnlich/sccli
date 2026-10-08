@@ -60,11 +60,11 @@ class TrackList(DataTable):
         self,
         event: events.Key,
     ) -> None:
-        if event.key != 'g':
+        if event.key != "g":
             self.g_pressed_before = False
 
         if not event.key.isnumeric():
-            if event.key != 'G':
+            if event.key != "G":
                 self.number = None
         else:
             if self.number is None:
@@ -76,44 +76,30 @@ class TrackList(DataTable):
             self.number = min(self.number, self.row_count - 1)
 
         match event.key:
-            case 'h':
-                self.move_cursor(
-                    column = self.cursor_column - 1
-                )
-            case 'j':
-                self.move_cursor(
-                    row = self.cursor_row + 1
-                )
-            case 'k':
-                self.move_cursor(
-                    row = self.cursor_row - 1
-                )
-            case 'l':
-                self.move_cursor(
-                    column = self.cursor_column + 1
-                )
-            case 'g':
+            case "h":
+                self.move_cursor(column=self.cursor_column - 1)
+            case "j":
+                self.move_cursor(row=self.cursor_row + 1)
+            case "k":
+                self.move_cursor(row=self.cursor_row - 1)
+            case "l":
+                self.move_cursor(column=self.cursor_column + 1)
+            case "g":
                 if not self.g_pressed_before:
                     self.g_pressed_before = True
 
                     return None
 
-                self.move_cursor(
-                    row = 0
-                )
+                self.move_cursor(row=0)
 
-            case 'G':
+            case "G":
                 self.move_cursor(
-                    row = self.number if self.number is not None else self.row_count - 1
+                    row=self.number if self.number is not None else self.row_count - 1
                 )
-            case 'H':
-                self.move_cursor(
-                    column = 0
-                )
-            case 'L':
-                self.move_cursor(
-                    column = len(self.columns) - 1
-                )
+            case "H":
+                self.move_cursor(column=0)
+            case "L":
+                self.move_cursor(column=len(self.columns) - 1)
 
             case _:
                 return None

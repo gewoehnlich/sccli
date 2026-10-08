@@ -13,7 +13,5 @@ class SqliteDatabase(Database):
         super().__init__(
             database_name=database_name,
             base_model=base_model,
-            engine=sqlalchemy.create_engine(
-                f"sqlite+pysqlite:///{ database_name }"
-            )
+            engine=sqlalchemy.create_engine(f"sqlite+pysqlite:///{database_name}"),
         )

@@ -5,7 +5,9 @@ from textual.widget import Widget
 from models.track import Track
 from ui.widgets.components.music_player.buttons import MusicPlayerButtonsComponent
 from ui.widgets.components.music_player.image import Image
-from ui.widgets.components.music_player.track_progress_bar import TrackProgressBarComponent
+from ui.widgets.components.music_player.track_progress_bar import (
+    TrackProgressBarComponent,
+)
 from values.selected_track_index import SelectedTrackIndex
 
 
@@ -51,9 +53,11 @@ class MusicPlayer(Widget):
         self.is_playing = True
 
         self.app.di_container.actions.play_track.run(
-            track=self.tracks[self.selected_track_index.previous(
-                tracks=self.tracks,
-            )]
+            track=self.tracks[
+                self.selected_track_index.previous(
+                    tracks=self.tracks,
+                )
+            ]
         )
 
     def on_play_button_pressed(self) -> None:
@@ -72,9 +76,11 @@ class MusicPlayer(Widget):
         self.is_playing = True
 
         self.app.di_container.actions.play_track.run(
-            track=self.tracks[self.selected_track_index.next(
-                tracks=self.tracks,
-            )]
+            track=self.tracks[
+                self.selected_track_index.next(
+                    tracks=self.tracks,
+                )
+            ]
         )
 
     def register_player_events(self) -> None:
@@ -84,7 +90,9 @@ class MusicPlayer(Widget):
 
     def play_next_track(self) -> None:
         self.app.di_container.actions.play_track.run(
-            track=self.tracks[self.selected_track_index.next(
-                tracks=self.tracks,
-            )]
+            track=self.tracks[
+                self.selected_track_index.next(
+                    tracks=self.tracks,
+                )
+            ]
         )

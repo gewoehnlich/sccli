@@ -8,4 +8,6 @@ class ClientIdIsNotSetError(ConfigError):
         self,
         config_file: Path,
     ) -> None:
-        self.message = f"{self.ERROR_MESSAGE_PREFIX} - client_id has to be set in {config_file}"
+        self.message = (
+            f"{self.ERROR_MESSAGE_PREFIX} - client_id has to be set in {config_file}"
+        )

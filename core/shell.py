@@ -51,10 +51,7 @@ class Shell:
             case _:
                 self.commands.unknown.run()
 
-    def __parse_input(
-        self,
-        command_line: str
-    ) -> tuple[str, list[str]]:
+    def __parse_input(self, command_line: str) -> tuple[str, list[str]]:
         parts: list[str] = shlex.split(command_line)
 
         command: str = parts[0].lower()

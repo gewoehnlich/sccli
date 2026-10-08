@@ -29,9 +29,7 @@ class Request:
     def send(
         self,
     ) -> dict[str, Any]:
-        response = self.__session.send(
-            request=self.__request.prepare()
-        )
+        response = self.__session.send(request=self.__request.prepare())
 
         data: dict[str, Any] = response.json()
 

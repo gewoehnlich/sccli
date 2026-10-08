@@ -9,7 +9,7 @@ from ui.app import App
 def main() -> int:
     try:
         di_container: DiContainer = DiContainer(
-            config_file=Path('config.yml'),
+            config_file=Path("config.yml"),
         )
 
         di_container.database.initialize_tables()

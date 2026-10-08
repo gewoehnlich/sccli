@@ -17,8 +17,9 @@ class MpvPlayer(Player):
         self.auth: Auth = auth
         self.logger = logger
         self.player = mpv.MPV(
-            log_handler=self.__log, ytdl=True,
-            http_header_fields=f"Authorization: Bearer { self.auth.get_access_token() }",
+            log_handler=self.__log,
+            ytdl=True,
+            http_header_fields=f"Authorization: Bearer {self.auth.get_access_token()}",
             http_proxy=http_proxy,
         )
 
@@ -26,8 +27,8 @@ class MpvPlayer(Player):
         def on_end_file(event: mpv.MpvEventEndFile) -> None:
             event = event.as_dict()
 
-            if event["reason"] == b'eof':
-                self.logger.info('track finished')
+            if event["reason"] == b"eof":
+                self.logger.info("track finished")
 
                 self.emit_track_finished()
 

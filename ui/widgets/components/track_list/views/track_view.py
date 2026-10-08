@@ -7,10 +7,10 @@ from models.user import User
 
 class TrackView(View):
     fields: list[str] = [
-        'id',
-        'username',
-        'title',
-        'duration',
+        "id",
+        "username",
+        "title",
+        "duration",
     ]
 
     def __init__(
@@ -22,22 +22,20 @@ class TrackView(View):
         self.user = user
 
     def view(self) -> tuple[Any]:
-        return tuple([
-            self.match(field) for field in self.fields
-        ])
+        return tuple([self.match(field) for field in self.fields])
 
     def match(
         self,
         field: str,
     ) -> Any:
         match field:
-            case 'id':
+            case "id":
                 return self.id()
-            case 'username':
+            case "username":
                 return self.username()
-            case 'title':
+            case "title":
                 return self.title()
-            case 'duration':
+            case "duration":
                 return self.duration()
 
             case _:

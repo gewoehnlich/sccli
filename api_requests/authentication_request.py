@@ -11,9 +11,9 @@ class AuthenticationRequest(Request):
         auth_code: str,
     ) -> None:
         super().__init__(
-        	method="POST",
-        	url="https://secure.soundcloud.com/oauth/token",
-        	data={
+            method="POST",
+            url="https://secure.soundcloud.com/oauth/token",
+            data={
                 "grant_type": "authorization_code",
                 "client_id": client_id,
                 "client_secret": client_secret,

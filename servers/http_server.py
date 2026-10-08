@@ -16,8 +16,7 @@ class HttpServer(Server):
         )
 
         self.__server = HTTPServer(
-            server_address=('', self.port),
-            RequestHandlerClass=AuthRequestHandler
+            server_address=("", self.port), RequestHandlerClass=AuthRequestHandler
         )
 
         # hack to store the data from response
@@ -29,7 +28,9 @@ class HttpServer(Server):
     def run(
         self,
     ) -> None:
-        print(f"Temporary server started at http://localhost:{self.port}. Waiting for callback...")
+        print(
+            f"Temporary server started at http://localhost:{self.port}. Waiting for callback..."
+        )
 
         self.__server.handle_request()
 

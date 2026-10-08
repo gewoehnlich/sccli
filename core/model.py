@@ -19,4 +19,6 @@ class Model(DeclarativeBase):
     def to_tuple(
         self,
     ) -> tuple[Any]:
-        return tuple(getattr(self, attr.key) for attr in inspect(self).mapper.column_attrs)
+        return tuple(
+            getattr(self, attr.key) for attr in inspect(self).mapper.column_attrs
+        )

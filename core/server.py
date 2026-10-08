@@ -13,11 +13,9 @@ class Server:
     @abstractmethod
     def run(
         self,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @abstractmethod
     def stop(
         self,
-    ) -> None:
-        ...
+    ) -> None: ...

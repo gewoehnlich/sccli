@@ -19,7 +19,7 @@ from values.selected_track_index import SelectedTrackIndex
 
 
 class App(BaseApp):
-    TITLE = 'sccli'
+    TITLE = "sccli"
 
     tracks: Reactive[list[Track]] = reactive([])
     selected_track_index: Reactive[SelectedTrackIndex] = reactive(SelectedTrackIndex())
@@ -54,16 +54,13 @@ class App(BaseApp):
             yield TrackList(
                 track_view=self.di_container.views.track,
                 logger=self.logger,
-
                 track_selected_event=self.track_selected_event,
             ).data_bind(
                 selected_track_index=App.selected_track_index,
                 tracks=App.tracks,
             )
         yield Shell()
-        yield Footer(
-            id="footer"
-        )
+        yield Footer(id="footer")
 
     def on_mount(self) -> None:
         self.theme = "rose-pine"

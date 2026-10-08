@@ -30,9 +30,7 @@ class Track(Model):
     title: Mapped[str] = mapped_column(
         String,
     )
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id")
-    )
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
     def __repr__(self) -> str:
         return f"<Track(id={self.id}, title='{self.title}')>"

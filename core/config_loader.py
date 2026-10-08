@@ -6,15 +6,24 @@ import yaml
 from core.config import Config
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
 from exceptions.config.config_file_is_empty_error import ConfigFileIsEmptyError
-from exceptions.config.config_file_must_be_utf_8_encoded_error import ConfigFileMustBeUtf8EncodedError
+from exceptions.config.config_file_must_be_utf_8_encoded_error import (
+    ConfigFileMustBeUtf8EncodedError,
+)
 from exceptions.config.config_file_not_found_error import ConfigFileNotFoundError
-from exceptions.config.config_path_is_a_directory_error import ConfigPathIsADirectoryError
+from exceptions.config.config_path_is_a_directory_error import (
+    ConfigPathIsADirectoryError,
+)
 from exceptions.config.invalid_yaml_config_error import InvalidYamlConfigError
-from exceptions.config.invalid_config_file_format_error import InvalidConfigFileFormatError
-from exceptions.config.no_permission_to_read_config_error import NoPermissionToReadConfigError
+from exceptions.config.invalid_config_file_format_error import (
+    InvalidConfigFileFormatError,
+)
+from exceptions.config.no_permission_to_read_config_error import (
+    NoPermissionToReadConfigError,
+)
 
 
 type ConfigFileData = dict[str, str | None]
+
 
 class ConfigLoader:
     def load(

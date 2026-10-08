@@ -9,10 +9,11 @@ from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 from textual_image.widget import Image as BaseImage
 
+
 class Image(Widget):
     image: Reactive[ImageFile | None] = reactive(None)
 
-    DEFAULT_IMAGE: str = 'dist/image.jpg'
+    DEFAULT_IMAGE: str = "dist/image.jpg"
 
     def compose(self) -> ComposeResult:
         pil_image: ImageFile = PILImage.open(self.DEFAULT_IMAGE)

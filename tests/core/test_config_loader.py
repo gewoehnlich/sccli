@@ -8,7 +8,9 @@ from core.config_loader import ConfigLoader
 from exceptions.config.cannot_read_config_file_error import CannotReadConfigFileError
 from exceptions.config.client_id_invalid_format_error import ClientIdInvalidFormatError
 from exceptions.config.client_id_is_not_set_error import ClientIdIsNotSetError
-from exceptions.config.client_secret_invalid_format_error import ClientSecretInvalidFormatError
+from exceptions.config.client_secret_invalid_format_error import (
+    ClientSecretInvalidFormatError,
+)
 from exceptions.config.client_secret_is_not_set_error import ClientSecretIsNotSetError
 from exceptions.config.config_error import ConfigError
 from exceptions.config.config_file_is_empty_error import ConfigFileIsEmptyError
@@ -132,6 +134,8 @@ def test_config_must_be_a_mapping(
 
 INVALID_FORMAT_SOUNDCLOUD_CREDENTIAL: str = "asdf"
 VALID_FORMAT_SOUNDCLOUD_CREDENTIAL: str = "asdf1234asdf1234asdf1234asdf1234"
+
+
 @pytest.mark.parametrize(
     ("content"),
     [

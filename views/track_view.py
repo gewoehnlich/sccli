@@ -26,11 +26,11 @@ class TrackView(View):
             data[attr.key] = getattr(track, attr.key)
 
         print(data)
-        if 'user_id.username' in self.fields:
-            data['username'] = self.user_repository.get(
-                id=data['user_id'],
+        if "user_id.username" in self.fields:
+            data["username"] = self.user_repository.get(
+                id=data["user_id"],
             )[0].username
 
-            self.fields[self.fields.index('user_id.username')] = 'username'
+            self.fields[self.fields.index("user_id.username")] = "username"
 
         return tuple(data[field] for field in self.fields)
