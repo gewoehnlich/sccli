@@ -31,6 +31,7 @@ class DiContainer:
 
         self.logger: Logger = Logger(
             directory=self.config.logs.directory,
+            level=self.config.logs.level,
         )
 
         self.database: Database = SqliteDatabase(
