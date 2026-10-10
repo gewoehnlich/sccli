@@ -1,6 +1,7 @@
 from typing import Callable
 from sqlalchemy.orm import Session
 
+from core.database import Database
 from di.models_container import ModelsContainer
 from repositories.account_repository import AccountRepository
 from repositories.track_repository import TrackRepository
@@ -11,19 +12,19 @@ class RepositoriesContainer:
     def __init__(
         self,
         models: ModelsContainer,
-        session_factory: Callable[[], Session],
+        database: Database,
     ) -> None:
         self.account = AccountRepository(
             model=models.account,
-            session_factory=session_factory,
+            database=database,
         )
 
         self.track = TrackRepository(
             model=models.track,
-            session_factory=session_factory,
+            database=database,
         )
 
         self.user = UserRepository(
             model=models.user,
-            session_factory=session_factory,
+            database=database,
         )

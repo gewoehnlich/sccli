@@ -34,15 +34,16 @@ class DiContainer:
             level=self.config.logs.level,
         )
 
-        self.database: Database = SqliteDatabase(
-            name=self.config.database.name,
-        )
-
         self.models = ModelsContainer()
 
-        self.repositories = RepositoriesContainer(
-            session_factory=self.database.session_factory,
+        self.database: Database = SqliteDatabase(
+            path=self.config.database.path,
             models=self.models,
+        )
+
+        self.repositories = RepositoriesContainer(
+            models=self.models,
+            database=self.database,
         )
 
         self.server: Server = HttpServer(
