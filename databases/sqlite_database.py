@@ -29,8 +29,10 @@ class SqliteDatabase(Database):
         path: Path,
     ) -> Engine:
         path.parent.mkdir(parents=True, exist_ok=True)
+
         engine = create_engine(URL.create("sqlite+pysqlite", database=str(path)))
         event.listen(engine, "connect", self._configure)
+
         return engine
 
     def _configure(
@@ -39,6 +41,8 @@ class SqliteDatabase(Database):
         _: ConnectionPoolEntry,
     ) -> None:
         cursor = dbapi_connection.cursor()
+
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("PRAGMA busy_timeout=5000")
+
         cursor.close()

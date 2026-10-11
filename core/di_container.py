@@ -36,8 +36,6 @@ class DiContainer:
             level=self.config.logs.level,
         )
 
-        self.models = ModelsContainer()
-
         self.database: Database = SqliteDatabase(
             path=self.config.database.path,
             alembic_config=AlembicConfig(
@@ -45,6 +43,8 @@ class DiContainer:
                 toml_file=self.config.database.alembic.toml,
             )
         )
+
+        self.models = ModelsContainer()
 
         self.repositories = RepositoriesContainer(
             models=self.models,

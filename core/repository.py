@@ -25,7 +25,7 @@ class Repository[ModelT: Model]:
 
     def get_one(
         self,
-        key: str,
+        key: str | int,
     ) -> ModelT | None:
         with self._database.session() as session:
             return session.get(self.model, key)

@@ -25,4 +25,4 @@ class Account(Model):
     )
 
     def __repr__(self) -> str:
-        return f"<Account(client_id={self.client_id}')>"
+        return f"<Account(client_id={self.client_id})>"
