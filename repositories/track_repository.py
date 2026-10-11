@@ -3,7 +3,7 @@ from core.repository import Repository
 from models.track import Track
 
 
-class TrackRepository(Repository):
+class TrackRepository(Repository[Track]):
     def __init__(
         self,
         model: type[Track],

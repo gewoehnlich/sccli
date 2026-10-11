@@ -38,9 +38,9 @@ class Auth:
     def get_access_token(
         self,
     ) -> str:
-        account: Account | None = self.account_repository.get(
-            client_id=self.client_id,
-        )[0]
+        account: Account | None = self.account_repository.get_one(
+            key=self.client_id,
+        )
 
         if not account:
             return self.__authenticate_user()
@@ -66,11 +66,13 @@ class Auth:
         response: dict[str, Any] = request.send()
 
         account: Account = self.account_repository.store(
-            client_id=self.client_id,
-            client_secret=self.client_secret,
-            access_token=str(response["access_token"]),
-            refresh_token=str(response["refresh_token"]),
-            expire_timestamp=int(time.time()) + int(response["expires_in"]),
+            model=Account(
+                client_id=self.client_id,
+                client_secret=self.client_secret,
+                access_token=str(response["access_token"]),
+                refresh_token=str(response["refresh_token"]),
+                expire_timestamp=int(time.time()) + int(response["expires_in"]),
+            ),
         )
 
         return account.access_token
@@ -111,11 +113,13 @@ class Auth:
         response: dict[str, Any] = request.send()
 
         account: Account = self.account_repository.store(
-            client_id=self.client_id,
-            client_secret=self.client_secret,
-            access_token=str(response["access_token"]),
-            refresh_token=str(response["refresh_token"]),
-            expire_timestamp=int(time.time()) + int(response["expires_in"]),
+            model=Account(
+                client_id=self.client_id,
+                client_secret=self.client_secret,
+                access_token=str(response["access_token"]),
+                refresh_token=str(response["refresh_token"]),
+                expire_timestamp=int(time.time()) + int(response["expires_in"]),
+            ),
         )
 
         return account.access_token

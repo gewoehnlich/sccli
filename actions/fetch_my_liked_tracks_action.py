@@ -54,26 +54,30 @@ class FetchMyLikedTracksAction(Action):
             if collection:
                 for track in collection:
                     user: User = self.user_repository.store(
-                        avatar_url=track["user"]["avatar_url"],
-                        city=track["user"]["city"],
-                        country=track["user"]["country"],
-                        created_at=track["user"]["created_at"],
-                        description=track["user"]["description"],
-                        id=track["user"]["id"],
-                        permalink=track["user"]["permalink"],
-                        permalink_url=track["user"]["permalink_url"],
-                        username=track["user"]["username"],
+                        model=User(
+                            avatar_url=track["user"]["avatar_url"],
+                            city=track["user"]["city"],
+                            country=track["user"]["country"],
+                            created_at=track["user"]["created_at"],
+                            description=track["user"]["description"],
+                            id=track["user"]["id"],
+                            permalink=track["user"]["permalink"],
+                            permalink_url=track["user"]["permalink_url"],
+                            username=track["user"]["username"],
+                        ),
                     )
 
                     self.track_repository.store(
-                        artwork_url=track["artwork_url"],
-                        created_at=track["created_at"],
-                        description=track["description"],
-                        duration=track["duration"],
-                        id=track["id"],
-                        permalink_url=track["permalink_url"],
-                        title=track["title"],
-                        user_id=user.id,
+                        model=Track(
+                            artwork_url=track["artwork_url"],
+                            created_at=track["created_at"],
+                            description=track["description"],
+                            duration=track["duration"],
+                            id=track["id"],
+                            permalink_url=track["permalink_url"],
+                            title=track["title"],
+                            user_id=user.id,
+                        ),
                     )
 
             if not next_href:

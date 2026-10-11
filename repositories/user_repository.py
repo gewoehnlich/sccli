@@ -3,7 +3,7 @@ from core.repository import Repository
 from models.user import User
 
 
-class UserRepository(Repository):
+class UserRepository(Repository[User]):
     def __init__(
         self,
         model: type[User],
