@@ -1,18 +1,17 @@
 from collections.abc import Generator
 from contextlib import contextmanager
 
+from alembic import command
+from alembic.config import Config as AlembicConfig
 import sqlalchemy
 from sqlalchemy.orm import Session, sessionmaker
-
-from core.model import Model
-from di.models_container import ModelsContainer
 
 
 class Database:
     def __init__(
         self,
         engine: sqlalchemy.Engine,
-        models: ModelsContainer,
+        alembic_config: AlembicConfig,
     ) -> None:
         self._engine: sqlalchemy.Engine = engine
 
@@ -21,13 +20,13 @@ class Database:
             expire_on_commit=False,
         )
 
-        self._base_model: type[Model] = models.base
+        self._alembic_config: AlembicConfig = alembic_config
 
-    def initialize_tables(
+    def run_migrations(
         self,
     ) -> None:
-        """Create tables that are not present yet"""
-        self._base_model().metadata.create_all(self._engine)
+        """Apply all pending migrations."""
+        command.upgrade(self._alembic_config, "head")
 
     @contextmanager
     def session(

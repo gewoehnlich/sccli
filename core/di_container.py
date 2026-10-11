@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from alembic.config import Config as AlembicConfig
+
 from core.auth import Auth
 from core.config import Config
 from core.config_loader import ConfigLoader
@@ -38,7 +40,10 @@ class DiContainer:
 
         self.database: Database = SqliteDatabase(
             path=self.config.database.path,
-            models=self.models,
+            alembic_config=AlembicConfig(
+                file_=self.config.database.alembic.ini,
+                toml_file=self.config.database.alembic.toml,
+            )
         )
 
         self.repositories = RepositoriesContainer(

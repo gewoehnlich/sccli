@@ -1,23 +1,27 @@
 import sqlite3
 from pathlib import Path
 
+from alembic.config import Config as AlembicConfig
 from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.engine import URL
 from sqlalchemy.pool import ConnectionPoolEntry
 
 from core.database import Database
-from di.models_container import ModelsContainer
 
 
 class SqliteDatabase(Database):
     def __init__(
         self,
         path: Path,
-        models: ModelsContainer,
+        alembic_config: AlembicConfig,
     ) -> None:
+        engine = self._create_engine(path)
+
+        alembic_config.set_main_option("sqlalchemy.url", engine.url.render_as_string())
+
         super().__init__(
-            engine=self._create_engine(path),
-            models=models,
+            engine=engine,
+            alembic_config=alembic_config,
         )
 
     def _create_engine(

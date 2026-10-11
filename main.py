@@ -12,7 +12,7 @@ def main() -> int:
             config_file=Path("config.yml"),
         )
 
-        di_container.database.initialize_tables()
+        di_container.database.run_migrations()
         di_container.logger.info("Starting sccli...")
 
         app = App(di_container=di_container)
