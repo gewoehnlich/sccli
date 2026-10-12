@@ -4,12 +4,12 @@ from models.track import Track
 
 
 class TrackRepository(Repository[Track]):
+    model = Track
+
     def __init__(
         self,
-        model: type[Track],
         database: Database,
     ) -> None:
         super().__init__(
-            model=model,
             database=database,
         )

@@ -11,20 +11,16 @@ from repositories.user_repository import UserRepository
 class RepositoriesContainer:
     def __init__(
         self,
-        models: ModelsContainer,
         database: Database,
     ) -> None:
         self.account = AccountRepository(
-            model=models.account,
             database=database,
         )
 
         self.track = TrackRepository(
-            model=models.track,
             database=database,
         )
 
         self.user = UserRepository(
-            model=models.user,
             database=database,
         )

@@ -4,12 +4,12 @@ from models.user import User
 
 
 class UserRepository(Repository[User]):
+    model = User
+
     def __init__(
         self,
-        model: type[User],
         database: Database,
     ) -> None:
         super().__init__(
-            model=model,
             database=database,
         )

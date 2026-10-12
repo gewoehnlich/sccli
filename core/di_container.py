@@ -12,7 +12,6 @@ from core.shell import Shell
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
-from di.models_container import ModelsContainer
 from di.repositories_container import RepositoriesContainer
 from di.requests_container import RequestsContainer
 from di.resources_container import ResourcesContainer
@@ -44,10 +43,7 @@ class DiContainer:
             )
         )
 
-        self.models = ModelsContainer()
-
         self.repositories = RepositoriesContainer(
-            models=self.models,
             database=self.database,
         )
 

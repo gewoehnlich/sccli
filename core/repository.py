@@ -6,12 +6,12 @@ from core.model import Model
 
 
 class Repository[ModelT: Model]:
+    model: type[ModelT]
+
     def __init__(
         self,
-        model: type[ModelT],
         database: Database,
     ) -> None:
-        self.model: type[ModelT] = model
         self._database: Database = database
 
     def get(
