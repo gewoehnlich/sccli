@@ -1,9 +1,8 @@
 from io import BytesIO
 
-from PIL.ImageFile import ImageFile
 import requests
 from PIL import Image as PILImage
-
+from PIL.ImageFile import ImageFile
 from textual.app import ComposeResult
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget

@@ -1,4 +1,5 @@
 from typing import Any
+
 from ui.components.buttons.music_player_button import MusicPlayerButton
 from ui.events.play_button_pressed import PlayButtonPressed
 

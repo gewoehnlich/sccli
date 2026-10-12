@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from exceptions.config.config_error import ConfigError
 
 

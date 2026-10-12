@@ -1,4 +1,5 @@
 from typing import Any
+
 from textual.reactive import Reactive, reactive
 from textual.widgets import ProgressBar
 

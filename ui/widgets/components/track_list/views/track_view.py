@@ -1,5 +1,6 @@
 import math
 from typing import Any
+
 from core.view import View
 from models.track import Track
 from models.user import User

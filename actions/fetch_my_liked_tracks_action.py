@@ -1,9 +1,5 @@
-from pprint import pprint
-import sys
 from time import sleep
 from typing import Any
-
-from rich import inspect
 
 from core.action import Action
 from core.auth import Auth

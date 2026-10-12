@@ -36,7 +36,7 @@ class Shell:
         if not command_line:
             return
 
-        command, args = self.__parse_input(command_line)
+        command, _args = self.__parse_input(command_line)
 
         match command:
             case "help":

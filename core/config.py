@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from pydantic import Field, ValidationError
-from rich import inspect
 
 from config.base_config_model import BaseConfigModel
 from config.database import DatabaseConfig
@@ -11,11 +10,12 @@ from config.proxy import ProxyConfig
 from config.server import ServerConfig
 from config.soundcloud import SoundcloudConfig
 from config.tests import TestsConfig
-from exceptions.config.client_id_invalid_format_error import ClientIdInvalidFormatError
+from exceptions.config.client_id_invalid_format_error import (
+    ClientIdInvalidFormatError,
+)
 from exceptions.config.client_secret_invalid_format_error import (
     ClientSecretInvalidFormatError,
 )
-
 
 type ConfigFileData = dict[str, str | None]
 

@@ -1,5 +1,5 @@
 import mpv
-import rich
+
 from core.auth import Auth
 from core.logger import Logger
 from core.player import Player
@@ -46,7 +46,7 @@ class MpvPlayer(Player):
         self,
         link: str,
     ) -> None:
-        if self.player.pause == True:
+        if self.player.pause:
             self.player.pause = False
         else:
             self.player.play(

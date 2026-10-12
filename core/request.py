@@ -1,7 +1,6 @@
 from typing import Any
 
-from requests import Request as BaseRequest
-from requests import Session
+from requests import Request as BaseRequest, Session
 
 
 class Request:
@@ -11,13 +10,16 @@ class Request:
         self,
         method: str = "",
         url: str = "",
-        headers: dict[str, str] = {
-            "Accept": "application/json; charset=utf-8",
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        params: dict[str, str] = {},
-        data: dict[str, str] = {},
+        headers: dict[str, str] | None = None,
+        params: dict[str, str] | None = None,
+        data: dict[str, str] | None = None,
     ) -> None:
+        if data is None:
+            data = {}
+        if params is None:
+            params = {}
+        if headers is None:
+            headers = {"Accept": "application/json; charset=utf-8", "Content-Type": "application/x-www-form-urlencoded"}
         self.__request = BaseRequest(
             method=method,
             url=url,

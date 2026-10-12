@@ -1,9 +1,9 @@
 from collections.abc import Generator
 from contextlib import contextmanager
 
+import sqlalchemy
 from alembic import command
 from alembic.config import Config as AlembicConfig
-import sqlalchemy
 from sqlalchemy.orm import Session, sessionmaker
 
 

@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 from loguru import logger
 
-from enums.logger_level import LoggerLevelEnum
 from core.logger import Logger
+from enums.logger_level import LoggerLevelEnum
 
 
 @pytest.fixture(autouse=True)

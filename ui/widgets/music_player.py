@@ -1,9 +1,11 @@
 from textual.app import ComposeResult
-from textual.containers import Vertical
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
+
 from models.track import Track
-from ui.widgets.components.music_player.buttons import MusicPlayerButtonsComponent
+from ui.widgets.components.music_player.buttons import (
+    MusicPlayerButtonsComponent,
+)
 from ui.widgets.components.music_player.image import Image
 from ui.widgets.components.music_player.track_progress_bar import (
     TrackProgressBarComponent,

@@ -9,10 +9,16 @@ class SoundcloudRequest(Request):
         access_token: str,
         method: str,
         url: str,
-        headers: dict[str, str] = {},
-        params: dict[str, str] = {},
-        data: dict[str, str] = {},
+        headers: dict[str, str] | None = None,
+        params: dict[str, str] | None = None,
+        data: dict[str, str] | None = None,
     ) -> None:
+        if data is None:
+            data = {}
+        if params is None:
+            params = {}
+        if headers is None:
+            headers = {}
         if access_token:
             headers["Authorization"] = f"OAuth {access_token}"
 

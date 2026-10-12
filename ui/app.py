@@ -1,4 +1,3 @@
-from typing import Any
 from textual.app import App as BaseApp, ComposeResult
 from textual.containers import Horizontal
 from textual.message import Message
