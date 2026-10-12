@@ -15,12 +15,8 @@ class SqliteDatabase(Database):
         path: Path,
         alembic_config: AlembicConfig,
     ) -> None:
-        engine = self._create_engine(path)
-
-        alembic_config.set_main_option("sqlalchemy.url", engine.url.render_as_string())
-
         super().__init__(
-            engine=engine,
+            engine=self._create_engine(path),
             alembic_config=alembic_config,
         )
 
@@ -28,9 +24,7 @@ class SqliteDatabase(Database):
         self,
         path: Path,
     ) -> Engine:
-        path.parent.mkdir(parents=True, exist_ok=True)
-
-        engine = create_engine(URL.create("sqlite+pysqlite", database=str(path)))
+        engine: Engine = create_engine(URL.create("sqlite+pysqlite", database=str(path)))
         event.listen(engine, "connect", self._configure)
 
         return engine
