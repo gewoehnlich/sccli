@@ -20,7 +20,9 @@ class Database:
             expire_on_commit=False,
         )
 
-        alembic_config.set_main_option("sqlalchemy.url", engine.url.render_as_string())
+        alembic_config.set_main_option(
+            "sqlalchemy.url", engine.url.render_as_string()
+        )
 
         self._alembic_config: AlembicConfig = alembic_config
 

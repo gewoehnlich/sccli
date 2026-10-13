@@ -24,7 +24,9 @@ class SqliteDatabase(Database):
         self,
         path: Path,
     ) -> Engine:
-        engine: Engine = create_engine(URL.create("sqlite+pysqlite", database=str(path)))
+        engine: Engine = create_engine(
+            URL.create("sqlite+pysqlite", database=str(path))
+        )
         event.listen(engine, "connect", self._configure)
 
         return engine

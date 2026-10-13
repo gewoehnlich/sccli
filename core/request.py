@@ -19,7 +19,10 @@ class Request:
         if params is None:
             params = {}
         if headers is None:
-            headers = {"Accept": "application/json; charset=utf-8", "Content-Type": "application/x-www-form-urlencoded"}
+            headers = {
+                "Accept": "application/json; charset=utf-8",
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
         self.__request = BaseRequest(
             method=method,
             url=url,

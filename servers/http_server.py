@@ -16,7 +16,8 @@ class HttpServer(Server):
         )
 
         self.__server = HTTPServer(
-            server_address=("", self.port), RequestHandlerClass=AuthRequestHandler
+            server_address=("", self.port),
+            RequestHandlerClass=AuthRequestHandler,
         )
 
         # hack to store the data from response

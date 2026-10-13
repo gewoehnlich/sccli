@@ -14,4 +14,6 @@ class MessagesConfig(BaseConfigModel):
         "  help           - Show this help message.\n"
         "  exit, quit     - Exit the shell.\n"
     )
-    unknown: str = "Unknown command.\nType 'help' for a list of available commands.\n"
+    unknown: str = (
+        "Unknown command.\nType 'help' for a list of available commands.\n"
+    )

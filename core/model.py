@@ -21,5 +21,6 @@ class Model(DeclarativeBase):
         self,
     ) -> tuple[Any]:
         return tuple(
-            getattr(self, attr.key) for attr in inspect(self).mapper.column_attrs
+            getattr(self, attr.key)
+            for attr in inspect(self).mapper.column_attrs
         )

@@ -42,6 +42,8 @@ class Config(BaseConfigModel):
                 if error["loc"] == ("soundcloud", "client_id"):
                     raise ClientIdInvalidFormatError(config_file=path) from e
                 if error["loc"] == ("soundcloud", "client_secret"):
-                    raise ClientSecretInvalidFormatError(config_file=path) from e
+                    raise ClientSecretInvalidFormatError(
+                        config_file=path
+                    ) from e
 
             raise e

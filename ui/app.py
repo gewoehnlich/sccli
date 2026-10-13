@@ -21,7 +21,9 @@ class App(BaseApp):
     TITLE = "sccli"
 
     tracks: Reactive[list[Track]] = reactive([])
-    selected_track_index: Reactive[SelectedTrackIndex] = reactive(SelectedTrackIndex())
+    selected_track_index: Reactive[SelectedTrackIndex] = reactive(
+        SelectedTrackIndex()
+    )
 
     track_selected_event: type[Message] = TrackSelected
 

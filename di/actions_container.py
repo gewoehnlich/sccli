@@ -29,9 +29,13 @@ class ActionsContainer:
             message=messages.welcome,
         )
 
-        self.get_exit_message: Action = GetExitMessageAction(message=messages.exit)
+        self.get_exit_message: Action = GetExitMessageAction(
+            message=messages.exit
+        )
 
-        self.get_help_message: Action = GetHelpMessageAction(message=messages.help)
+        self.get_help_message: Action = GetHelpMessageAction(
+            message=messages.help
+        )
 
         self.get_unknown_message: Action = GetUnknownCommandMessageAction(
             message=messages.unknown

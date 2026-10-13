@@ -99,7 +99,9 @@ def seed(widgets: WidgetRepository) -> None:
 # --- get(): filtering rows
 
 
-def test_get_without_filters_returns_every_row(widgets: WidgetRepository) -> None:
+def test_get_without_filters_returns_every_row(
+    widgets: WidgetRepository,
+) -> None:
     seed(widgets)
 
     assert len(find(widgets)) == 4
@@ -121,7 +123,9 @@ def test_get_combines_filters_with_and(widgets: WidgetRepository) -> None:
     assert [widget.name for widget in found] == ["gear"]
 
 
-def test_get_returns_nothing_when_no_row_matches(widgets: WidgetRepository) -> None:
+def test_get_returns_nothing_when_no_row_matches(
+    widgets: WidgetRepository,
+) -> None:
     seed(widgets)
 
     assert len(find(widgets, color="green")) == 0
@@ -298,7 +302,9 @@ def test_delete_leaves_other_rows_alone(
     assert "bolt" not in {widget.name for widget in find(widgets)}
 
 
-def test_delete_of_a_never_stored_object_raises(widgets: WidgetRepository) -> None:
+def test_delete_of_a_never_stored_object_raises(
+    widgets: WidgetRepository,
+) -> None:
     with pytest.raises(InvalidRequestError):
         widgets.delete(Widget(name="ghost", color=None))
 

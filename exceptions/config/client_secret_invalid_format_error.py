@@ -8,4 +8,6 @@ class ClientSecretInvalidFormatError(ConfigError):
         self,
         config_file: Path,
     ) -> None:
-        self.message = f"Invalid soundcloud.client_secret format in {config_file}"
+        self.message = (
+            f"Invalid soundcloud.client_secret format in {config_file}"
+        )

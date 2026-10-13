@@ -33,7 +33,9 @@ class Auth:
         self.authentication_request: type[AuthenticationRequest] = (
             authentication_request
         )
-        self.refresh_token_request: type[RefreshTokenRequest] = refresh_token_request
+        self.refresh_token_request: type[RefreshTokenRequest] = (
+            refresh_token_request
+        )
 
     def get_access_token(
         self,
@@ -130,7 +132,9 @@ class Auth:
         )
 
         code_challenge: str = (
-            base64.urlsafe_b64encode(hashlib.sha256(code_verifier.encode()).digest())
+            base64.urlsafe_b64encode(
+                hashlib.sha256(code_verifier.encode()).digest()
+            )
             .decode("utf-8")
             .rstrip("=")
         )
@@ -138,6 +142,8 @@ class Auth:
         return code_verifier, code_challenge
 
     def __generate_state(self) -> str:
-        state: str = base64.urlsafe_b64encode(os.urandom(16)).decode().rstrip("=")
+        state: str = (
+            base64.urlsafe_b64encode(os.urandom(16)).decode().rstrip("=")
+        )
 
         return state

@@ -15,7 +15,9 @@ from values.selected_track_index import SelectedTrackIndex
 
 class MusicPlayer(Widget):
     tracks: Reactive[list[Track]] = reactive([])
-    selected_track_index: Reactive[SelectedTrackIndex] = reactive(SelectedTrackIndex())
+    selected_track_index: Reactive[SelectedTrackIndex] = reactive(
+        SelectedTrackIndex()
+    )
 
     is_playing: Reactive[bool] = reactive(False)
 
@@ -48,8 +50,12 @@ class MusicPlayer(Widget):
         self.register_player_events()
 
     def update_current_track_info(self) -> None:
-        self.current_track_playtime = self.app.player.get_current_track_playtime()
-        self.current_track_duration = self.app.player.get_current_track_duration()
+        self.current_track_playtime = (
+            self.app.player.get_current_track_playtime()
+        )
+        self.current_track_duration = (
+            self.app.player.get_current_track_duration()
+        )
 
     def on_previous_track_button_pressed(self) -> None:
         self.is_playing = True

@@ -31,7 +31,9 @@ def read_log(directory: Path) -> str:
     return files[0].read_text(encoding="utf-8")
 
 
-def test_creates_directory_and_dated_file(log_dir: Path, level: LoggerLevelEnum) -> None:
+def test_creates_directory_and_dated_file(
+    log_dir: Path, level: LoggerLevelEnum
+) -> None:
     log = Logger(directory=log_dir, level=level)
 
     text = "hello"
@@ -77,7 +79,9 @@ def test_default_level_hides_lower_level_logs(log_dir: Path) -> None:
         ("critical", LoggerLevelEnum.CRITICAL),
     ],
 )
-def test_each_method_logs_at_its_level(log_dir: Path, method: str, level: LoggerLevelEnum) -> None:
+def test_each_method_logs_at_its_level(
+    log_dir: Path, method: str, level: LoggerLevelEnum
+) -> None:
     log = Logger(directory=log_dir, level=level)
     getattr(log, method)("msg")
     log.close()
@@ -85,7 +89,9 @@ def test_each_method_logs_at_its_level(log_dir: Path, method: str, level: Logger
     assert re.search(rf"\| {level.value}\s+\|", read_log(log_dir))
 
 
-def test_records_caller_location_not_wrapper(log_dir: Path, level: LoggerLevelEnum) -> None:
+def test_records_caller_location_not_wrapper(
+    log_dir: Path, level: LoggerLevelEnum
+) -> None:
     log = Logger(directory=log_dir, level=level)
     log.info("where")
     log.close()
@@ -93,7 +99,9 @@ def test_records_caller_location_not_wrapper(log_dir: Path, level: LoggerLevelEn
     assert "test_records_caller_location_not_wrapper" in read_log(log_dir)
 
 
-def test_exception_includes_traceback(log_dir: Path, level: LoggerLevelEnum) -> None:
+def test_exception_includes_traceback(
+    log_dir: Path, level: LoggerLevelEnum
+) -> None:
     log = Logger(directory=log_dir, level=level)
 
     try:

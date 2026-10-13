@@ -5,9 +5,7 @@ from pathlib import Path
 import pytest
 from alembic.config import Config as AlembicConfig
 from sqlalchemy import String, text
-from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy.pool import QueuePool
 
 from databases.sqlite_database import SqliteDatabase
 
@@ -104,7 +102,9 @@ def db_path(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def database(db_path: Path, alembic_config: AlembicConfig) -> Iterator[SqliteDatabase]:
+def database(
+    db_path: Path, alembic_config: AlembicConfig
+) -> Iterator[SqliteDatabase]:
     db = SqliteDatabase(path=db_path, alembic_config=alembic_config)
     yield db
     db.close()
@@ -146,8 +146,12 @@ def test_pragmas_are_applied_to_every_new_connection(
     # two sessions open at once force two separate connections
     with database.session() as first, database.session() as second:
         for session in (first, second):
-            foreign_keys = session.execute(text("PRAGMA foreign_keys")).scalar_one()
-            busy_timeout = session.execute(text("PRAGMA busy_timeout")).scalar_one()
+            foreign_keys = session.execute(
+                text("PRAGMA foreign_keys")
+            ).scalar_one()
+            busy_timeout = session.execute(
+                text("PRAGMA busy_timeout")
+            ).scalar_one()
 
             assert foreign_keys == 1
             assert busy_timeout == 5000
@@ -201,9 +205,9 @@ def test_stored_objects_can_be_read_back(database: SqliteDatabase) -> None:
         session.add(Widget(name="gear"))
 
     with database.session() as session:
-        names = session.execute(
-            text("SELECT name FROM widgets")
-        ).scalars().all()
+        names = (
+            session.execute(text("SELECT name FROM widgets")).scalars().all()
+        )
 
     assert names == ["gear"]
 
@@ -232,9 +236,11 @@ def test_run_migrations_is_idempotent(database: SqliteDatabase) -> None:
     database.run_migrations()
 
     with database.session() as session:
-        versions = session.execute(
-            text("select version_num from alembic_version")
-        ).scalars().all()
+        versions = (
+            session.execute(text("select version_num from alembic_version"))
+            .scalars()
+            .all()
+        )
 
     assert versions == ["0001"]
 
@@ -280,6 +286,8 @@ def test_concurrent_writers_do_not_hit_database_is_locked(
             future.result()  # re-raises any exception from the worker
 
     with database.session() as session:
-        total = session.execute(text("select count(*) from counter")).scalar_one()
+        total = session.execute(
+            text("select count(*) from counter")
+        ).scalar_one()
 
     assert total == 200

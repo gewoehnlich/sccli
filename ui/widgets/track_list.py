@@ -16,7 +16,9 @@ class TrackList(DataTable):
     number: int | None = None
 
     tracks: Reactive[list[Track]] = reactive([])
-    selected_track_index: Reactive[SelectedTrackIndex] = reactive(SelectedTrackIndex())
+    selected_track_index: Reactive[SelectedTrackIndex] = reactive(
+        SelectedTrackIndex()
+    )
 
     def __init__(
         self,
@@ -95,7 +97,9 @@ class TrackList(DataTable):
 
             case "G":
                 self.move_cursor(
-                    row=self.number if self.number is not None else self.row_count - 1
+                    row=self.number
+                    if self.number is not None
+                    else self.row_count - 1
                 )
             case "H":
                 self.move_cursor(column=0)

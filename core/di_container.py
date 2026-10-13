@@ -40,7 +40,7 @@ class DiContainer:
             alembic_config=AlembicConfig(
                 file_=self.config.database.alembic.ini,
                 toml_file=self.config.database.alembic.toml,
-            )
+            ),
         )
 
         self.repositories: RepositoriesContainer = RepositoriesContainer(
