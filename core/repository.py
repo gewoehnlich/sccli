@@ -37,7 +37,7 @@ class Repository[ModelT: Model]:
         model: ModelT,
     ) -> ModelT:
         with self._database.session() as session:
-            merged = session.merge(model)  # insert or update by primary key
+            merged = session.merge(model)
             session.flush()
 
             return merged

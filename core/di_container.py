@@ -43,7 +43,7 @@ class DiContainer:
             )
         )
 
-        self.repositories = RepositoriesContainer(
+        self.repositories: RepositoriesContainer = RepositoriesContainer(
             database=self.database,
         )
 

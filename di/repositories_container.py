@@ -1,4 +1,3 @@
-
 from core.database import Database
 from repositories.account_repository import AccountRepository
 from repositories.track_repository import TrackRepository
