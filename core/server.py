@@ -1,7 +1,9 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
+
+from values.callback_result import CallbackResult
 
 
-class Server:
+class Server(ABC):
     def __init__(
         self,
         port: int,
@@ -11,11 +13,11 @@ class Server:
         self.path = path
 
     @abstractmethod
-    def run(
-        self,
-    ) -> None: ...
+    def start(self) -> None:
+        """Bind and listen. Must be called before the browser is opened."""
 
     @abstractmethod
-    def stop(
-        self,
-    ) -> None: ...
+    def wait_for_callback(self, timeout: float) -> CallbackResult: ...
+
+    @abstractmethod
+    def stop(self) -> None: ...

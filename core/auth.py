@@ -1,14 +1,20 @@
 import base64
 import hashlib
 import os
+import secrets
 import time
+from urllib.parse import urlencode
 import webbrowser
 from typing import Any
+
+from rich import inspect
 
 from api_requests.authentication_request import AuthenticationRequest
 from api_requests.refresh_token_request import RefreshTokenRequest
 from core.request import Request
 from core.server import Server
+from exceptions.auth.authorization_denied_error import AuthorizationDeniedError
+from exceptions.auth.state_mismatch_error import StateMismatchError
 from models.account import Account
 from repositories.account_repository import AccountRepository
 
@@ -85,24 +91,39 @@ class Auth:
         code_verifier, code_challenge = self.__generate_pkce()
         state = self.__generate_state()
 
-        auth_url = (
-            "https://secure.soundcloud.com/authorize"
-            f"?client_id={self.client_id}"
-            f"&redirect_uri={self.redirect_uri}"
-            "&response_type=code"
-            f"&code_challenge={code_challenge}"
-            "&code_challenge_method=S256"
-            f"&state={state}"
-        )
+        query: str = urlencode({
+            "client_id": self.client_id,
+            "redirect_uri": self.redirect_uri,
+            "response_type": "code",
+            "code_challenge": code_challenge,
+            "code_challenge_method": "S256",
+            "state": state,
+        })
 
-        webbrowser.open(auth_url)
-        self.server.run()
+        auth_url: str = f"https://secure.soundcloud.com/authorize?{query}"
 
-        auth_code: str = self.server.auth_code
-        returned_state: str = self.server.state
+        self.server.start()
 
-        if state != returned_state:
-            raise Exception("State mismatch!")
+        try:
+            if not webbrowser.open(auth_url):
+                print(f"Open this URL in your browser:\n{auth_url}")  # headless fallback
+
+            result = self.server.wait_for_callback(timeout=300)
+            inspect(result)
+        finally:
+            self.server.stop()
+
+        if result.error is not None:
+            raise AuthorizationDeniedError(result.error)
+
+        if (
+            result.code is None
+            or result.state is None
+            or not secrets.compare_digest(result.state.encode(), state.encode())
+        ):
+            raise StateMismatchError
+
+        auth_code: str = result.code
 
         request: Request = self.authentication_request(
             self.client_id,
