@@ -1,11 +1,11 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs, urlsplit
 import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import cast
+from urllib.parse import parse_qs, urlsplit
 
 from core.server import Server
-from exceptions.auth.port_unavailable_error import PortUnavailableError
 from exceptions.auth.callback_timeout_error import CallbackTimeoutError
+from exceptions.auth.port_unavailable_error import PortUnavailableError
 from values.callback_result import CallbackResult
 
 

@@ -3,9 +3,9 @@ import hashlib
 import os
 import secrets
 import time
-from urllib.parse import urlencode
 import webbrowser
 from typing import Any
+from urllib.parse import urlencode
 
 from rich import inspect
 
@@ -91,14 +91,16 @@ class Auth:
         code_verifier, code_challenge = self.__generate_pkce()
         state = self.__generate_state()
 
-        query: str = urlencode({
-            "client_id": self.client_id,
-            "redirect_uri": self.redirect_uri,
-            "response_type": "code",
-            "code_challenge": code_challenge,
-            "code_challenge_method": "S256",
-            "state": state,
-        })
+        query: str = urlencode(
+            {
+                "client_id": self.client_id,
+                "redirect_uri": self.redirect_uri,
+                "response_type": "code",
+                "code_challenge": code_challenge,
+                "code_challenge_method": "S256",
+                "state": state,
+            }
+        )
 
         auth_url: str = f"https://secure.soundcloud.com/authorize?{query}"
 
@@ -106,7 +108,9 @@ class Auth:
 
         try:
             if not webbrowser.open(auth_url):
-                print(f"Open this URL in your browser:\n{auth_url}")  # headless fallback
+                print(
+                    f"Open this URL in your browser:\n{auth_url}"
+                )  # headless fallback
 
             result = self.server.wait_for_callback(timeout=300)
             inspect(result)

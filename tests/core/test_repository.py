@@ -8,13 +8,12 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from di.repositories_container import RepositoriesContainer
-from databases.sqlite_database import SqliteDatabase
 from core.repository import Repository
+from databases.sqlite_database import SqliteDatabase
+from di.repositories_container import RepositoriesContainer
 from models.account import Account
 from models.track import Track
 from models.user import User
-
 
 # --- test-only tables and repositories
 
