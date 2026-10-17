@@ -95,7 +95,9 @@ class Auth:
             }
         )
 
-        auth_url: str = SoundcloudApiEndpointEnum.AUTHORIZATION.value + "?" + query
+        auth_url: str = (
+            SoundcloudApiEndpointEnum.AUTHORIZATION.value + "?" + query
+        )
 
         self._server.start()
 
@@ -154,8 +156,7 @@ class Auth:
             base64.urlsafe_b64encode(
                 hashlib.sha256(
                     code_verifier.encode(),
-                )
-                .digest()
+                ).digest()
             )
             .decode("utf-8")
             .rstrip("=")

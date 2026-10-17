@@ -13,8 +13,12 @@ import pytest
 from core.server import Server
 from exceptions.servers.callback_timeout_error import CallbackTimeoutError
 from exceptions.servers.port_unavailable_error import PortUnavailableError
-from exceptions.servers.server_is_already_running_error import ServerIsAlreadyRunningError
-from exceptions.servers.server_is_not_started_error import ServerIsNotStartedError
+from exceptions.servers.server_is_already_running_error import (
+    ServerIsAlreadyRunningError,
+)
+from exceptions.servers.server_is_not_started_error import (
+    ServerIsNotStartedError,
+)
 from servers.http_server import HttpServer, _CallbackHandler
 from values.callback_result import CallbackResult
 
@@ -34,7 +38,11 @@ def result(
     return CallbackResult(code=code, state=state, error=error)
 
 
-def send(server: HttpServer, target: str, method: str = "GET",) -> Response:
+def send(
+    server: HttpServer,
+    target: str,
+    method: str = "GET",
+) -> Response:
     connection = http.client.HTTPConnection(server.host, server.port, timeout=5)
 
     try:
@@ -189,8 +197,14 @@ def test_restart_starts_with_a_clean_slate(server: HttpServer) -> None:
         ("?state=xyz&code=abc", result("abc", "xyz")),
         ("?code=abc&state=xyz&extra=1&other=2", result("abc", "xyz")),
         # OAuth error response
-        ("?error=access_denied&state=xyz", result(None, "xyz", "access_denied")),
-        ("?error=access_denied&error_description=User+denied", result(error="access_denied")),
+        (
+            "?error=access_denied&state=xyz",
+            result(None, "xyz", "access_denied"),
+        ),
+        (
+            "?error=access_denied&error_description=User+denied",
+            result(error="access_denied"),
+        ),
         # partial parameters
         ("?code=abc", result(code="abc")),
         ("?state=xyz", result(state="xyz")),
@@ -218,7 +232,9 @@ def test_callback_parameters_are_parsed(
     assert deliver(server, query) == expected
 
 
-def test_callback_arriving_before_the_wait_is_not_lost(server: HttpServer) -> None:
+def test_callback_arriving_before_the_wait_is_not_lost(
+    server: HttpServer,
+) -> None:
     with ThreadPoolExecutor(max_workers=1) as pool:
         pending = pool.submit(send, server, "/callback?code=abc&state=xyz")
         time.sleep(0.2)
@@ -230,19 +246,20 @@ def test_callback_arriving_before_the_wait_is_not_lost(server: HttpServer) -> No
     assert received == result("abc", "xyz")
 
 
-def test_waiting_again_returns_the_same_result_immediately(server: HttpServer) -> None:
+def test_waiting_again_returns_the_same_result_immediately(
+    server: HttpServer,
+) -> None:
     first = deliver(server, "?code=abc&state=xyz")
 
     assert server.wait_for_callback(0) == first
 
 
 def test_custom_callback_path() -> None:
-    with running(path="/oauth/cb") as custom:
-        with waiting(custom) as future:
-            assert send(custom, "/callback?code=a&state=b").status == 404
-            assert send(custom, "/oauth/cb?code=a&state=b").status == 200
+    with running(path="/oauth/cb") as custom, waiting(custom) as future:
+        assert send(custom, "/callback?code=a&state=b").status == 404
+        assert send(custom, "/oauth/cb?code=a&state=b").status == 200
 
-            assert future.result(timeout=5) == result("a", "b")
+        assert future.result(timeout=5) == result("a", "b")
 
 
 STRAY_TARGETS = [
@@ -256,7 +273,9 @@ STRAY_TARGETS = [
 ]
 
 
-def test_other_paths_get_404_and_do_not_end_the_wait(server: HttpServer) -> None:
+def test_other_paths_get_404_and_do_not_end_the_wait(
+    server: HttpServer,
+) -> None:
     with waiting(server) as future:
         for target in STRAY_TARGETS:
             response = send(server, f"{target}?code=stolen&state=stolen")
@@ -270,10 +289,14 @@ def test_other_paths_get_404_and_do_not_end_the_wait(server: HttpServer) -> None
         assert future.result(timeout=5) == result("real", "ok")
 
 
-@pytest.mark.parametrize("method", ["POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"])
+@pytest.mark.parametrize(
+    "method", ["POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
+)
 def test_only_get_is_supported(server: HttpServer, method: str) -> None:
     with waiting(server) as future:
-        response = send(server, "/callback?code=stolen&state=stolen", method=method)
+        response = send(
+            server, "/callback?code=stolen&state=stolen", method=method
+        )
 
         assert response.status == 501
         assert not future.done()
@@ -287,7 +310,9 @@ def test_idle_connection_does_not_block_the_callback(
     server: HttpServer,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(_CallbackHandler, "timeout", 0.3)  # default is 5 s; keep the suite fast
+    monkeypatch.setattr(
+        _CallbackHandler, "timeout", 0.3
+    )  # default is 5 s; keep the suite fast
 
     # a browser pre-connect: connects, sends nothing
     with socket.create_connection((server.host, server.port)):
@@ -299,7 +324,9 @@ def test_idle_connection_does_not_block_the_callback(
     assert elapsed < 3
 
 
-def test_connection_closed_without_a_request_is_ignored(server: HttpServer) -> None:
+def test_connection_closed_without_a_request_is_ignored(
+    server: HttpServer,
+) -> None:
     with socket.create_connection((server.host, server.port)):
         pass
 
@@ -363,13 +390,17 @@ def test_response_headers_and_body(
     assert response.status == status
     assert text in response.body
     assert response.headers["content-type"] == "text/html; charset=utf-8"
-    assert int(response.headers["content-length"]) == len(response.body.encode("utf-8"))
+    assert int(response.headers["content-length"]) == len(
+        response.body.encode("utf-8")
+    )
     assert response.headers["cache-control"] == "no-store"
     assert response.headers["referrer-policy"] == "no-referrer"
     assert response.headers["connection"] == "close"
 
 
-def test_response_does_not_reflect_request_parameters(server: HttpServer) -> None:
+def test_response_does_not_reflect_request_parameters(
+    server: HttpServer,
+) -> None:
     payload = quote("<script>alert(1)</script>")
 
     with waiting(server):
