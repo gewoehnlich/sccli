@@ -4,20 +4,22 @@ from typing import cast
 from urllib.parse import parse_qs, urlsplit
 
 from core.server import Server
-from exceptions.auth.callback_timeout_error import CallbackTimeoutError
-from exceptions.auth.port_unavailable_error import PortUnavailableError
+from exceptions.servers.callback_timeout_error import CallbackTimeoutError
+from exceptions.servers.port_unavailable_error import PortUnavailableError
+from exceptions.servers.server_is_already_running_error import ServerIsAlreadyRunningError
+from exceptions.servers.server_is_not_started_error import ServerIsNotStartedError
 from values.callback_result import CallbackResult
 
 
 class HttpServer(Server):
-    def __init__(self, host: str, port: int, path: str) -> None:
+    def __init__(self, host: str, port: int, path: str,) -> None:
         super().__init__(host=host, port=port, path=path)
 
         self._server: _CallbackServer | None = None
 
-    def start(self) -> None:
+    def start(self,) -> None:
         if self._server is not None:
-            raise RuntimeError("Server is already started")
+            raise ServerIsAlreadyRunningError()
 
         try:
             server = _CallbackServer((self.host, self.port), _CallbackHandler)
@@ -28,9 +30,9 @@ class HttpServer(Server):
         self.port = server.server_port
         self._server = server
 
-    def wait_for_callback(self, timeout: float) -> CallbackResult:
+    def wait_for_callback(self, timeout: float,) -> CallbackResult:
         if self._server is None:
-            raise RuntimeError("Server is not started")
+            raise ServerIsNotStartedError()
 
         deadline = time.monotonic() + timeout
 
@@ -44,7 +46,7 @@ class HttpServer(Server):
 
         return self._server.result
 
-    def stop(self) -> None:
+    def stop(self,) -> None:
         if self._server is not None:
             self._server.server_close()
             self._server = None
@@ -58,7 +60,7 @@ class _CallbackServer(HTTPServer):
 class _CallbackHandler(BaseHTTPRequestHandler):
     timeout = 5
 
-    def do_GET(self) -> None:
+    def do_GET(self,) -> None:
         server = cast("_CallbackServer", self.server)
         request = urlsplit(self.path)
 
@@ -75,11 +77,11 @@ class _CallbackHandler(BaseHTTPRequestHandler):
         self._respond(200, "Authentication finished. You can close this tab.")
 
     @staticmethod
-    def _single(params: dict[str, list[str]], key: str) -> str | None:
+    def _single(params: dict[str, list[str]], key: str,) -> str | None:
         values = params.get(key)
         return values[0] if values is not None and len(values) == 1 else None
 
-    def _respond(self, status: int, message: str) -> None:
+    def _respond(self, status: int, message: str,) -> None:
         body = f"<!doctype html><meta charset='utf-8'><p>{message}</p>".encode()
 
         self.send_response(status)

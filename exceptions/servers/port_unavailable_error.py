@@ -1,7 +1,7 @@
-from exceptions.auth.auth_error import AuthError
+from exceptions.servers.server_error import ServerError
 
 
-class PortUnavailableError(AuthError):
+class PortUnavailableError(ServerError):
     def __init__(
         self,
         port: int,
