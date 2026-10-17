@@ -3,7 +3,24 @@ from urllib.parse import urlsplit
 from pydantic import field_validator
 
 from config.base_config_model import BaseConfigModel
-from exceptions.config.server_config_error import ServerConfigError
+from exceptions.config.server.redirect_uri_has_fragment_error import (
+    RedirectUriHasFragmentError,
+)
+from exceptions.config.server.redirect_uri_has_query_error import (
+    RedirectUriHasQueryError,
+)
+from exceptions.config.server.redirect_uri_invalid_host_error import (
+    RedirectUriInvalidHostError,
+)
+from exceptions.config.server.redirect_uri_no_callback_path_error import (
+    RedirectUriNoCallbackPathError,
+)
+from exceptions.config.server.redirect_uri_no_port_error import (
+    RedirectUriNoPortError,
+)
+from exceptions.config.server.redirect_uri_not_http_error import (
+    RedirectUriNotHttpError,
+)
 
 
 class ServerConfig(BaseConfigModel):
@@ -15,21 +32,23 @@ class ServerConfig(BaseConfigModel):
         parts = urlsplit(value)
 
         if parts.scheme != "http":
-            raise ServerConfigError("must start with http://")
+            raise RedirectUriNotHttpError(scheme=parts.scheme)
         if parts.hostname not in {"localhost", "127.0.0.1"}:
-            raise ServerConfigError("host must be localhost or 127.0.0.1")
+            raise RedirectUriInvalidHostError(host=parts.hostname)
         if parts.port is None:
-            raise ServerConfigError("must include a port, e.g. :16501")
+            raise RedirectUriNoPortError(port=parts.port)
         if parts.path in {"", "/"}:
-            raise ServerConfigError("must include a callback path, e.g. /callback")
-        if parts.query or parts.fragment:
-            raise ServerConfigError("must not contain a query string or fragment")
+            raise RedirectUriNoCallbackPathError(path=parts.path)
+        if parts.query:
+            raise RedirectUriHasQueryError(query=parts.query)
+        if parts.fragment:
+            raise RedirectUriHasFragmentError(fragment=parts.fragment)
 
         return value
 
     @property
     def host(self) -> str:
-        host =  urlsplit(self.redirect_uri).hostname
+        host = urlsplit(self.redirect_uri).hostname
         assert host is not None
 
         return host
