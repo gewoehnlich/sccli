@@ -1,4 +1,5 @@
 from core.request import Request
+from domain.enums.soundcloud_api_endpoint_enum import SoundcloudApiEndpointEnum
 
 
 class RefreshTokenRequest(Request):
@@ -10,7 +11,7 @@ class RefreshTokenRequest(Request):
     ) -> None:
         super().__init__(
             method="POST",
-            url="https://secure.soundcloud.com/oauth/token",
+            url=SoundcloudApiEndpointEnum.TOKEN.value,
             data={
                 "grant_type": "refresh_token",
                 "client_id": client_id,

@@ -11,6 +11,7 @@ from api_requests.authentication_request import AuthenticationRequest
 from api_requests.refresh_token_request import RefreshTokenRequest
 from core.request import Request
 from core.server import Server
+from domain.enums.soundcloud_api_endpoint_enum import SoundcloudApiEndpointEnum
 from exceptions.auth.authorization_denied_error import AuthorizationDeniedError
 from exceptions.auth.state_mismatch_error import StateMismatchError
 from models.account import Account
@@ -22,48 +23,42 @@ class Auth:
         self,
         client_id: str,
         client_secret: str,
+        redirect_uri: str,
         server: Server,
         account_repository: AccountRepository,
-        authentication_request: type[AuthenticationRequest],
-        refresh_token_request: type[RefreshTokenRequest],
     ) -> None:
-        self.client_id: str = client_id
-        self.client_secret: str = client_secret
-        self.redirect_uri: str = f"http://localhost:{server.port}{server.path}"
+        self._client_id: str = client_id
+        self._client_secret: str = client_secret
+        self._redirect_uri: str = redirect_uri
 
-        self.server: Server = server
-        self.account_repository: AccountRepository = account_repository
-
-        self.authentication_request: type[AuthenticationRequest] = (
-            authentication_request
-        )
-        self.refresh_token_request: type[RefreshTokenRequest] = (
-            refresh_token_request
-        )
+        self._server: Server = server
+        self._account_repository: AccountRepository = account_repository
 
     def get_access_token(
         self,
     ) -> str:
-        account: Account | None = self.account_repository.get_one(
-            key=self.client_id,
+        account: Account | None = self._account_repository.get_one(
+            key=self._client_id,
         )
 
         if not account:
-            return self.__authenticate_user()
+            account = self._authenticate_user()
 
         current_timestamp = int(time.time())
         if current_timestamp > account.expire_timestamp - 100:
-            return self.__refresh_token(
+            account = self._refresh_token(
                 account=account,
             )
 
+        assert account is not None
+
         return account.access_token
 
-    def __refresh_token(
+    def _refresh_token(
         self,
         account: Account,
-    ) -> str:
-        request: Request = self.refresh_token_request(
+    ) -> Account:
+        request: Request = RefreshTokenRequest(
             client_id=account.client_id,
             client_secret=account.client_secret,
             refresh_token=account.refresh_token,
@@ -71,28 +66,28 @@ class Auth:
 
         response: dict[str, Any] = request.send()
 
-        account: Account = self.account_repository.store(
+        updated_account: Account = self._account_repository.store(
             model=Account(
-                client_id=self.client_id,
-                client_secret=self.client_secret,
+                client_id=self._client_id,
+                client_secret=self._client_secret,
                 access_token=str(response["access_token"]),
                 refresh_token=str(response["refresh_token"]),
                 expire_timestamp=int(time.time()) + int(response["expires_in"]),
             ),
         )
 
-        return account.access_token
+        return updated_account
 
-    def __authenticate_user(
+    def _authenticate_user(
         self,
-    ) -> str:
-        code_verifier, code_challenge = self.__generate_pkce()
-        state = self.__generate_state()
+    ) -> Account:
+        code_verifier, code_challenge = self._generate_pkce()
+        state = self._generate_state()
 
         query: str = urlencode(
             {
-                "client_id": self.client_id,
-                "redirect_uri": self.redirect_uri,
+                "client_id": self._client_id,
+                "redirect_uri": self._redirect_uri,
                 "response_type": "code",
                 "code_challenge": code_challenge,
                 "code_challenge_method": "S256",
@@ -100,17 +95,17 @@ class Auth:
             }
         )
 
-        auth_url: str = f"https://secure.soundcloud.com/authorize?{query}"
+        auth_url: str = SoundcloudApiEndpointEnum.AUTHORIZATION.value + "?" + query
 
-        self.server.start()
+        self._server.start()
 
         try:
             if not webbrowser.open(auth_url):
                 print(f"Open this URL in your browser:\n{auth_url}")
 
-            result = self.server.wait_for_callback(timeout=300)
+            result = self._server.wait_for_callback(timeout=300)
         finally:
-            self.server.stop()
+            self._server.stop()
 
         if result.error is not None:
             raise AuthorizationDeniedError(result.error)
@@ -124,36 +119,43 @@ class Auth:
 
         auth_code: str = result.code
 
-        request: Request = self.authentication_request(
-            self.client_id,
-            self.client_secret,
-            self.redirect_uri,
-            code_verifier,
-            auth_code,
+        request: Request = AuthenticationRequest(
+            client_id=self._client_id,
+            client_secret=self._client_secret,
+            redirect_uri=self._redirect_uri,
+            code_verifier=code_verifier,
+            auth_code=auth_code,
         )
 
         response: dict[str, Any] = request.send()
 
-        account: Account = self.account_repository.store(
+        account: Account = self._account_repository.store(
             model=Account(
-                client_id=self.client_id,
-                client_secret=self.client_secret,
+                client_id=self._client_id,
+                client_secret=self._client_secret,
                 access_token=str(response["access_token"]),
                 refresh_token=str(response["refresh_token"]),
                 expire_timestamp=int(time.time()) + int(response["expires_in"]),
             ),
         )
 
-        return account.access_token
+        return account
 
-    def __generate_pkce(self) -> tuple[str, str]:
+    def _generate_pkce(self) -> tuple[str, str]:
         code_verifier: str = (
-            base64.urlsafe_b64encode(os.urandom(40)).decode("utf-8").rstrip("=")
+            base64.urlsafe_b64encode(
+                os.urandom(40),
+            )
+            .decode("utf-8")
+            .rstrip("=")
         )
 
         code_challenge: str = (
             base64.urlsafe_b64encode(
-                hashlib.sha256(code_verifier.encode()).digest()
+                hashlib.sha256(
+                    code_verifier.encode(),
+                )
+                .digest()
             )
             .decode("utf-8")
             .rstrip("=")
@@ -161,9 +163,13 @@ class Auth:
 
         return code_verifier, code_challenge
 
-    def __generate_state(self) -> str:
+    def _generate_state(self) -> str:
         state: str = (
-            base64.urlsafe_b64encode(os.urandom(16)).decode().rstrip("=")
+            base64.urlsafe_b64encode(
+                os.urandom(16),
+            )
+            .decode()
+            .rstrip("=")
         )
 
         return state

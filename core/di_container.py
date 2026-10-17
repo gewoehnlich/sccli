@@ -53,15 +53,14 @@ class DiContainer:
             path=self.config.server.path,
         )
 
-        self.requests = RequestsContainer()
+        self.requests: RequestsContainer = RequestsContainer()
 
-        self.auth = Auth(
+        self.auth: Auth = Auth(
             client_id=self.config.soundcloud.client_id,
             client_secret=self.config.soundcloud.client_secret,
+            redirect_uri=self.config.server.redirect_uri,
             server=self.server,
             account_repository=self.repositories.account,
-            authentication_request=self.requests.authentication,
-            refresh_token_request=self.requests.refresh_token,
         )
 
         self.tasks = TasksContainer(

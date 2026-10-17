@@ -54,7 +54,7 @@ class HttpServer(Server):
 
 class _CallbackServer(HTTPServer):
     result: CallbackResult | None = None
-    callback_path: str = "/callback"
+    callback_path: str
 
 
 class _CallbackHandler(BaseHTTPRequestHandler):
