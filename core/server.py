@@ -6,9 +6,11 @@ from values.callback_result import CallbackResult
 class Server(ABC):
     def __init__(
         self,
+        host: str,
         port: int,
         path: str,
     ) -> None:
+        self.host = host
         self.port = port
         self.path = path
 

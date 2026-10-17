@@ -7,8 +7,6 @@ import webbrowser
 from typing import Any
 from urllib.parse import urlencode
 
-from rich import inspect
-
 from api_requests.authentication_request import AuthenticationRequest
 from api_requests.refresh_token_request import RefreshTokenRequest
 from core.request import Request
@@ -108,12 +106,9 @@ class Auth:
 
         try:
             if not webbrowser.open(auth_url):
-                print(
-                    f"Open this URL in your browser:\n{auth_url}"
-                )  # headless fallback
+                print(f"Open this URL in your browser:\n{auth_url}")
 
             result = self.server.wait_for_callback(timeout=300)
-            inspect(result)
         finally:
             self.server.stop()
 

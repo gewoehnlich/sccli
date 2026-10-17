@@ -10,10 +10,8 @@ from values.callback_result import CallbackResult
 
 
 class HttpServer(Server):
-    HOST = "127.0.0.1"
-
-    def __init__(self, port: int, path: str) -> None:
-        super().__init__(port=port, path=path)
+    def __init__(self, host: str, port: int, path: str) -> None:
+        super().__init__(host=host, port=port, path=path)
 
         self._server: _CallbackServer | None = None
 
@@ -22,7 +20,7 @@ class HttpServer(Server):
             raise RuntimeError("Server is already started")
 
         try:
-            server = _CallbackServer((self.HOST, self.port), _CallbackHandler)
+            server = _CallbackServer((self.host, self.port), _CallbackHandler)
         except OSError as e:
             raise PortUnavailableError(port=self.port) from e
 

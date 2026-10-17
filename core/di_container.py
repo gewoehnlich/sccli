@@ -48,6 +48,7 @@ class DiContainer:
         )
 
         self.server: Server = HttpServer(
+            host=self.config.server.host,
             port=self.config.server.port,
             path=self.config.server.path,
         )

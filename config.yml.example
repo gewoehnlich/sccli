@@ -2,5 +2,8 @@ soundcloud:
   client_id:
   client_secret:
 
+server:
+  redirect_uri:
+
 proxy:
   endpoint:
