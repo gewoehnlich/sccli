@@ -1,4 +1,4 @@
-from core.requests.soundcloud_request import SoundcloudRequest
+from core.soundcloud_request import SoundcloudRequest
 
 
 class FetchTrackStreamsRequest(SoundcloudRequest):
@@ -9,6 +9,6 @@ class FetchTrackStreamsRequest(SoundcloudRequest):
     ) -> None:
         super().__init__(
             method="GET",
-            url=self.SOUNDCLOUD_API_LINK + f"/tracks/{track_urn}/streams",
+            url=self.SOUNDCLOUD_API_ENDPOINT + f"/tracks/{track_urn}/streams",
             access_token=access_token,
         )

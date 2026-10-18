@@ -1,6 +1,6 @@
 from typing import Any
 
-from core.requests.soundcloud_request import SoundcloudRequest
+from core.soundcloud_request import SoundcloudRequest
 
 
 class FetchMyLikedTracksRequest(SoundcloudRequest):
@@ -10,7 +10,7 @@ class FetchMyLikedTracksRequest(SoundcloudRequest):
         url: str | None = None,
     ) -> None:
         if not url:
-            url = self.SOUNDCLOUD_API_LINK + "/me/likes/tracks"
+            url = self.SOUNDCLOUD_API_ENDPOINT + "/me/likes/tracks"
 
         params: dict[str, Any] = {
             "limit": 50,

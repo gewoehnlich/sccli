@@ -1,4 +1,4 @@
-from core.requests.soundcloud_request import SoundcloudRequest
+from core.soundcloud_request import SoundcloudRequest
 
 
 class FetchTrackFromStreamingUrlRequest(SoundcloudRequest):

@@ -1,4 +1,4 @@
-from core.requests.soundcloud_request import SoundcloudRequest
+from core.soundcloud_request import SoundcloudRequest
 
 
 class UserInfoRequest(SoundcloudRequest):
@@ -7,4 +7,4 @@ class UserInfoRequest(SoundcloudRequest):
 
         self.method = "GET"
 
-        self.url = self.SOUNDCLOUD_API_LINK + "/me"
+        self.url = self.SOUNDCLOUD_API_ENDPOINT + "/me"

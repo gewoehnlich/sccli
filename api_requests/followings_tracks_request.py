@@ -1,4 +1,4 @@
-from core.requests.soundcloud_request import SoundcloudRequest
+from core.soundcloud_request import SoundcloudRequest
 
 
 class FollowingsTracksRequest(SoundcloudRequest):
@@ -10,4 +10,4 @@ class FollowingsTracksRequest(SoundcloudRequest):
 
         self.method = "GET"
 
-        self.url = self.SOUNDCLOUD_API_LINK + "/me/followings/tracks"
+        self.url = self.SOUNDCLOUD_API_ENDPOINT + "/me/followings/tracks"

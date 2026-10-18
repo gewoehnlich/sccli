@@ -1,4 +1,4 @@
-from core.requests.soundcloud_request import SoundcloudRequest
+from core.soundcloud_request import SoundcloudRequest
 
 
 class GetTrackRequest(SoundcloudRequest):
@@ -11,4 +11,4 @@ class GetTrackRequest(SoundcloudRequest):
 
         self.method = "GET"
 
-        self.url = SOUNDCLOUD_API_LINK + f"/tracks/{track_urn}"
+        self.url = self.SOUNDCLOUD_API_ENDPOINT + f"/tracks/{track_urn}"

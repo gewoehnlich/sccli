@@ -1,4 +1,4 @@
-from core.requests.soundcloud_request import SoundcloudRequest
+from core.soundcloud_request import SoundcloudRequest
 
 
 class MeTracksRequest(SoundcloudRequest):
@@ -10,7 +10,7 @@ class MeTracksRequest(SoundcloudRequest):
 
         self.method = "GET"
 
-        self.url = self.SOUNDCLOUD_API_LINK + "/me/tracks"
+        self.url = self.SOUNDCLOUD_API_ENDPOINT + "/me/tracks"
 
         self.params["limit"] = "5"
         self.params["linked_partitioning"] = "true"
