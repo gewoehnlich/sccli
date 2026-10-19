@@ -1,5 +1,5 @@
-from datetime import UTC, datetime
 import time
+from datetime import UTC, datetime
 from typing import Any, cast
 
 import requests
@@ -41,15 +41,11 @@ class Request:
     AUTHORIZATION_API_ENDPOINT: str = (
         SoundcloudApiEndpointEnum.AUTHORIZATION.value
     )
-    TOKEN_API_ENDPOINT: str = (
-        SoundcloudApiEndpointEnum.TOKEN.value
-    )
+    TOKEN_API_ENDPOINT: str = SoundcloudApiEndpointEnum.TOKEN.value
     REFRESH_TOKEN_API_ENDPOINT: str = (
         SoundcloudApiEndpointEnum.REFRESH_TOKEN.value
     )
-    SOUNDCLOUD_API_ENDPOINT: str = (
-        SoundcloudApiEndpointEnum.API.value
-    )
+    SOUNDCLOUD_API_ENDPOINT: str = SoundcloudApiEndpointEnum.API.value
 
     TIMEOUT: tuple[float, float] = (3.05, 15.0)
     MAX_RETRIES: int = 2
@@ -112,10 +108,9 @@ class Request:
                     timeout=self.TIMEOUT,
                 )
             except requests.RequestException as e:
-                if (
-                    isinstance(e, (requests.ConnectionError, requests.Timeout))
-                    and self._retryable(attempt=attempt)
-                ):
+                if isinstance(
+                    e, (requests.ConnectionError, requests.Timeout)
+                ) and self._retryable(attempt=attempt):
                     time.sleep(self._time_to_wait(attempt=attempt))
                     continue
 
