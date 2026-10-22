@@ -14,17 +14,13 @@ class Request:
         SoundcloudApiEndpointEnum.AUTHORIZATION.value
     )
 
-    TOKEN_API_ENDPOINT: str = (
-        SoundcloudApiEndpointEnum.TOKEN.value
-    )
+    TOKEN_API_ENDPOINT: str = SoundcloudApiEndpointEnum.TOKEN.value
 
     REFRESH_TOKEN_API_ENDPOINT: str = (
         SoundcloudApiEndpointEnum.REFRESH_TOKEN.value
     )
 
-    SOUNDCLOUD_API_ENDPOINT: str = (
-        SoundcloudApiEndpointEnum.API.value
-    )
+    SOUNDCLOUD_API_ENDPOINT: str = SoundcloudApiEndpointEnum.API.value
 
     def __init__(
         self,
