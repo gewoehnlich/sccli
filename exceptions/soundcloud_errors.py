@@ -71,9 +71,7 @@ class TooManyRequestsError(ApiError):
         self,
         status: int,
         message: str,
-        retry_after: float | None,
         spam_warning_urn: str | None,
     ) -> None:
         super().__init__(status, message)
-        self.retry_after = retry_after  # seconds, None when unknown
         self.spam_warning_urn = spam_warning_urn
