@@ -11,7 +11,6 @@ from core.action import Action
 from core.auth import Auth
 from core.player import Player
 from di.repositories_container import RepositoriesContainer
-from di.requests_container import RequestsContainer
 from di.tasks_container import TasksContainer
 
 
@@ -19,7 +18,6 @@ class ActionsContainer:
     def __init__(
         self,
         auth: Auth,
-        requests: RequestsContainer,
         repositories: RepositoriesContainer,
         messages: MessagesConfig,
         tasks: TasksContainer,
@@ -43,7 +41,6 @@ class ActionsContainer:
 
         self.fetch_my_liked_tracks: Action = FetchMyLikedTracksAction(
             auth=auth,
-            request=requests.fetch_my_liked_tracks,
             track_repository=repositories.track,
             user_repository=repositories.user,
         )
@@ -52,5 +49,4 @@ class ActionsContainer:
             auth=auth,
             player=player,
             fetch_track_streams_task=tasks.fetch_track_streams,
-            serve_track_task=tasks.serve_track,
         )

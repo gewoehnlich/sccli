@@ -20,8 +20,8 @@ class Request:
         method: str,
         url: str,
         headers: dict[str, str] | None = None,
-        params: dict[str, str] | None = None,
-        data: dict[str, str] | None = None,
+        params: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
         access_token: str | None = None,
     ) -> None:
         method = method.upper()
@@ -84,7 +84,6 @@ class Request:
             raise BuildUrlError("Could not build the URL")
 
         return url
-
 
     @staticmethod
     def _parse_body(

@@ -13,15 +13,10 @@ class PlayTrackAction(Action):
         auth: Auth,
         player: Player,
         fetch_track_streams_task: Task,
-        serve_track_task: Task,
     ) -> None:
-        super().__init__(
-            auth=auth,
-        )
-
-        self.player = player
+        self.auth: Auth = auth
+        self.player: Player = player
         self.fetch_track_streams_task = fetch_track_streams_task
-        self.serve_track_task = serve_track_task
 
     def run(
         self,

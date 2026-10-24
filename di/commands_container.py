@@ -6,14 +6,12 @@ from commands.unknown_command import UnknownCommand
 from commands.welcome_command import WelcomeCommand
 from core.command import Command
 from di.actions_container import ActionsContainer
-from di.resources_container import ResourcesContainer
 
 
 class CommandsContainer:
     def __init__(
         self,
         actions: ActionsContainer,
-        resources: ResourcesContainer,
     ) -> None:
         self.welcome: Command = WelcomeCommand(
             action=actions.get_welcome_message,
@@ -33,7 +31,6 @@ class CommandsContainer:
 
         self.liked_tracks: Command = MyLikedTracksCommand(
             action=actions.fetch_my_liked_tracks,
-            resource=resources.pprint,
         )
 
         self.play: Command = PlayTrackCommand(

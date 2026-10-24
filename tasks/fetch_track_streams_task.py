@@ -1,7 +1,7 @@
 from typing import Any
 
-from api_requests.fetch_track_streams_request import FetchTrackStreamsRequest
 from core.auth import Auth
+from core.request import Request
 from core.task import Task
 
 
@@ -9,20 +9,17 @@ class FetchTrackStreamsTask(Task):
     def __init__(
         self,
         auth: Auth,
-        request: type[FetchTrackStreamsRequest],
     ) -> None:
-        super().__init__(
-            auth=auth,
-            request=request,
-        )
+        self.auth: Auth = auth
 
     def run(
         self,
         track_urn: str = "soundcloud:tracks:1815509691",
     ) -> dict[str, Any]:
-        request = self.request(
-            access_token=self.auth.get_access_token(),
-            track_urn=track_urn,
+        request: Request = Request(
+            method=Request.METHOD.GET,
+            url=Request.URL.API + f"/tracks/{track_urn}/streams",
+            access_token=self.auth.access_token(),
         )
 
         response: dict[str, Any] = request.send()

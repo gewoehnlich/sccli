@@ -1,3 +1,5 @@
+from typing import Callable
+
 from core.action import Action
 from core.resource import Resource
 
@@ -18,10 +20,13 @@ class Command:
 
     def run(
         self,
+        output: Callable[[str], None],
     ) -> None:
         result = self.action.run()
 
-        if self.resource:
-            self.resource.print(data=result)
-        else:
-            print(result)
+        output(result)
+        #
+        # if self.resource:
+        #     self.resource.print(data=result)
+        # else:
+        #     print(result)

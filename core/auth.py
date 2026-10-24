@@ -66,7 +66,7 @@ class Auth:
                 "code_challenge": code_challenge,
                 "code_challenge_method": "S256",
                 "state": state,
-            }
+            },
         ).build_url()
 
         self._server.start()

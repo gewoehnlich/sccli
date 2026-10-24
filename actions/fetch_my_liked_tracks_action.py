@@ -4,6 +4,7 @@ from typing import Any
 from core.action import Action
 from core.auth import Auth
 from core.request import Request
+from models.track import Track
 from models.user import User
 from repositories.track_repository import TrackRepository
 from repositories.user_repository import UserRepository
@@ -13,17 +14,12 @@ class FetchMyLikedTracksAction(Action):
     def __init__(
         self,
         auth: Auth,
-        request: type[Request],
         track_repository: TrackRepository,
         user_repository: UserRepository,
     ) -> None:
-        super().__init__(
-            auth=auth,
-            request=request,
-        )
-
-        self.track_repository = track_repository
-        self.user_repository = user_repository
+        self.auth: Auth = auth
+        self.track_repository: TrackRepository = track_repository
+        self.user_repository: UserRepository = user_repository
 
     def run(
         self,
@@ -32,15 +28,16 @@ class FetchMyLikedTracksAction(Action):
         next_href: str | None = None
 
         while not fetched:
-            if next_href:
-                request = self.request(
-                    access_token=self.auth.get_access_token(),
-                    url=next_href,
-                )
-            else:
-                request = self.request(
-                    access_token=self.auth.get_access_token(),
-                )
+            request = Request(
+                method=Request.METHOD.GET,
+                url=next_href if next_href else Request.URL.API + "/me/likes/tracks",
+                params={
+                    "limit": 100,
+                    "access": "playable",
+                    "linked_partitioning": True,
+                },
+                access_token=self.auth.get_access_token(),
+            )
 
             response: dict[str, Any] = request.send()
 

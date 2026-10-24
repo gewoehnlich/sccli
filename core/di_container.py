@@ -8,13 +8,10 @@ from core.config_loader import ConfigLoader
 from core.database import Database
 from core.logger import Logger
 from core.server import Server
-from core.shell import Shell
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from di.repositories_container import RepositoriesContainer
-from di.requests_container import RequestsContainer
-from di.resources_container import ResourcesContainer
 from di.tasks_container import TasksContainer
 from di.views_container import ViewsContainer
 from players.mpv_player import MpvPlayer
@@ -53,8 +50,6 @@ class DiContainer:
             path=self.config.server.path,
         )
 
-        self.requests: RequestsContainer = RequestsContainer()
-
         self.auth: Auth = Auth(
             client_id=self.config.soundcloud.client_id,
             client_secret=self.config.soundcloud.client_secret,
@@ -63,38 +58,28 @@ class DiContainer:
             account_repository=self.repositories.account,
         )
 
-        self.tasks = TasksContainer(
-            auth=self.auth,
-            requests=self.requests,
-            repositories=self.repositories,
-            messages=self.config.messages,
-            server=self.server,
-        )
-
         self.player = MpvPlayer(
             auth=self.auth,
             http_proxy=self.config.proxy.endpoint,
             logger=self.logger,
         )
 
+        self.tasks = TasksContainer(
+            auth=self.auth,
+            repositories=self.repositories,
+            messages=self.config.messages,
+        )
+
         self.actions = ActionsContainer(
             auth=self.auth,
-            requests=self.requests,
             repositories=self.repositories,
             messages=self.config.messages,
             tasks=self.tasks,
             player=self.player,
         )
 
-        self.resources = ResourcesContainer()
-
         self.commands = CommandsContainer(
             actions=self.actions,
-            resources=self.resources,
         )
 
         self.views = ViewsContainer()
-
-        self.shell = Shell(
-            commands=self.commands,
-        )

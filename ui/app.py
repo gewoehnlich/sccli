@@ -1,5 +1,5 @@
 from textual.app import App as BaseApp, ComposeResult
-from textual.containers import Horizontal
+from textual.containers import Horizontal, Vertical
 from textual.message import Message
 from textual.reactive import Reactive, reactive
 from textual.widgets import Footer, Header, Input
@@ -45,13 +45,18 @@ class App(BaseApp):
             show_clock=True,
             id="header",
         )
+
         with Horizontal():
-            with Horizontal():
+            with Vertical():
                 yield MusicPlayer().data_bind(
                     selected_track_index=App.selected_track_index,
                     tracks=App.tracks,
                 )
-                yield Shell()
+                yield Shell(
+                    id="shell",
+                    commands=self.commands,
+                )
+
             yield TrackList(
                 track_view=self.di_container.views.track,
                 logger=self.logger,
@@ -60,18 +65,18 @@ class App(BaseApp):
                 selected_track_index=App.selected_track_index,
                 tracks=App.tracks,
             )
-        yield Shell()
+
         yield Footer(id="footer")
 
     def on_mount(self) -> None:
         self.theme = "rose-pine"
         self.styles.height = "100%"
 
-        self.query_one(MusicPlayer).styles.max_width = "50%"
-        self.query_one(MusicPlayer).styles.height = "90%"
-        self.query_one(Shell).styles.max_width = "50%"
-        self.query_one(Shell).styles.height = "10%"
-        self.query_one(TrackList).styles.max_width = "50%"
+        self.query_one(MusicPlayer).styles.max_width = "100%"
+        self.query_one(MusicPlayer).styles.height = "70%"
+        self.query_one(Shell).styles.max_width = "100%"
+        self.query_one(Shell).styles.height = "30%"
+        self.query_one(TrackList).styles.max_width = "100%"
         self.query_one(TrackList).styles.height = "100%"
 
         self.tracks = self.track_repository.get()
