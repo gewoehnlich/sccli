@@ -26,7 +26,7 @@ class PlayTrackAction(Action):
             track_urn=track.urn,
         )
 
-        streaming_url: str = streams["http_mp3_128_url"]
+        streaming_url: str = streams["hls_aac_160_url"]
 
         self.player.play(
             link=streaming_url,

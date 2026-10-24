@@ -22,7 +22,7 @@ class FetchTrackStreamsTask(Task):
         request: Request = Request(
             method=Request.METHOD.GET,
             url=Request.URL.API + f"/tracks/{track_urn}/streams",
-            access_token=self.auth.access_token(),
+            access_token=self.auth.get_access_token(),
         )
 
         response: dict[str, Any] = self.http_client.send(request)
