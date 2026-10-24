@@ -5,13 +5,9 @@ import secrets
 import time
 import webbrowser
 from typing import Any
-from urllib.parse import urlencode
 
-from api_requests.authentication_request import AuthenticationRequest
-from api_requests.refresh_token_request import RefreshTokenRequest
 from core.request import Request
 from core.server import Server
-from domain.enums.soundcloud_api_endpoint_enum import SoundcloudApiEndpointEnum
 from exceptions.auth.authorization_denied_error import AuthorizationDeniedError
 from exceptions.auth.state_mismatch_error import StateMismatchError
 from models.account import Account
@@ -38,7 +34,7 @@ class Auth:
         self,
     ) -> str:
         account: Account | None = self._account_repository.get_one(
-            key=self._client_id,
+            primary_key=self._client_id,
         )
 
         if not account:
@@ -54,38 +50,16 @@ class Auth:
 
         return account.access_token
 
-    def _refresh_token(
-        self,
-        account: Account,
-    ) -> Account:
-        request: Request = RefreshTokenRequest(
-            client_id=account.client_id,
-            client_secret=account.client_secret,
-            refresh_token=account.refresh_token,
-        )
-
-        response: dict[str, Any] = request.send()
-
-        updated_account: Account = self._account_repository.store(
-            model=Account(
-                client_id=self._client_id,
-                client_secret=self._client_secret,
-                access_token=str(response["access_token"]),
-                refresh_token=str(response["refresh_token"]),
-                expire_timestamp=int(time.time()) + int(response["expires_in"]),
-            ),
-        )
-
-        return updated_account
-
     def _authenticate_user(
         self,
     ) -> Account:
         code_verifier, code_challenge = self._generate_pkce()
         state = self._generate_state()
 
-        query: str = urlencode(
-            {
+        auth_url: str = Request(
+            method="GET",
+            url=Request.AUTHORIZATION_API_ENDPOINT,
+            params={
                 "client_id": self._client_id,
                 "redirect_uri": self._redirect_uri,
                 "response_type": "code",
@@ -93,11 +67,7 @@ class Auth:
                 "code_challenge_method": "S256",
                 "state": state,
             }
-        )
-
-        auth_url: str = (
-            SoundcloudApiEndpointEnum.AUTHORIZATION.value + "?" + query
-        )
+        ).build_url()
 
         self._server.start()
 
@@ -121,12 +91,17 @@ class Auth:
 
         auth_code: str = result.code
 
-        request: Request = AuthenticationRequest(
-            client_id=self._client_id,
-            client_secret=self._client_secret,
-            redirect_uri=self._redirect_uri,
-            code_verifier=code_verifier,
-            auth_code=auth_code,
+        request: Request = Request(
+            method="POST",
+            url=Request.TOKEN_API_ENDPOINT,
+            data={
+                "grant_type": "authorization_code",
+                "client_id": self._client_id,
+                "client_secret": self._client_secret,
+                "redirect_uri": self._redirect_uri,
+                "code_verifier": code_verifier,
+                "code": auth_code,
+            },
         )
 
         response: dict[str, Any] = request.send()
@@ -142,6 +117,35 @@ class Auth:
         )
 
         return account
+
+    def _refresh_token(
+        self,
+        account: Account,
+    ) -> Account:
+        request: Request = Request(
+            method="POST",
+            url=Request.REFRESH_TOKEN_API_ENDPOINT,
+            data={
+                "grant_type": "refresh_token",
+                "client_id": account.client_id,
+                "client_secret": account.client_secret,
+                "refresh_token": account.refresh_token,
+            },
+        )
+
+        response: dict[str, Any] = request.send()
+
+        updated_account: Account = self._account_repository.store(
+            model=Account(
+                client_id=account.client_id,
+                client_secret=account.client_secret,
+                access_token=str(response["access_token"]),
+                refresh_token=str(response["refresh_token"]),
+                expire_timestamp=int(time.time()) + int(response["expires_in"]),
+            ),
+        )
+
+        return updated_account
 
     def _generate_pkce(self) -> tuple[str, str]:
         code_verifier: str = (

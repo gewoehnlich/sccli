@@ -75,3 +75,5 @@ class TooManyRequestsError(ApiError):
     ) -> None:
         super().__init__(status, message)
         self.spam_warning_urn = spam_warning_urn
+
+class BuildUrlError(Exception): ...

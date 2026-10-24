@@ -82,6 +82,17 @@ class Request:
 
         raise error
 
+    def build_url(
+        self,
+    ) -> str:
+        url = self._request.prepare().url
+
+        if url is None:
+            raise BuildUrlError("Could not build the URL")
+
+        return url
+
+
     @staticmethod
     def _parse_body(
         response: Response,
