@@ -23,6 +23,10 @@ class Urls:
 
 class Request:
     _session = requests.Session()
+    _session.proxies.update({
+        "http": "http://172.17.0.1:52048",
+        "https": "http://172.17.0.1:52048",
+    })
 
     METHOD: HttpMethods = HttpMethods()
 

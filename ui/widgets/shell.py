@@ -94,8 +94,7 @@ class Shell(Vertical):
                     output=self.write,
                 )
             case "exit" | "quit" | "q":
-                print(123)
-                #
+                self.write("exit")
                 # self.app.exit()
             case _:
                 self.commands.unknown.run(

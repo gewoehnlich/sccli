@@ -34,7 +34,7 @@ class FetchMyLikedTracksAction(Action):
                 if next_href
                 else Request.URL.API + "/me/likes/tracks",
                 data={
-                    "limit": 100,
+                    "limit": 200,
                     "access": "playable",
                     "linked_partitioning": True,
                 },
