@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 import requests
 from pytest_mock import MockerFixture
+from rich import inspect
 
 from core.request import Request
 from exceptions.soundcloud_errors import *
@@ -51,12 +52,8 @@ def respond(
     send_mock.return_value = make_response(status, body, raw)
 
 
-def test_method_is_uppercased() -> None:
-    assert Request("get", URL)._request.method == "GET"
-
-
 def test_default_headers_are_set() -> None:
-    headers = Request("GET", URL)._request.headers
+    headers = Request(Request.METHOD.GET, URL)._request.headers
 
     assert headers["Accept"] == "application/json; charset=utf-8"
     assert headers["Content-Type"] == "application/x-www-form-urlencoded"
@@ -65,7 +62,7 @@ def test_default_headers_are_set() -> None:
 
 def test_custom_headers_are_not_overridden() -> None:
     headers = Request(
-        "GET",
+        Request.METHOD.GET,
         URL,
         headers={"Accept": "text/plain", "Content-Type": "application/json"},
     )._request.headers
@@ -76,7 +73,7 @@ def test_custom_headers_are_not_overridden() -> None:
 
 def test_access_token_sets_authorization_header() -> None:
     headers = Request(
-        "GET",
+        Request.METHOD.GET,
         URL,
         access_token="abc123",
     )._request.headers
@@ -86,7 +83,7 @@ def test_access_token_sets_authorization_header() -> None:
 
 def test_params_and_data_are_stored() -> None:
     request = Request(
-        "POST",
+        Request.METHOD.POST,
         URL,
         params={"q": "lofi"},
         data={"grant_type": "refresh_token"},
@@ -97,7 +94,7 @@ def test_params_and_data_are_stored() -> None:
 
 
 def test_params_and_data_default_to_empty() -> None:
-    request = Request("GET", URL)._request
+    request = Request(Request.METHOD.GET, URL)._request
 
     assert request.params == {}
     assert request.data == {}
@@ -108,7 +105,7 @@ def test_returns_parsed_json_object(
 ) -> None:
     respond(send_mock, 200, {"id": 1, "username": "me"})
 
-    assert Request("GET", URL).send() == {"id": 1, "username": "me"}
+    assert Request(Request.METHOD.GET, URL).send() == {"id": 1, "username": "me"}
 
 
 def test_sends_prepared_request_built_from_inputs(
@@ -117,7 +114,7 @@ def test_sends_prepared_request_built_from_inputs(
     respond(send_mock, 200, {})
 
     Request(
-        "get",
+        Request.METHOD.GET,
         URL,
         params={"q": "lofi"},
         access_token="tok",
@@ -126,7 +123,7 @@ def test_sends_prepared_request_built_from_inputs(
     prepared = send_mock.call_args.kwargs["request"]
 
     assert isinstance(prepared, requests.PreparedRequest)
-    assert prepared.method == "GET"
+    assert prepared.method == Request.METHOD.GET.value
     assert prepared.url == f"{URL}?q=lofi"
     assert prepared.headers["Authorization"] == "OAuth tok"
 
@@ -136,7 +133,7 @@ def test_post_data_is_form_encoded(
 ) -> None:
     respond(send_mock, 200, {})
 
-    Request("POST", URL, data={"a": "1", "b": "2"}).send()
+    Request(Request.METHOD.POST, URL, data={"a": "1", "b": "2"}).send()
 
     prepared = send_mock.call_args.kwargs["request"]
 
@@ -148,7 +145,7 @@ def test_204_returns_empty_dict(
 ) -> None:
     respond(send_mock, 204)
 
-    assert Request("DELETE", URL).send() == {}
+    assert Request(Request.METHOD.DELETE, URL).send() == {}
 
 
 def test_empty_body_returns_empty_dict(
@@ -156,7 +153,7 @@ def test_empty_body_returns_empty_dict(
 ) -> None:
     respond(send_mock, 200, raw=b"")
 
-    assert Request("GET", URL).send() == {}
+    assert Request(Request.METHOD.GET, URL).send() == {}
 
 
 @pytest.mark.parametrize(
@@ -174,7 +171,7 @@ def test_request_exceptions_become_connection_error(
     send_mock.side_effect = exc
 
     with pytest.raises(SoundcloudConnectionError) as info:
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
     assert info.value.__cause__ is exc
     assert type(exc).__name__ in str(info.value)
@@ -186,7 +183,7 @@ def test_non_json_success_body_raises_invalid_response(
     respond(send_mock, 200, raw=b"<html>nope</html>")
 
     with pytest.raises(InvalidResponseError):
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
 
 @pytest.mark.parametrize(
@@ -205,7 +202,7 @@ def test_non_object_json_raises_invalid_response(
     send_mock.return_value = make_response(200, raw=json.dumps(body).encode())
 
     with pytest.raises(InvalidResponseError):
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
 
 @pytest.mark.parametrize(
@@ -235,7 +232,7 @@ def test_oauth_errors(
     respond(send_mock, status, {"message": message})
 
     with pytest.raises(ApiError) as info:
-        Request("POST", URL).send()
+        Request(Request.METHOD.POST, URL).send()
 
     assert type(info.value) is expected
 
@@ -256,7 +253,7 @@ def test_oauth_message_ignored_for_other_statuses(
     respond(send_mock, status, {"message": "invalid_grant"})
 
     with pytest.raises(ApiError) as info:
-        Request("POST", URL).send()
+        Request(Request.METHOD.POST, URL).send()
 
     assert type(info.value) is not InvalidGrantError
 
@@ -281,7 +278,7 @@ def test_status_code_mapping(
     respond(send_mock, status, {"message": "something went wrong"})
 
     with pytest.raises(ApiError) as info:
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
     assert type(info.value) is expected
 
@@ -301,7 +298,7 @@ def test_other_5xx_become_server_error(
     respond(send_mock, status, {"message": "down"})
 
     with pytest.raises(ApiError) as info:
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
     assert type(info.value) is ServerError
 
@@ -322,7 +319,7 @@ def test_unmapped_4xx_become_generic_api_error(
     respond(send_mock, status, {"message": "meh"})
 
     with pytest.raises(ApiError) as info:
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
     assert type(info.value) is ApiError
 
@@ -337,7 +334,7 @@ def test_429_with_spam_warning_urn(
     )
 
     with pytest.raises(TooManyRequestsError):
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
 
 def test_429_without_spam_warning_urn(
@@ -346,7 +343,7 @@ def test_429_without_spam_warning_urn(
     respond(send_mock, 429, {"message": "slow down"})
 
     with pytest.raises(TooManyRequestsError):
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
 
 def test_error_with_empty_body_still_maps_by_status(
@@ -355,7 +352,7 @@ def test_error_with_empty_body_still_maps_by_status(
     respond(send_mock, 404, raw=b"")
 
     with pytest.raises(NotFoundError):
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()
 
 
 def test_error_without_message_key_still_maps_by_status(
@@ -364,4 +361,4 @@ def test_error_without_message_key_still_maps_by_status(
     respond(send_mock, 403, {"errors": []})
 
     with pytest.raises(ForbiddenError):
-        Request("GET", URL).send()
+        Request(Request.METHOD.GET, URL).send()

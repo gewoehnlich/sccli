@@ -3,9 +3,22 @@ from typing import Any, cast
 import requests
 from requests import Request as BaseRequest, Response
 
-from domain.enums.http_methods import HttpMethods
-from domain.enums.soundcloud_api_endpoints import SoundcloudApiEndpoints
+from domain.enums.http_method_enum import HttpMethodEnum
 from exceptions.soundcloud_errors import *
+
+
+class HttpMethods:
+    GET: HttpMethodEnum = HttpMethodEnum.GET
+    POST: HttpMethodEnum = HttpMethodEnum.POST
+    PUT: HttpMethodEnum = HttpMethodEnum.PUT
+    DELETE: HttpMethodEnum = HttpMethodEnum.DELETE
+
+
+class Urls:
+    AUTHORIZATION = "https://secure.soundcloud.com/authorize"
+    TOKEN = "https://secure.soundcloud.com/oauth/token"
+    REFRESH_TOKEN = "https://secure.soundcloud.com/oauth/token"
+    API = "https://api.soundcloud.com"
 
 
 class Request:
@@ -13,19 +26,17 @@ class Request:
 
     METHOD: HttpMethods = HttpMethods()
 
-    URL: SoundcloudApiEndpoints = SoundcloudApiEndpoints()
+    URL: Urls = Urls()
 
     def __init__(
         self,
-        method: str,
+        method: HttpMethodEnum,
         url: str,
         headers: dict[str, str] | None = None,
         params: dict[str, Any] | None = None,
         data: dict[str, Any] | None = None,
         access_token: str | None = None,
     ) -> None:
-        method = method.upper()
-
         if data is None:
             data = {}
 
@@ -45,7 +56,7 @@ class Request:
             headers["Authorization"] = f"OAuth {access_token}"
 
         self._request = BaseRequest(
-            method=method,
+            method=method.value,
             url=url,
             headers=headers,
             params=params,
