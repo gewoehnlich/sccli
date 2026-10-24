@@ -6,6 +6,7 @@ import time
 import webbrowser
 from typing import Any
 
+from core.http_client import HttpClient
 from core.request import Request
 from core.server import Server
 from exceptions.auth.authorization_denied_error import AuthorizationDeniedError
@@ -22,6 +23,7 @@ class Auth:
         redirect_uri: str,
         server: Server,
         account_repository: AccountRepository,
+        http_client: HttpClient,
     ) -> None:
         self._client_id: str = client_id
         self._client_secret: str = client_secret
@@ -29,6 +31,7 @@ class Auth:
 
         self._server: Server = server
         self._account_repository: AccountRepository = account_repository
+        self._http_client: HttpClient = http_client
 
     def get_access_token(
         self,
@@ -104,7 +107,7 @@ class Auth:
             },
         )
 
-        response: dict[str, Any] = request.send()
+        response: dict[str, Any] = self._http_client.send(request)
 
         account: Account = self._account_repository.store(
             model=Account(
@@ -133,7 +136,7 @@ class Auth:
             },
         )
 
-        response: dict[str, Any] = request.send()
+        response: dict[str, Any] = self._http_client.send(request)
 
         updated_account: Account = self._account_repository.store(
             model=Account(

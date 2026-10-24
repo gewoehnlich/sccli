@@ -9,6 +9,7 @@ from actions.play_track_action import PlayTrackAction
 from config.messages import MessagesConfig
 from core.action import Action
 from core.auth import Auth
+from core.http_client import HttpClient
 from core.player import Player
 from di.repositories_container import RepositoriesContainer
 from di.tasks_container import TasksContainer
@@ -22,6 +23,7 @@ class ActionsContainer:
         messages: MessagesConfig,
         tasks: TasksContainer,
         player: Player,
+        http_client: HttpClient,
     ) -> None:
         self.get_welcome_message: Action = GetWelcomeMessageAction(
             message=messages.welcome,
@@ -43,6 +45,7 @@ class ActionsContainer:
             auth=auth,
             track_repository=repositories.track,
             user_repository=repositories.user,
+            http_client=http_client,
         )
 
         self.play_track: Action = PlayTrackAction(

@@ -3,6 +3,7 @@ from typing import Any
 
 from core.action import Action
 from core.auth import Auth
+from core.http_client import HttpClient
 from core.request import Request
 from models.track import Track
 from models.user import User
@@ -16,10 +17,12 @@ class FetchMyLikedTracksAction(Action):
         auth: Auth,
         track_repository: TrackRepository,
         user_repository: UserRepository,
+        http_client: HttpClient,
     ) -> None:
         self.auth: Auth = auth
         self.track_repository: TrackRepository = track_repository
         self.user_repository: UserRepository = user_repository
+        self.http_client: HttpClient = http_client
 
     def run(
         self,
@@ -41,7 +44,7 @@ class FetchMyLikedTracksAction(Action):
                 access_token=self.auth.get_access_token(),
             )
 
-            response: dict[str, Any] = request.send()
+            response: dict[str, Any] = self.http_client.send(request)
 
             collection: list[dict[str, Any]] = response["collection"]
             next_href = response["next_href"]

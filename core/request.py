@@ -1,10 +1,9 @@
-from typing import Any, cast
+from typing import Any
 
-import requests
-from requests import Request as BaseRequest, Response
+from requests import Request as BaseRequest
 
 from domain.enums.http_method_enum import HttpMethodEnum
-from exceptions.soundcloud_errors import *
+from exceptions.soundcloud_errors import BuildUrlError, UnsupportedApiEndpointException
 
 
 class HttpMethods:
@@ -22,12 +21,6 @@ class Urls:
 
 
 class Request:
-    _session = requests.Session()
-    _session.proxies.update({
-        "http": "http://172.17.0.1:52048",
-        "https": "http://172.17.0.1:52048",
-    })
-
     METHOD: HttpMethods = HttpMethods()
 
     URL: Urls = Urls()
@@ -74,7 +67,7 @@ class Request:
         if access_token:
             headers["Authorization"] = f"OAuth {access_token}"
 
-        self._request = BaseRequest(
+        self.base_request = BaseRequest(
             method=method.value,
             url=url,
             headers=headers,
@@ -82,102 +75,12 @@ class Request:
             data=data,
         )
 
-    def send(
-        self,
-    ) -> dict[str, Any]:
-        prepared: requests.PreparedRequest = self._session.prepare_request(
-            request=self._request,
-        )
-
-        try:
-            response: Response = self._session.send(
-                request=prepared,
-            )
-        except requests.RequestException as e:
-            raise SoundcloudConnectionError(
-                f"Could not reach SoundCloud: {type(e).__name__})"
-            ) from e
-
-        if response.ok:
-            return self._parse_body(response=response)
-
-        error = self._build_error(response=response)
-
-        raise error
-
     def build_url(
         self,
     ) -> str:
-        url = self._request.prepare().url
+        url = self.base_request.prepare().url
 
         if url is None:
             raise BuildUrlError("Could not build the URL")
 
         return url
-
-    @staticmethod
-    def _parse_body(
-        response: Response,
-    ) -> dict[str, Any]:
-        if response.status_code == 204 or not response.content:
-            return {}
-
-        try:
-            data: Any = response.json()
-        except ValueError as e:
-            raise InvalidResponseError(
-                "SoundCloud returned a non-JSON response"
-            ) from e
-
-        if not isinstance(data, dict):
-            raise InvalidResponseError(
-                f"Expected a JSON object, got {type(data).__name__}"
-            )
-
-        return cast("dict[str, Any]", data)
-
-    def _build_error(
-        self,
-        response: Response,
-    ) -> ApiError:
-        body = self._parse_body(response=response)
-
-        message = str(body.get("message"))
-
-        status = response.status_code
-
-        oauth_errors: dict[str, type[ApiError]] = {
-            "invalid_grant": InvalidGrantError,
-            "unsupported_grant": UnsupportedGrantError,
-            "unsupported_grant_type": UnsupportedGrantError,
-            "invalid_client": InvalidClientError,
-            "invalid_scope": InvalidScopeError,
-            "unauthorized_client": UnauthorizedClientError,
-        }
-
-        if status in (400, 401) and message in oauth_errors:
-            return oauth_errors[message](status, message)
-
-        if status == 429:
-            spam_warning_urn = body.get("spam_warning_urn")
-
-            return TooManyRequestsError(
-                status=status,
-                message=message,
-                spam_warning_urn=spam_warning_urn,
-            )
-
-        status_errors: dict[int, type[ApiError]] = {
-            400: BadRequestError,
-            401: UnauthorizedError,
-            403: ForbiddenError,
-            404: NotFoundError,
-            406: NotAcceptableError,
-            422: UnprocessableEntityError,
-            504: GatewayTimeoutError,
-        }
-        error_class = status_errors.get(status) or (
-            ServerError if status >= 500 else ApiError
-        )
-
-        return error_class(status, message)

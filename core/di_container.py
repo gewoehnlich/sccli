@@ -6,6 +6,7 @@ from core.auth import Auth
 from core.config import Config
 from core.config_loader import ConfigLoader
 from core.database import Database
+from core.http_client import HttpClient
 from core.logger import Logger
 from core.server import Server
 from databases.sqlite_database import SqliteDatabase
@@ -50,12 +51,17 @@ class DiContainer:
             path=self.config.server.path,
         )
 
+        self.http_client: HttpClient = HttpClient(
+            proxy_endpoint=self.config.proxy.endpoint,
+        )
+
         self.auth: Auth = Auth(
             client_id=self.config.soundcloud.client_id,
             client_secret=self.config.soundcloud.client_secret,
             redirect_uri=self.config.server.redirect_uri,
             server=self.server,
             account_repository=self.repositories.account,
+            http_client=self.http_client,
         )
 
         self.player = MpvPlayer(
@@ -68,6 +74,7 @@ class DiContainer:
             auth=self.auth,
             repositories=self.repositories,
             messages=self.config.messages,
+            http_client=self.http_client,
         )
 
         self.actions = ActionsContainer(
@@ -76,6 +83,7 @@ class DiContainer:
             messages=self.config.messages,
             tasks=self.tasks,
             player=self.player,
+            http_client=self.http_client,
         )
 
         self.commands = CommandsContainer(
