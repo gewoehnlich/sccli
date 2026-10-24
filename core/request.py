@@ -33,14 +33,29 @@ class Request:
         method: HttpMethodEnum,
         url: str,
         headers: dict[str, str] | None = None,
-        params: dict[str, Any] | None = None,
         data: dict[str, Any] | None = None,
         access_token: str | None = None,
     ) -> None:
-        if data is None:
-            data = {}
+        if not any(
+            url.startswith(api_endpoint)
+            for api_endpoint in (
+                self.URL.AUTHORIZATION,
+                self.URL.TOKEN,
+                self.URL.REFRESH_TOKEN,
+                self.URL.API,
+            )
+        ):
+            raise UnsupportedApiEndpointException(
+                f"Unsupported API endpoint: {url}"
+            )
 
-        if params is None:
+        if data is None:
+            params = {}
+            data = {}
+        elif method in (self.METHOD.GET, self.METHOD.DELETE):
+            params = data
+            data = {}
+        else:
             params = {}
 
         if headers is None:

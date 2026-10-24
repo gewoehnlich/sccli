@@ -78,3 +78,6 @@ class TooManyRequestsError(ApiError):
 
 
 class BuildUrlError(Exception): ...
+
+
+class UnsupportedApiEndpointException(Exception): ...

@@ -4,12 +4,11 @@ from unittest.mock import MagicMock
 import pytest
 import requests
 from pytest_mock import MockerFixture
-from rich import inspect
 
 from core.request import Request
 from exceptions.soundcloud_errors import *
 
-URL = "https://example.com/test"
+URL = Request.URL.API
 
 
 def make_response(
@@ -82,15 +81,23 @@ def test_access_token_sets_authorization_header() -> None:
 
 
 def test_params_and_data_are_stored() -> None:
-    request = Request(
+    post_request = Request(
         Request.METHOD.POST,
         URL,
-        params={"q": "lofi"},
         data={"grant_type": "refresh_token"},
     )._request
 
-    assert request.params == {"q": "lofi"}
-    assert request.data == {"grant_type": "refresh_token"}
+    assert post_request.params == {}
+    assert post_request.data == {"grant_type": "refresh_token"}
+
+    get_request = Request(
+        Request.METHOD.GET,
+        URL,
+        data={"q": "lofi"},
+    )._request
+
+    assert get_request.params == {"q": "lofi"}
+    assert get_request.data == {}
 
 
 def test_params_and_data_default_to_empty() -> None:
@@ -105,7 +112,10 @@ def test_returns_parsed_json_object(
 ) -> None:
     respond(send_mock, 200, {"id": 1, "username": "me"})
 
-    assert Request(Request.METHOD.GET, URL).send() == {"id": 1, "username": "me"}
+    assert Request(Request.METHOD.GET, URL).send() == {
+        "id": 1,
+        "username": "me",
+    }
 
 
 def test_sends_prepared_request_built_from_inputs(
@@ -116,7 +126,7 @@ def test_sends_prepared_request_built_from_inputs(
     Request(
         Request.METHOD.GET,
         URL,
-        params={"q": "lofi"},
+        data={"q": "lofi"},
         access_token="tok",
     ).send()
 
@@ -124,7 +134,7 @@ def test_sends_prepared_request_built_from_inputs(
 
     assert isinstance(prepared, requests.PreparedRequest)
     assert prepared.method == Request.METHOD.GET.value
-    assert prepared.url == f"{URL}?q=lofi"
+    assert prepared.url == f"{URL}/?q=lofi"
     assert prepared.headers["Authorization"] == "OAuth tok"
 
 

@@ -1,4 +1,4 @@
-from typing import Callable
+from collections.abc import Callable
 
 from core.action import Action
 from core.resource import Resource

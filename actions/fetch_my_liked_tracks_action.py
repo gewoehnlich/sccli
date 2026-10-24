@@ -30,8 +30,10 @@ class FetchMyLikedTracksAction(Action):
         while not fetched:
             request = Request(
                 method=Request.METHOD.GET,
-                url=next_href if next_href else Request.URL.API + "/me/likes/tracks",
-                params={
+                url=next_href
+                if next_href
+                else Request.URL.API + "/me/likes/tracks",
+                data={
                     "limit": 100,
                     "access": "playable",
                     "linked_partitioning": True,

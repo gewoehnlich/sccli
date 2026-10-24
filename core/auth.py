@@ -59,7 +59,7 @@ class Auth:
         auth_url: str = Request(
             method=Request.METHOD.GET,
             url=Request.URL.AUTHORIZATION,
-            params={
+            data={
                 "client_id": self._client_id,
                 "redirect_uri": self._redirect_uri,
                 "response_type": "code",
