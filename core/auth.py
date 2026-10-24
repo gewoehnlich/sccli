@@ -57,8 +57,8 @@ class Auth:
         state = self._generate_state()
 
         auth_url: str = Request(
-            method="GET",
-            url=Request.AUTHORIZATION_API_ENDPOINT,
+            method=Request.METHOD.GET,
+            url=Request.URL.AUTHORIZATION,
             params={
                 "client_id": self._client_id,
                 "redirect_uri": self._redirect_uri,
@@ -92,8 +92,8 @@ class Auth:
         auth_code: str = result.code
 
         request: Request = Request(
-            method="POST",
-            url=Request.TOKEN_API_ENDPOINT,
+            method=Request.METHOD.POST,
+            url=Request.URL.TOKEN,
             data={
                 "grant_type": "authorization_code",
                 "client_id": self._client_id,
@@ -123,8 +123,8 @@ class Auth:
         account: Account,
     ) -> Account:
         request: Request = Request(
-            method="POST",
-            url=Request.REFRESH_TOKEN_API_ENDPOINT,
+            method=Request.METHOD.POST,
+            url=Request.URL.REFRESH_TOKEN,
             data={
                 "grant_type": "refresh_token",
                 "client_id": account.client_id,

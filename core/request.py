@@ -3,24 +3,17 @@ from typing import Any, cast
 import requests
 from requests import Request as BaseRequest, Response
 
-from domain.enums.soundcloud_api_endpoint_enum import SoundcloudApiEndpointEnum
+from domain.enums.http_methods import HttpMethods
+from domain.enums.soundcloud_api_endpoints import SoundcloudApiEndpoints
 from exceptions.soundcloud_errors import *
 
 
 class Request:
     _session = requests.Session()
 
-    AUTHORIZATION_API_ENDPOINT: str = (
-        SoundcloudApiEndpointEnum.AUTHORIZATION.value
-    )
+    METHOD: HttpMethods = HttpMethods()
 
-    TOKEN_API_ENDPOINT: str = SoundcloudApiEndpointEnum.TOKEN.value
-
-    REFRESH_TOKEN_API_ENDPOINT: str = (
-        SoundcloudApiEndpointEnum.REFRESH_TOKEN.value
-    )
-
-    SOUNDCLOUD_API_ENDPOINT: str = SoundcloudApiEndpointEnum.API.value
+    URL: SoundcloudApiEndpoints = SoundcloudApiEndpoints()
 
     def __init__(
         self,
