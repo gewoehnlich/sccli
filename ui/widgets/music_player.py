@@ -1,4 +1,5 @@
 from textual.app import ComposeResult
+from textual.containers import Center
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 
@@ -25,30 +26,37 @@ class MusicPlayer(Widget):
     current_track_duration: Reactive[int] = reactive(0)
 
     def compose(self) -> ComposeResult:
-        self.image = Image()
-        yield self.image
+        with Center():
+            yield Image()
 
-        self.buttons = MusicPlayerButtonsComponent()
-        yield self.buttons.data_bind(
-            is_playing=MusicPlayer.is_playing,
-        )
+        with Center():
+            yield MusicPlayerButtonsComponent().data_bind(
+                is_playing=MusicPlayer.is_playing,
+            )
 
-        self.progress_bar = TrackProgressBarComponent()
-        yield self.progress_bar.data_bind(
-            current_track_playtime=MusicPlayer.current_track_playtime,
-            current_track_duration=MusicPlayer.current_track_duration,
-        )
+        with Center():
+            yield TrackProgressBarComponent().data_bind(
+                current_track_playtime=MusicPlayer.current_track_playtime,
+                current_track_duration=MusicPlayer.current_track_duration,
+            )
 
     def on_mount(self) -> None:
         self.styles.width = "auto"
         self.styles.height = "auto"
         self.styles.align_horizontal = "center"
 
-        self.image.styles.width = 30
-        self.image.styles.height = 15
+        image = self.query_one(Image)
+        image.styles.width = 30
+        image.styles.height = 15
+        image.styles.align_horizontal = "center"
 
-        self.buttons.styles.width = "auto"
-        self.progress_bar.styles.width = "auto"
+        buttons = self.query_one(MusicPlayerButtonsComponent)
+        buttons.styles.width = "auto"
+        buttons.styles.align_horizontal = "center"
+
+        progress_bar = self.query_one(TrackProgressBarComponent)
+        progress_bar.styles.width = "auto"
+        progress_bar.styles.align_horizontal = "center"
 
         self.set_interval(1, self.update_current_track_info)
 

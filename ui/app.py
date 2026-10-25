@@ -75,11 +75,15 @@ class App(BaseApp):
 
         self.query_one(MusicPlayer).styles.max_width = "100%"
         self.query_one(MusicPlayer).styles.height = "70%"
+
         self.query_one(Shell).styles.max_width = "100%"
         self.query_one(Shell).styles.height = "30%"
+
         self.query_one(TrackList).styles.max_width = "100%"
         self.query_one(TrackList).styles.height = "100%"
+
         music_player = self.query_one("#music_player", Container)
+        music_player.styles.width = "1fr"
         music_player.styles.height = "1fr"
         music_player.styles.align = ("center", "middle")
 
