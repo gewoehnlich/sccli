@@ -7,15 +7,17 @@ from exceptions.soundcloud_errors import *
 
 
 class HttpClient:
+    _session = requests.Session()
+
     def __init__(
         self,
-        proxy_endpoint: str,
+        proxy_endpoint: str | None = None,
     ) -> None:
-        self._session = requests.Session()
-        self._session.proxies.update({
-            "http": proxy_endpoint,
-            "https": proxy_endpoint,
-        })
+        if proxy_endpoint:
+            self._session.proxies.update({
+                "http": proxy_endpoint,
+                "https": proxy_endpoint,
+            })
 
     def send(
         self,
