@@ -77,17 +77,22 @@ class DiContainer:
             http_client=self.http_client,
         )
 
-        self.actions = ActionsContainer(
+        # self.actions = ActionsContainer(
+        #     auth=self.auth,
+        #     repositories=self.repositories,
+        #     messages=self.config.messages,
+        #     tasks=self.tasks,
+        #     player=self.player,
+        #     http_client=self.http_client,
+        # )
+
+        self.commands: CommandsContainer = CommandsContainer(
             auth=self.auth,
             repositories=self.repositories,
             messages=self.config.messages,
             tasks=self.tasks,
             player=self.player,
             http_client=self.http_client,
-        )
-
-        self.commands = CommandsContainer(
-            actions=self.actions,
         )
 
         self.views = ViewsContainer()

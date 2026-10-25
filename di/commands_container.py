@@ -1,38 +1,50 @@
-from commands.exit_command import ExitCommand
-from commands.help_command import HelpCommand
-from commands.my_liked_tracks_command import MyLikedTracksCommand
+from commands.fetch_my_liked_tracks_command import FetchMyLikedTracksCommand
+from commands.output_message_command import OutputMessageCommand
 from commands.play_track_command import PlayTrackCommand
-from commands.unknown_command import UnknownCommand
-from commands.welcome_command import WelcomeCommand
+from config.messages import MessagesConfig
 from core.command import Command
-from di.actions_container import ActionsContainer
+from core.auth import Auth
+from core.http_client import HttpClient
+from core.player import Player
+from di.repositories_container import RepositoriesContainer
+from di.tasks_container import TasksContainer
 
 
 class CommandsContainer:
     def __init__(
         self,
-        actions: ActionsContainer,
+        auth: Auth,
+        repositories: RepositoriesContainer,
+        messages: MessagesConfig,
+        tasks: TasksContainer,
+        player: Player,
+        http_client: HttpClient,
     ) -> None:
-        self.welcome: Command = WelcomeCommand(
-            action=actions.get_welcome_message,
+        self.welcome: Command = OutputMessageCommand(
+            message=messages.welcome,
         )
 
-        self.exit: Command = ExitCommand(
-            action=actions.get_exit_message,
+        self.exit: Command = OutputMessageCommand(
+            message=messages.exit,
         )
 
-        self.help: Command = HelpCommand(
-            action=actions.get_help_message,
+        self.help: Command = OutputMessageCommand(
+            message=messages.help,
         )
 
-        self.unknown: Command = UnknownCommand(
-            action=actions.get_unknown_message,
+        self.unknown: Command = OutputMessageCommand(
+            message=messages.unknown,
         )
 
-        self.liked_tracks: Command = MyLikedTracksCommand(
-            action=actions.fetch_my_liked_tracks,
+        self.fetch_my_liked_tracks: Command = FetchMyLikedTracksCommand(
+            auth=auth,
+            track_repository=repositories.track,
+            user_repository=repositories.user,
+            http_client=http_client,
         )
 
-        self.play: Command = PlayTrackCommand(
-            action=actions.play_track,
+        self.play_track: Command = PlayTrackCommand(
+            auth=auth,
+            player=player,
+            fetch_track_streams_task=tasks.fetch_track_streams,
         )
