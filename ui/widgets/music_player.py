@@ -40,10 +40,15 @@ class MusicPlayer(Widget):
         )
 
     def on_mount(self) -> None:
-        self.styles.layout = "vertical"
+        self.styles.width = "auto"
+        self.styles.height = "auto"
+        self.styles.align_horizontal = "center"
 
         self.image.styles.width = 30
         self.image.styles.height = 15
+
+        self.buttons.styles.width = "auto"
+        self.progress_bar.styles.width = "auto"
 
         self.set_interval(1, self.update_current_track_info)
 
