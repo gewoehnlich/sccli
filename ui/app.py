@@ -48,11 +48,10 @@ class App(BaseApp):
 
         with Horizontal(id="main"):
             with Vertical(id="left"):
-                with Container(id="music_player"):
-                    yield MusicPlayer().data_bind(
-                        selected_track_index=App.selected_track_index,
-                        tracks=App.tracks,
-                    )
+                yield MusicPlayer().data_bind(
+                    selected_track_index=App.selected_track_index,
+                    tracks=App.tracks,
+                )
                 yield Shell(
                     id="shell",
                     commands=self.commands,
@@ -73,19 +72,18 @@ class App(BaseApp):
         self.theme = "rose-pine"
         self.styles.height = "100%"
 
-        self.query_one(MusicPlayer).styles.max_width = "100%"
-        self.query_one(MusicPlayer).styles.height = "70%"
-
-        self.query_one(Shell).styles.max_width = "100%"
-        self.query_one(Shell).styles.height = "30%"
-
-        self.query_one(TrackList).styles.max_width = "100%"
-        self.query_one(TrackList).styles.height = "100%"
-
-        music_player = self.query_one("#music_player", Container)
+        music_player = self.query_one(MusicPlayer)
         music_player.styles.width = "1fr"
         music_player.styles.height = "1fr"
         music_player.styles.align = ("center", "middle")
+
+        shell = self.query_one(Shell)
+        shell.styles.max_width = "100%"
+        shell.styles.height = "40%"
+
+        track_list = self.query_one(TrackList)
+        track_list.styles.max_width = "100%"
+        track_list.styles.height = "100%"
 
         self.tracks = self.track_repository.get()
 

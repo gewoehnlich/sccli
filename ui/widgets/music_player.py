@@ -53,6 +53,7 @@ class MusicPlayer(Widget):
         buttons = self.query_one(MusicPlayerButtonsComponent)
         buttons.styles.width = "auto"
         buttons.styles.align_horizontal = "center"
+        buttons.styles.padding = 1
 
         progress_bar = self.query_one(TrackProgressBarComponent)
         progress_bar.styles.width = "auto"
