@@ -1,55 +1,15 @@
-from actions.fetch_my_liked_tracks_action import FetchMyLikedTracksAction
-from actions.get_exit_message_action import GetExitMessageAction
-from actions.get_help_message_action import GetHelpMessageAction
-from actions.get_unknown_command_message_action import (
-    GetUnknownCommandMessageAction,
-)
-from actions.get_welcome_message_action import GetWelcomeMessageAction
-from actions.play_track_action import PlayTrackAction
-from config.messages import MessagesConfig
-from core.action import Action
+from actions.fetch_track_streams_action import FetchTrackStreamsAction
 from core.auth import Auth
 from core.http_client import HttpClient
-from core.player import Player
-from di.repositories_container import RepositoriesContainer
-from di.tasks_container import TasksContainer
 
 
 class ActionsContainer:
     def __init__(
         self,
         auth: Auth,
-        repositories: RepositoriesContainer,
-        messages: MessagesConfig,
-        tasks: TasksContainer,
-        player: Player,
         http_client: HttpClient,
     ) -> None:
-        self.get_welcome_message: Action = GetWelcomeMessageAction(
-            message=messages.welcome,
-        )
-
-        self.get_exit_message: Action = GetExitMessageAction(
-            message=messages.exit
-        )
-
-        self.get_help_message: Action = GetHelpMessageAction(
-            message=messages.help
-        )
-
-        self.get_unknown_message: Action = GetUnknownCommandMessageAction(
-            message=messages.unknown
-        )
-
-        self.fetch_my_liked_tracks: Action = FetchMyLikedTracksAction(
+        self.fetch_track_streams: FetchTrackStreamsAction = FetchTrackStreamsAction(
             auth=auth,
-            track_repository=repositories.track,
-            user_repository=repositories.user,
             http_client=http_client,
-        )
-
-        self.play_track: Action = PlayTrackAction(
-            auth=auth,
-            player=player,
-            fetch_track_streams_task=tasks.fetch_track_streams,
         )

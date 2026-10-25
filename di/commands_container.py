@@ -6,17 +6,17 @@ from core.command import Command
 from core.auth import Auth
 from core.http_client import HttpClient
 from core.player import Player
+from di.actions_container import ActionsContainer
 from di.repositories_container import RepositoriesContainer
-from di.tasks_container import TasksContainer
 
 
 class CommandsContainer:
     def __init__(
         self,
+        actions: ActionsContainer,
         auth: Auth,
         repositories: RepositoriesContainer,
         messages: MessagesConfig,
-        tasks: TasksContainer,
         player: Player,
         http_client: HttpClient,
     ) -> None:
@@ -46,5 +46,5 @@ class CommandsContainer:
         self.play_track: Command = PlayTrackCommand(
             auth=auth,
             player=player,
-            fetch_track_streams_task=tasks.fetch_track_streams,
+            fetch_track_streams_action=actions.fetch_track_streams,
         )

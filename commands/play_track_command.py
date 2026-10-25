@@ -1,12 +1,12 @@
 from collections.abc import Callable
 from typing import Any
 
+from actions.fetch_track_streams_action import FetchTrackStreamsAction
+from core.action import Action
 from core.auth import Auth
 from core.command import Command
 from core.player import Player
-from core.task import Task
 from models.track import Track
-from tasks.fetch_track_streams_task import FetchTrackStreamsTask
 
 
 class PlayTrackCommand(Command):
@@ -14,18 +14,18 @@ class PlayTrackCommand(Command):
         self,
         auth: Auth,
         player: Player,
-        fetch_track_streams_task: Task,
+        fetch_track_streams_action: Action,
     ) -> None:
         self.auth: Auth = auth
         self.player: Player = player
-        self.fetch_track_streams_task: FetchTrackStreamsTask = fetch_track_streams_task
+        self.fetch_track_streams_action: FetchTrackStreamsAction = fetch_track_streams_action
 
     def run(
         self,
         track: Track,
         output: Callable[[str], None] | None = None,
     ) -> Any:
-        streams: dict[str, Any] = self.fetch_track_streams_task.run(
+        streams: dict[str, Any] = self.fetch_track_streams_action.run(
             track_urn=track.urn,
         )
 

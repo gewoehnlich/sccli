@@ -3,10 +3,10 @@ from typing import Any
 from core.auth import Auth
 from core.http_client import HttpClient
 from core.request import Request
-from core.task import Task
+from core.action import Action
 
 
-class FetchTrackStreamsTask(Task):
+class FetchTrackStreamsAction(Action):
     def __init__(
         self,
         auth: Auth,
@@ -17,7 +17,7 @@ class FetchTrackStreamsTask(Task):
 
     def run(
         self,
-        track_urn: str = "soundcloud:tracks:1815509691",
+        track_urn: str,
     ) -> dict[str, Any]:
         request: Request = Request(
             method=Request.METHOD.GET,

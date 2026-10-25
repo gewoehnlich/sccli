@@ -8,12 +8,12 @@ from core.config_loader import ConfigLoader
 from core.database import Database
 from core.http_client import HttpClient
 from core.logger import Logger
+from core.player import Player
 from core.server import Server
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from di.repositories_container import RepositoriesContainer
-from di.tasks_container import TasksContainer
 from di.views_container import ViewsContainer
 from players.mpv_player import MpvPlayer
 from servers.http_server import HttpServer
@@ -64,35 +64,24 @@ class DiContainer:
             http_client=self.http_client,
         )
 
-        self.player = MpvPlayer(
+        self.player: Player = MpvPlayer(
             auth=self.auth,
             http_proxy=self.config.proxy.endpoint,
             logger=self.logger,
         )
 
-        self.tasks = TasksContainer(
+        self.actions: ActionsContainer = ActionsContainer(
             auth=self.auth,
-            repositories=self.repositories,
-            messages=self.config.messages,
             http_client=self.http_client,
         )
 
-        # self.actions = ActionsContainer(
-        #     auth=self.auth,
-        #     repositories=self.repositories,
-        #     messages=self.config.messages,
-        #     tasks=self.tasks,
-        #     player=self.player,
-        #     http_client=self.http_client,
-        # )
-
         self.commands: CommandsContainer = CommandsContainer(
+            actions=self.actions,
             auth=self.auth,
             repositories=self.repositories,
             messages=self.config.messages,
-            tasks=self.tasks,
             player=self.player,
             http_client=self.http_client,
         )
 
-        self.views = ViewsContainer()
+        self.views: ViewsContainer = ViewsContainer()
