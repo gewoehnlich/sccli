@@ -2,25 +2,13 @@ import shlex
 from typing import Any
 
 from textual.app import ComposeResult
-from textual.containers import Vertical
+from textual.containers import Container, Vertical
 from textual.widgets import Input, RichLog
 
 from di.commands_container import CommandsContainer
 
 
 class Shell(Vertical):
-    DEFAULT_CSS = """
-    Shell {
-        height: 100%;
-    }
-    Shell > RichLog {
-        height: 1fr;
-    }
-    Shell > Input {
-        height: 3;
-    }
-    """
-
     def __init__(
         self,
         commands: CommandsContainer,
@@ -31,23 +19,39 @@ class Shell(Vertical):
         self.commands = commands
 
     def compose(self) -> ComposeResult:
-        yield RichLog(
-            id="shell-output",
-            markup=True,
-            wrap=True,
-        )
-        yield Input(
-            placeholder="sccli> ",
-            id="shell-input",
-        )
+        with Container(id="shell-container"):
+            yield RichLog(
+                id="shell-output",
+                markup=True,
+                wrap=True,
+            )
+            yield Input(
+                placeholder="sccli> ",
+                id="shell-input",
+            )
 
     def on_mount(
         self,
     ) -> None:
+        self.styles.height = "100%"
+
+        container = self.query_one(Container)
+        container.styles.padding = 1
+
+        rich_log = self.query_one(RichLog)
+        rich_log.styles.width = "100%"
+        rich_log.styles.height = "1fr"
+        rich_log.styles.padding = (1, 2)
+        rich_log.styles.margin = 1
+
+        input_widget = self.query_one(Input)
+        input_widget.styles.width = "100%"
+        input_widget.styles.height = 3
+        input_widget.focus()
+
         self.commands.welcome.run(
             output=self.write,
         )
-        self.query_one(Input).focus()
 
     def write(
         self,
@@ -67,7 +71,7 @@ class Shell(Vertical):
         if not command_line:
             return
 
-        self.write(f"[b]sccli>[/b] {command_line}")
+        self.write(f"[plum2]sccli>[/plum2] [thistle1]{command_line}[/thistle1]")
         self.process_command(command_line)
 
     def process_command(

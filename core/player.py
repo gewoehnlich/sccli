@@ -21,17 +21,9 @@ class Player:
             callback()
 
     @abstractmethod
-    def play(self, filename: str) -> None:
+    def play(self, link: str) -> None:
         pass
 
     @abstractmethod
     def stop(self) -> None:
-        pass
-
-    @abstractmethod
-    def next(self) -> None:
-        pass
-
-    @abstractmethod
-    def prev(self) -> None:
         pass

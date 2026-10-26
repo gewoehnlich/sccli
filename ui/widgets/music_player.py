@@ -3,6 +3,7 @@ from textual.containers import Center
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 
+from core.player import Player
 from models.track import Track
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
@@ -24,6 +25,14 @@ class MusicPlayer(Widget):
 
     current_track_playtime: Reactive[int] = reactive(0)
     current_track_duration: Reactive[int] = reactive(0)
+
+    def __init__(
+        self,
+        player: Player,
+    ) -> None:
+        self.player: Player = player
+
+        super().__init__()
 
     def compose(self) -> ComposeResult:
         with Center():
@@ -65,10 +74,10 @@ class MusicPlayer(Widget):
 
     def update_current_track_info(self) -> None:
         self.current_track_playtime = (
-            self.app.player.get_current_track_playtime()
+            self.player.get_current_track_playtime()
         )
         self.current_track_duration = (
-            self.app.player.get_current_track_duration()
+            self.player.get_current_track_duration()
         )
 
     def on_previous_track_button_pressed(self) -> None:
@@ -92,7 +101,7 @@ class MusicPlayer(Widget):
     def on_pause_button_pressed(self) -> None:
         self.is_playing = False
 
-        self.app.player.stop()
+        self.player.stop()
 
     def on_next_track_button_pressed(self) -> None:
         self.is_playing = True
@@ -106,7 +115,7 @@ class MusicPlayer(Widget):
         )
 
     def register_player_events(self) -> None:
-        self.app.player.on_track_finished(
+        self.player.on_track_finished(
             self.play_next_track,
         )
 

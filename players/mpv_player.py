@@ -1,3 +1,6 @@
+from collections.abc import Callable
+from typing import cast
+
 import mpv
 
 from core.auth import Auth
@@ -17,8 +20,9 @@ class MpvPlayer(Player):
         self.auth: Auth = auth
         self.logger = logger
         self.player = mpv.MPV(
-            log_handler=self.__log,
+            # log_handler=self._log,
             ytdl=True,
+            volume=20,
             http_header_fields=f"Authorization: Bearer {self.auth.get_access_token()}",
             http_proxy=http_proxy,
         )
@@ -32,9 +36,7 @@ class MpvPlayer(Player):
 
                 self.emit_track_finished()
 
-        self.logger.info(self.player._event_callbacks)
-
-    def __log(
+    def _log(
         self,
         level: str,
         prefix: str,
@@ -46,20 +48,18 @@ class MpvPlayer(Player):
         self,
         link: str,
     ) -> None:
-        if self.player.pause:
+        if cast(bool, self.player.pause):
             self.player.pause = False
         else:
-            self.player.play(
-                filename=link,
-            )
+            cast(Callable[..., None], self.player.play)(filename=link)
 
     def stop(
         self,
     ) -> None:
         self.player.pause = True
 
-    def get_current_track_playtime(self) -> int:
-        return self.player.time_pos or 0
+    def get_current_track_playtime(self,) -> int:
+        return cast(int, self.player.time_pos) or 0
 
-    def get_current_track_duration(self) -> int:
-        return self.player.duration or 0
+    def get_current_track_duration(self,) -> int:
+        return cast(int, self.player.duration) or 0

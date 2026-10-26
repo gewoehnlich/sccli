@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import Any
 
 from textual import events
@@ -15,7 +16,7 @@ class TrackList(DataTable):
     g_pressed_before: bool = False
     number: int | None = None
 
-    tracks: Reactive[list[Track]] = reactive([])
+    tracks: Reactive[Sequence[Track]] = reactive([])
     selected_track_index: Reactive[SelectedTrackIndex] = reactive(
         SelectedTrackIndex()
     )
@@ -26,10 +27,10 @@ class TrackList(DataTable):
         logger: Logger,
         track_selected_event: type[TrackSelected],
     ) -> None:
-        self.track_view = track_view
-        self.logger = logger
+        self.track_view: type[TrackView] = track_view
+        self.logger: Logger = logger
 
-        self.track_selected_event = track_selected_event
+        self.track_selected_event: type[TrackSelected] = track_selected_event
 
         super().__init__()
 
@@ -50,9 +51,9 @@ class TrackList(DataTable):
         for track in self.tracks:
             view: TrackView = self.track_view(
                 track=track,
-                user=self.app.di_container.repositories.user.get(
-                    id=track.user_id,
-                )[0],
+                user=self.app.di_container.repositories.user.get_one(
+                    primary_key=track.user_id,
+                ),
             )
 
             tracks.append(view.view())

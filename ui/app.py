@@ -1,6 +1,7 @@
+from collections.abc import Sequence
+
 from textual.app import App as BaseApp, ComposeResult
-from textual.containers import Container, Horizontal, Vertical
-from textual.message import Message
+from textual.containers import Horizontal, Vertical
 from textual.reactive import Reactive, reactive
 from textual.widgets import Footer, Header
 
@@ -17,15 +18,15 @@ from ui.widgets.track_list import TrackList
 from values.selected_track_index import SelectedTrackIndex
 
 
-class App(BaseApp):
+class App(BaseApp[None]):
     TITLE = "sccli"
 
-    tracks: Reactive[list[Track]] = reactive([])
+    tracks: Reactive[Sequence[Track]] = reactive([])
     selected_track_index: Reactive[SelectedTrackIndex] = reactive(
         SelectedTrackIndex()
     )
 
-    track_selected_event: type[Message] = TrackSelected
+    track_selected_event: type[TrackSelected] = TrackSelected
 
     def __init__(
         self,
@@ -48,7 +49,9 @@ class App(BaseApp):
 
         with Horizontal(id="main"):
             with Vertical(id="left"):
-                yield MusicPlayer().data_bind(
+                yield MusicPlayer(
+                    player=self.player,
+                ).data_bind(
                     selected_track_index=App.selected_track_index,
                     tracks=App.tracks,
                 )

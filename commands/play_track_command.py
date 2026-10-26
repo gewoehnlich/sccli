@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 from actions.fetch_track_streams_action import FetchTrackStreamsAction
 from core.action import Action
@@ -29,7 +29,10 @@ class PlayTrackCommand(Command):
             track_urn=track.urn,
         )
 
-        streaming_url: str = streams["hls_aac_160_url"]
+        streaming_url: str = cast(
+            str,
+            streams.get("hls_aac_160_url") or streams.get("hls_mp3_128_url")
+        )
 
         self.player.play(
             link=streaming_url,
