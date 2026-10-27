@@ -2,8 +2,8 @@ from commands.fetch_my_liked_tracks_command import FetchMyLikedTracksCommand
 from commands.output_message_command import OutputMessageCommand
 from commands.play_track_command import PlayTrackCommand
 from config.messages import MessagesConfig
-from core.command import Command
 from core.auth import Auth
+from core.command import Command
 from core.http_client import HttpClient
 from core.player import Player
 from di.actions_container import ActionsContainer

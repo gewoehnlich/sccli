@@ -1,9 +1,9 @@
 from typing import Any
 
+from core.action import Action
 from core.auth import Auth
 from core.http_client import HttpClient
 from core.request import Request
-from core.action import Action
 
 
 class FetchTrackStreamsAction(Action):

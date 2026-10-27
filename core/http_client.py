@@ -14,10 +14,12 @@ class HttpClient:
         proxy_endpoint: str | None = None,
     ) -> None:
         if proxy_endpoint:
-            self._session.proxies.update({
-                "http": proxy_endpoint,
-                "https": proxy_endpoint,
-            })
+            self._session.proxies.update(
+                {
+                    "http": proxy_endpoint,
+                    "https": proxy_endpoint,
+                }
+            )
 
     def send(
         self,

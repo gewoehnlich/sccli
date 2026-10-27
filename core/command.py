@@ -7,5 +7,4 @@ class Command:
     def run(
         self,
         output: Callable[[str], None] | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...

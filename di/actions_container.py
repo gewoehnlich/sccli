@@ -9,7 +9,9 @@ class ActionsContainer:
         auth: Auth,
         http_client: HttpClient,
     ) -> None:
-        self.fetch_track_streams: FetchTrackStreamsAction = FetchTrackStreamsAction(
-            auth=auth,
-            http_client=http_client,
+        self.fetch_track_streams: FetchTrackStreamsAction = (
+            FetchTrackStreamsAction(
+                auth=auth,
+                http_client=http_client,
+            )
         )

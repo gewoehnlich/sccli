@@ -73,12 +73,8 @@ class MusicPlayer(Widget):
         self.register_player_events()
 
     def update_current_track_info(self) -> None:
-        self.current_track_playtime = (
-            self.player.get_current_track_playtime()
-        )
-        self.current_track_duration = (
-            self.player.get_current_track_duration()
-        )
+        self.current_track_playtime = self.player.get_current_track_playtime()
+        self.current_track_duration = self.player.get_current_track_duration()
 
     def on_previous_track_button_pressed(self) -> None:
         self.is_playing = True

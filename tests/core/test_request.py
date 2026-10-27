@@ -113,7 +113,13 @@ def test_returns_parsed_json_object(
 ) -> None:
     respond(send_mock, 200, {"id": 1, "username": "me"})
 
-    assert HttpClient().send(Request(Request.METHOD.POST, URL, data={"id": 1, "username": "me"},)) == {
+    assert HttpClient().send(
+        Request(
+            Request.METHOD.POST,
+            URL,
+            data={"id": 1, "username": "me"},
+        )
+    ) == {
         "id": 1,
         "username": "me",
     }
@@ -124,7 +130,14 @@ def test_sends_prepared_request_built_from_inputs(
 ) -> None:
     respond(send_mock, 200, {})
 
-    HttpClient().send(Request(Request.METHOD.GET, URL, data={"q": "lofi"}, access_token="tok",))
+    HttpClient().send(
+        Request(
+            Request.METHOD.GET,
+            URL,
+            data={"q": "lofi"},
+            access_token="tok",
+        )
+    )
 
     prepared = send_mock.call_args.kwargs["request"]
 
@@ -139,7 +152,9 @@ def test_post_data_is_form_encoded(
 ) -> None:
     respond(send_mock, 200, {})
 
-    HttpClient().send(Request(Request.METHOD.POST, URL, data={"a": "1", "b": "2"}))
+    HttpClient().send(
+        Request(Request.METHOD.POST, URL, data={"a": "1", "b": "2"})
+    )
 
     prepared = send_mock.call_args.kwargs["request"]
 

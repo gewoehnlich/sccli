@@ -3,7 +3,10 @@ from typing import Any
 from requests import Request as BaseRequest
 
 from domain.enums.http_method_enum import HttpMethodEnum
-from exceptions.soundcloud_errors import BuildUrlError, UnsupportedApiEndpointException
+from exceptions.soundcloud_errors import (
+    BuildUrlError,
+    UnsupportedApiEndpointException,
+)
 
 
 class HttpMethods:

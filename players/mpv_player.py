@@ -58,8 +58,12 @@ class MpvPlayer(Player):
     ) -> None:
         self.player.pause = True
 
-    def get_current_track_playtime(self,) -> int:
+    def get_current_track_playtime(
+        self,
+    ) -> int:
         return cast(int, self.player.time_pos) or 0
 
-    def get_current_track_duration(self,) -> int:
+    def get_current_track_duration(
+        self,
+    ) -> int:
         return cast(int, self.player.duration) or 0

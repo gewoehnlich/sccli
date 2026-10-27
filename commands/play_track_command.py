@@ -18,7 +18,9 @@ class PlayTrackCommand(Command):
     ) -> None:
         self.auth: Auth = auth
         self.player: Player = player
-        self.fetch_track_streams_action: FetchTrackStreamsAction = fetch_track_streams_action
+        self.fetch_track_streams_action: FetchTrackStreamsAction = (
+            fetch_track_streams_action
+        )
 
     def run(
         self,
@@ -31,7 +33,7 @@ class PlayTrackCommand(Command):
 
         streaming_url: str = cast(
             str,
-            streams.get("hls_aac_160_url") or streams.get("hls_mp3_128_url")
+            streams.get("hls_aac_160_url") or streams.get("hls_mp3_128_url"),
         )
 
         self.player.play(
