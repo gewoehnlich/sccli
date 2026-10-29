@@ -7,12 +7,14 @@ from textual.widgets import DataTable
 
 from core.logger import Logger
 from models.track import Track
+from models.user import User
+from repositories.user_repository import UserRepository
 from ui.events.track_selected import TrackSelected
 from ui.widgets.components.track_list.views.track_view import TrackView
 from values.selected_track_index import SelectedTrackIndex
 
 
-class TrackList(DataTable):
+class TrackList(DataTable[None]):
     g_pressed_before: bool = False
     number: int | None = None
 
@@ -26,11 +28,14 @@ class TrackList(DataTable):
         track_view: type[TrackView],
         logger: Logger,
         track_selected_event: type[TrackSelected],
+        user_repository: UserRepository,
     ) -> None:
         self.track_view: type[TrackView] = track_view
         self.logger: Logger = logger
 
         self.track_selected_event: type[TrackSelected] = track_selected_event
+
+        self.user_repository: UserRepository = user_repository
 
         super().__init__()
 
@@ -49,11 +54,17 @@ class TrackList(DataTable):
         tracks: list[tuple[Any]] = []
 
         for track in self.tracks:
+            user: User | None = self.user_repository.get_one(
+                primary_key=track.user_id,
+            )
+
+            if not user:
+                self.logger.warning(f"user_id {track.user_id} not found in the database")
+                continue
+
             view: TrackView = self.track_view(
                 track=track,
-                user=self.app.di_container.repositories.user.get_one(
-                    primary_key=track.user_id,
-                ),
+                user=user,
             )
 
             tracks.append(view.view())

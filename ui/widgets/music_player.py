@@ -105,7 +105,7 @@ class MusicPlayer(Widget):
     def on_next_track_button_pressed(self) -> None:
         self.is_playing = True
 
-        self.app.di_container.commands.play_track.run(
+        self.commands.play_track.run(
             track=self.tracks[
                 self.selected_track_index.next(
                     tracks=self.tracks,
@@ -119,7 +119,7 @@ class MusicPlayer(Widget):
         )
 
     def play_next_track(self) -> None:
-        self.app.di_container.commands.play_track.run(
+        self.commands.play_track.run(
             track=self.tracks[
                 self.selected_track_index.next(
                     tracks=self.tracks,

@@ -65,6 +65,7 @@ class App(BaseApp[None]):
                 track_view=self.di_container.views.track,
                 logger=self.logger,
                 track_selected_event=self.track_selected_event,
+                user_repository=self.di_container.repositories.user,
             ).data_bind(
                 selected_track_index=App.selected_track_index,
                 tracks=App.tracks,

@@ -16,7 +16,7 @@ class Shell(Vertical):
     ) -> None:
         super().__init__(**kwargs)
 
-        self.commands = commands
+        self.commands: CommandsContainer = commands
 
     def compose(self) -> ComposeResult:
         with Container(id="shell-container"):
@@ -89,12 +89,8 @@ class Shell(Vertical):
                 self.commands.help.run(
                     output=self.write,
                 )
-            case "liked:tracks" | "lt":
-                self.commands.liked_tracks.run(
-                    output=self.write,
-                )
-            case "track:play" | "tp":
-                self.commands.play.run(
+            case "sync:liked_tracks" | "slt":
+                self.commands.fetch_my_liked_tracks.run(
                     output=self.write,
                 )
             case "exit" | "quit" | "q":
