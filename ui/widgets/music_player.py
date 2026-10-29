@@ -4,6 +4,7 @@ from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 
 from core.player import Player
+from di.commands_container import CommandsContainer
 from models.track import Track
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
@@ -29,8 +30,10 @@ class MusicPlayer(Widget):
     def __init__(
         self,
         player: Player,
+        commands: CommandsContainer,
     ) -> None:
         self.player: Player = player
+        self.commands: CommandsContainer = commands
 
         super().__init__()
 
@@ -79,7 +82,7 @@ class MusicPlayer(Widget):
     def on_previous_track_button_pressed(self) -> None:
         self.is_playing = True
 
-        self.app.di_container.commands.play_track.run(
+        self.commands.play_track.run(
             track=self.tracks[
                 self.selected_track_index.previous(
                     tracks=self.tracks,
@@ -90,7 +93,7 @@ class MusicPlayer(Widget):
     def on_play_button_pressed(self) -> None:
         self.is_playing = True
 
-        self.app.di_container.commands.play_track.run(
+        self.commands.play_track.run(
             track=self.tracks[self.selected_track_index.value()]
         )
 

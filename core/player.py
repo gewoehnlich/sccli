@@ -27,3 +27,11 @@ class Player:
     @abstractmethod
     def stop(self) -> None:
         pass
+
+    @abstractmethod
+    def get_current_track_playtime(self) -> int:
+        pass
+
+    @abstractmethod
+    def get_current_track_duration(self) -> int:
+        pass

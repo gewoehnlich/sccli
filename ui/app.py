@@ -51,6 +51,7 @@ class App(BaseApp[None]):
             with Vertical(id="left"):
                 yield MusicPlayer(
                     player=self.player,
+                    commands=self.commands,
                 ).data_bind(
                     selected_track_index=App.selected_track_index,
                     tracks=App.tracks,
@@ -88,7 +89,7 @@ class App(BaseApp[None]):
         track_list.styles.max_width = "100%"
         track_list.styles.height = "100%"
 
-        self.tracks = self.track_repository.get()
+        self.tracks = self.track_repository.get()[:100]
 
     def on_track_selected(
         self,
