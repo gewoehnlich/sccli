@@ -5,7 +5,6 @@ from textual.widget import Widget
 
 from core.player import Player
 from di.commands_container import CommandsContainer
-from models.track import Track
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
 )
@@ -13,14 +12,11 @@ from ui.widgets.components.music_player.image import Image
 from ui.widgets.components.music_player.track_progress_bar import (
     TrackProgressBarComponent,
 )
-from values.selected_track_index import SelectedTrackIndex
+from values.playlist import Playlist
 
 
 class MusicPlayer(Widget):
-    tracks: Reactive[list[Track]] = reactive([])
-    selected_track_index: Reactive[SelectedTrackIndex] = reactive(
-        SelectedTrackIndex()
-    )
+    playlist: Reactive[Playlist] = reactive(Playlist(tracks=()))
 
     is_playing: Reactive[bool] = reactive(False)
 
@@ -83,18 +79,14 @@ class MusicPlayer(Widget):
         self.is_playing = True
 
         self.commands.play_track.run(
-            track=self.tracks[
-                self.selected_track_index.previous(
-                    tracks=self.tracks,
-                )
-            ]
+            track=self.playlist.prev(),
         )
 
     def on_play_button_pressed(self) -> None:
         self.is_playing = True
 
         self.commands.play_track.run(
-            track=self.tracks[self.selected_track_index.value()]
+            track=self.playlist.current(),
         )
 
     def on_pause_button_pressed(self) -> None:
@@ -106,11 +98,7 @@ class MusicPlayer(Widget):
         self.is_playing = True
 
         self.commands.play_track.run(
-            track=self.tracks[
-                self.selected_track_index.next(
-                    tracks=self.tracks,
-                )
-            ]
+            track=self.playlist.next(),
         )
 
     def register_player_events(self) -> None:
@@ -120,9 +108,5 @@ class MusicPlayer(Widget):
 
     def play_next_track(self) -> None:
         self.commands.play_track.run(
-            track=self.tracks[
-                self.selected_track_index.next(
-                    tracks=self.tracks,
-                )
-            ]
+            track=self.playlist.next(),
         )

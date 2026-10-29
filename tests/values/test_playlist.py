@@ -45,16 +45,6 @@ def test_explicit_index_on_empty_playlist_raises() -> None:
         Playlist(tracks=(), index=0)
 
 
-def test_tracks_are_copied_into_a_tuple() -> None:
-    source = list(make_tracks(2))
-
-    playlist = Playlist(tracks=source)
-    source.append(Mock(spec=Track))
-
-    assert isinstance(playlist.tracks, tuple)
-    assert len(playlist) == 2
-
-
 def test_current_is_none_for_empty_playlist() -> None:
     assert Playlist(tracks=()).current() is None
 

@@ -1,4 +1,3 @@
-from collections.abc import Sequence
 from typing import Any
 
 from textual import events
@@ -6,22 +5,18 @@ from textual.reactive import Reactive, reactive
 from textual.widgets import DataTable
 
 from core.logger import Logger
-from models.track import Track
 from models.user import User
 from repositories.user_repository import UserRepository
 from ui.events.track_selected import TrackSelected
 from ui.widgets.components.track_list.views.track_view import TrackView
-from values.selected_track_index import SelectedTrackIndex
+from values.playlist import Playlist
 
 
 class TrackList(DataTable[None]):
     g_pressed_before: bool = False
     number: int | None = None
 
-    tracks: Reactive[Sequence[Track]] = reactive([])
-    selected_track_index: Reactive[SelectedTrackIndex] = reactive(
-        SelectedTrackIndex()
-    )
+    playlist: Reactive[Playlist] = reactive(Playlist(tracks=()))
 
     def __init__(
         self,
@@ -43,7 +38,7 @@ class TrackList(DataTable[None]):
         self.cursor_type = "row"
         self.zebra_stripes = True
 
-    def watch_tracks(self) -> None:
+    def watch_playlist(self) -> None:
         self.columns = {}
         self.rows = {}
 
@@ -53,7 +48,7 @@ class TrackList(DataTable[None]):
     def formatted_tracks(self) -> list[tuple[Any]]:
         tracks: list[tuple[Any]] = []
 
-        for track in self.tracks:
+        for track in self.playlist.tracks:
             user: User | None = self.user_repository.get_one(
                 primary_key=track.user_id,
             )

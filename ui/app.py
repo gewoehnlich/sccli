@@ -1,5 +1,3 @@
-from collections.abc import Sequence
-
 from textual.app import App as BaseApp, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.reactive import Reactive, reactive
@@ -9,23 +7,18 @@ from core.di_container import DiContainer
 from core.logger import Logger
 from core.player import Player
 from di.commands_container import CommandsContainer
-from models.track import Track
 from repositories.track_repository import TrackRepository
 from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
 from ui.widgets.shell import Shell
 from ui.widgets.track_list import TrackList
-from values.selected_track_index import SelectedTrackIndex
+from values.playlist import Playlist
 
 
 class App(BaseApp[None]):
     TITLE = "sccli"
 
-    tracks: Reactive[Sequence[Track]] = reactive([])
-    selected_track_index: Reactive[SelectedTrackIndex] = reactive(
-        SelectedTrackIndex()
-    )
-
+    playlist: Reactive[Playlist] = reactive(Playlist(tracks=()))
     track_selected_event: type[TrackSelected] = TrackSelected
 
     def __init__(
@@ -53,8 +46,7 @@ class App(BaseApp[None]):
                     player=self.player,
                     commands=self.commands,
                 ).data_bind(
-                    selected_track_index=App.selected_track_index,
-                    tracks=App.tracks,
+                    playlist=App.playlist,
                 )
                 yield Shell(
                     id="shell",
@@ -67,8 +59,7 @@ class App(BaseApp[None]):
                 track_selected_event=self.track_selected_event,
                 user_repository=self.di_container.repositories.user,
             ).data_bind(
-                selected_track_index=App.selected_track_index,
-                tracks=App.tracks,
+                playlist=App.playlist,
             )
 
         yield Footer(id="footer")
@@ -90,12 +81,14 @@ class App(BaseApp[None]):
         track_list.styles.max_width = "100%"
         track_list.styles.height = "100%"
 
-        self.tracks = self.track_repository.get()[:100]
+        self.playlist = Playlist(
+            tracks=self.track_repository.get()[:100],
+        )
 
     def on_track_selected(
         self,
         message: TrackSelected,
     ) -> None:
-        self.selected_track_index.with_value(
+        self.playlist.select(
             index=message.index,
         )

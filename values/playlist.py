@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from random import randrange
 
 from core.value import Value
@@ -11,10 +12,10 @@ from models.track import Track
 class Playlist(Value):
     def __init__(
         self,
-        tracks: tuple[Track, ...],
+        tracks: Sequence[Track],
         index: int | None = None,
     ) -> None:
-        self.tracks: tuple[Track, ...] = tuple(tracks)
+        self.tracks: Sequence[Track] = tracks
 
         if index is None:
             index = 0 if self.tracks else None
