@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import String, Text
 
 from core.model import Model
+
+if TYPE_CHECKING:
+    from models.track import Track
 
 
 class User(Model):
@@ -16,7 +21,7 @@ class User(Model):
     permalink: Mapped[str] = mapped_column(String)
     permalink_url: Mapped[str] = mapped_column(String)
     username: Mapped[str] = mapped_column(String)
-    tracks: Mapped[list["Track"]] = relationship(
+    tracks: Mapped[list[Track]] = relationship(
         back_populates="user",
         lazy="selectin",
     )

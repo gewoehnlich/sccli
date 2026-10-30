@@ -44,14 +44,12 @@ class TrackList(DataTable[None]):
         tracks: list[tuple[Any]] = []
 
         for track in self.playlist.tracks:
-            tracks.append(
-                tuple([
-                    track.id,
-                    track.user.username,
-                    track.title,
-                    track.formatted_duration,
-                ])
-            )
+            tracks.append(tuple([
+                track.id,
+                track.user.username,
+                track.title,
+                track.formatted_duration,
+            ]))
 
         return tracks
 
