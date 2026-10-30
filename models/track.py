@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.model import Model
 
@@ -15,6 +15,10 @@ class Track(Model):
     permalink_url: Mapped[str] = mapped_column(String)
     title: Mapped[str] = mapped_column(String)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user: Mapped["User"] = relationship(
+        back_populates="tracks",
+        lazy="joined",
+    )
 
     def __repr__(self) -> str:
         return f"<Track(id={self.id}, title='{self.title}')>"

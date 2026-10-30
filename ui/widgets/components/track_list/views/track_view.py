@@ -17,10 +17,8 @@ class TrackView(View):
     def __init__(
         self,
         track: Track,
-        user: User,
     ) -> None:
         self.track = track
-        self.user = user
 
     def view(self) -> tuple[Any]:
         return tuple([self.match(field) for field in self.fields])
@@ -46,7 +44,7 @@ class TrackView(View):
         return self.track.id
 
     def username(self) -> str:
-        return self.user.username
+        return self.track.user.username
 
     def title(self) -> str:
         return self.track.title

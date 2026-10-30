@@ -82,7 +82,7 @@ class App(BaseApp[None]):
         track_list.styles.height = "100%"
 
         self.playlist = Playlist(
-            tracks=self.track_repository.get()[:100],
+            tracks=self.track_repository.get(),
         )
 
     def on_track_selected(

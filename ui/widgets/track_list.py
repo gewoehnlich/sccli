@@ -5,7 +5,6 @@ from textual.reactive import Reactive, reactive
 from textual.widgets import DataTable
 
 from core.logger import Logger
-from models.user import User
 from repositories.user_repository import UserRepository
 from ui.events.track_selected import TrackSelected
 from ui.widgets.components.track_list.views.track_view import TrackView
@@ -49,17 +48,8 @@ class TrackList(DataTable[None]):
         tracks: list[tuple[Any]] = []
 
         for track in self.playlist.tracks:
-            user: User | None = self.user_repository.get_one(
-                primary_key=track.user_id,
-            )
-
-            if not user:
-                self.logger.warning(f"user_id {track.user_id} not found in the database")
-                continue
-
             view: TrackView = self.track_view(
                 track=track,
-                user=user,
             )
 
             tracks.append(view.view())
