@@ -7,7 +7,6 @@ from textual.widgets import DataTable
 from core.logger import Logger
 from repositories.user_repository import UserRepository
 from ui.events.track_selected import TrackSelected
-from ui.widgets.components.track_list.views.track_view import TrackView
 from values.playlist import Playlist
 
 
@@ -19,17 +18,14 @@ class TrackList(DataTable[None]):
 
     def __init__(
         self,
-        track_view: type[TrackView],
         logger: Logger,
-        track_selected_event: type[TrackSelected],
         user_repository: UserRepository,
+        track_selected_event: type[TrackSelected],
     ) -> None:
-        self.track_view: type[TrackView] = track_view
         self.logger: Logger = logger
+        self.user_repository: UserRepository = user_repository
 
         self.track_selected_event: type[TrackSelected] = track_selected_event
-
-        self.user_repository: UserRepository = user_repository
 
         super().__init__()
 
@@ -41,18 +37,21 @@ class TrackList(DataTable[None]):
         self.columns = {}
         self.rows = {}
 
-        self.add_columns(*tuple(self.track_view.fields))
+        self.add_columns(*tuple(["id", "username", "title", "duration"]))
         self.add_rows(self.formatted_tracks())
 
     def formatted_tracks(self) -> list[tuple[Any]]:
         tracks: list[tuple[Any]] = []
 
         for track in self.playlist.tracks:
-            view: TrackView = self.track_view(
-                track=track,
+            tracks.append(
+                tuple([
+                    track.id,
+                    track.user.username,
+                    track.title,
+                    track.formatted_duration,
+                ])
             )
-
-            tracks.append(view.view())
 
         return tracks
 

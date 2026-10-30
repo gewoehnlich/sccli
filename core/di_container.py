@@ -14,7 +14,6 @@ from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from di.repositories_container import RepositoriesContainer
-from di.views_container import ViewsContainer
 from players.mpv_player import MpvPlayer
 from servers.http_server import HttpServer
 
@@ -83,5 +82,3 @@ class DiContainer:
             player=self.player,
             http_client=self.http_client,
         )
-
-        self.views: ViewsContainer = ViewsContainer()

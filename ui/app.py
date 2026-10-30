@@ -54,10 +54,9 @@ class App(BaseApp[None]):
                 )
 
             yield TrackList(
-                track_view=self.di_container.views.track,
                 logger=self.logger,
-                track_selected_event=self.track_selected_event,
                 user_repository=self.di_container.repositories.user,
+                track_selected_event=self.track_selected_event,
             ).data_bind(
                 playlist=App.playlist,
             )

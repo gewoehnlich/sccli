@@ -26,3 +26,9 @@ class Track(Model):
     @property
     def urn(self) -> str:
         return f"soundcloud:tracks:{self.id}"
+
+    @property
+    def formatted_duration(self) -> str:
+        minutes, seconds = divmod(self.duration, 60)
+
+        return f"{minutes}:{seconds:02d}"
