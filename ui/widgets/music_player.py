@@ -5,6 +5,8 @@ from textual.widget import Widget
 
 from core.player import Player
 from di.commands_container import CommandsContainer
+from ui.components.statics.track_username import TrackUsername
+from ui.components.statics.track_title import TrackTitle
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
@@ -23,6 +25,8 @@ class MusicPlayer(Widget):
 
     current_track_playtime: Reactive[int] = reactive(0)
     current_track_duration: Reactive[int] = reactive(0)
+    current_track_username: Reactive[str] = reactive('')
+    current_track_title: Reactive[str] = reactive('')
 
     def __init__(
         self,
@@ -41,6 +45,16 @@ class MusicPlayer(Widget):
         with Center():
             yield MusicPlayerButtonsComponent().data_bind(
                 is_playing=MusicPlayer.is_playing,
+            )
+
+        with Center():
+            yield TrackUsername().data_bind(
+                username=MusicPlayer.current_track_username,
+            )
+
+        with Center():
+            yield TrackTitle().data_bind(
+                title=MusicPlayer.current_track_title,
             )
 
         with Center():
@@ -75,6 +89,12 @@ class MusicPlayer(Widget):
     def update_current_track_info(self) -> None:
         self.current_track_playtime = self.player.get_current_track_playtime()
         self.current_track_duration = self.player.get_current_track_duration()
+
+        track = self.playlist.current()
+
+        if track:
+            self.current_track_username = track.user.username
+            self.current_track_title = track.title
 
     def on_previous_track_button_pressed(self) -> None:
         self.is_playing = True
