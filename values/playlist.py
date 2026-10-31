@@ -44,7 +44,8 @@ class Playlist(Value):
         return self.tracks[index]
 
     def next(self) -> Track:
-        return self._move(step=1)
+        return self.random()
+        # return self._move(step=1)
 
     def prev(self) -> Track:
         return self._move(step=-1)
