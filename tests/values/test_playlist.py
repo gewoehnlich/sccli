@@ -2,13 +2,13 @@ from unittest.mock import Mock
 
 import pytest
 
+import values.playlist as playlist_module
 from exceptions.playlist_errors import (
     PlaylistEmptyError,
     PlaylistInvalidIndexError,
 )
-import values.playlist as playlist_module
-from values.playlist import Playlist
 from models.track import Track
+from values.playlist import Playlist
 
 
 def make_tracks(count: int) -> tuple[Track, ...]:

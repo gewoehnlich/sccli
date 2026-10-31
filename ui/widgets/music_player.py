@@ -84,10 +84,15 @@ class MusicPlayer(Widget):
         )
 
     def on_play_button_pressed(self) -> None:
+        track = self.playlist.current()
+
+        if not track:
+            return
+
         self.is_playing = True
 
         self.commands.play_track.run(
-            track=self.playlist.current(),
+            track=track,
         )
 
     def on_pause_button_pressed(self) -> None:

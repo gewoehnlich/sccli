@@ -36,11 +36,13 @@ class CommandsContainer:
             message=messages.unknown,
         )
 
-        self.fetch_my_liked_tracks: FetchMyLikedTracksCommand = FetchMyLikedTracksCommand(
-            auth=auth,
-            track_repository=repositories.track,
-            user_repository=repositories.user,
-            http_client=http_client,
+        self.fetch_my_liked_tracks: FetchMyLikedTracksCommand = (
+            FetchMyLikedTracksCommand(
+                auth=auth,
+                track_repository=repositories.track,
+                user_repository=repositories.user,
+                http_client=http_client,
+            )
         )
 
         self.play_track: PlayTrackCommand = PlayTrackCommand(

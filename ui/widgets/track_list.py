@@ -37,19 +37,21 @@ class TrackList(DataTable[None]):
         self.columns = {}
         self.rows = {}
 
-        self.add_columns(*tuple(["id", "username", "title", "duration"]))
+        self.add_columns(*("id", "username", "title", "duration"))
         self.add_rows(self.formatted_tracks())
 
     def formatted_tracks(self) -> list[tuple[Any]]:
-        tracks: list[tuple[Any]] = []
+        tracks: list[tuple[Any, ...]] = []
 
         for track in self.playlist.tracks:
-            tracks.append(tuple([
-                track.id,
-                track.user.username,
-                track.title,
-                track.formatted_duration,
-            ]))
+            tracks.append(
+                (
+                    track.id,
+                    track.user.username,
+                    track.title,
+                    track.formatted_duration,
+                )
+            )
 
         return tracks
 
