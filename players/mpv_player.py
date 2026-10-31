@@ -67,3 +67,9 @@ class MpvPlayer(Player):
         self,
     ) -> int:
         return cast(int, self.player.duration) or 0
+
+    def update_current_track_playtime(
+        self,
+        playtime: int,
+    ) -> None:
+        self.player.time_pos = playtime

@@ -35,3 +35,7 @@ class Player:
     @abstractmethod
     def get_current_track_duration(self) -> int:
         pass
+
+    @abstractmethod
+    def update_current_track_playtime(self, playtime: int) -> None:
+        pass

@@ -5,6 +5,7 @@ from textual.widget import Widget
 
 from core.player import Player
 from di.commands_container import CommandsContainer
+from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
 )
@@ -109,4 +110,17 @@ class MusicPlayer(Widget):
     def play_next_track(self) -> None:
         self.commands.play_track.run(
             track=self.playlist.next(),
+        )
+
+    def on_track_current_playtime_changed(
+        self,
+        message: TrackCurrentPlaytimeChanged,
+    ) -> None:
+        message.stop()
+
+        if self.playlist.current() is None:
+            return
+
+        self.player.update_current_track_playtime(
+            playtime=message.playtime,
         )
