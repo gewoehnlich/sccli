@@ -8,11 +8,23 @@ from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 from textual_image.widget import Image as BaseImage
 
+from loguru import logger
+
+from actions.fetch_image_action import FetchImageAction
+
 
 class Image(Widget):
+    DEFAULT_IMAGE: str = "dist/image.jpg"
+
     image: Reactive[ImageFile | None] = reactive(None)
 
-    DEFAULT_IMAGE: str = "dist/image.jpg"
+    def __init__(
+        self,
+        fetch_image_action: FetchImageAction,
+    ) -> None:
+        self.fetch_image_action = fetch_image_action
+
+        super().__init__()
 
     def compose(self) -> ComposeResult:
         pil_image: ImageFile = PILImage.open(self.DEFAULT_IMAGE)
@@ -20,32 +32,32 @@ class Image(Widget):
         yield BaseImage(pil_image)
 
     def on_mount(self) -> None:
-        base_image = self.query_one(BaseImage)
-        base_image.styles.width = "100%"
-        base_image.styles.height = "100%"
+        image = self.query_one(BaseImage)
+        image.styles.width = "100%"
+        image.styles.height = "100%"
 
-    def update(
-        self,
-        image: ImageFile,
-    ) -> None:
-        self.image = image
+    def watch_image(self, image: ImageFile | None) -> None:
+        if image is not None:
+            self.query_one(BaseImage).image = image
 
-    def update_from_link(
-        self,
-        link: str,
-    ) -> None:
-        response = requests.get(link, timeout=5)
+    def show_default(self) -> None:
+        self.image = PILImage.open(self.DEFAULT_IMAGE)
 
-        pil_image: ImageFile = PILImage.open(
-            BytesIO(response.content),
-        )
+    def load_artwork(self, url: str | None) -> None:
+        image: ImageFile | None = None
 
-        self.update(image=pil_image)
+        if url:
+            logger.info(f"url: {url}")
+            try:
+                proxy_endpoint = "http://172.17.0.1:52048"
+                response = requests.get(url, timeout=5, proxies={"http": proxy_endpoint, "https": proxy_endpoint})
 
-    def update_from_local(
-        self,
-        filename: str,
-    ) -> None:
-        pil_image: ImageFile = PILImage.open(filename)
+                image = PILImage.open(BytesIO(response.content))
+                image.load()
+            except (requests.RequestException, OSError):
+                image = None
 
-        self.update(image=pil_image)
+        if image is None:
+            self.show_default()
+        else:
+            self.image = image

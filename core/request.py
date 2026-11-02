@@ -21,6 +21,7 @@ class Urls:
     TOKEN = "https://secure.soundcloud.com/oauth/token"
     REFRESH_TOKEN = "https://secure.soundcloud.com/oauth/token"
     API = "https://api.soundcloud.com"
+    SNDCDN = "https://i1.sndcdn.com"
 
 
 class Request:
@@ -43,6 +44,7 @@ class Request:
                 self.URL.TOKEN,
                 self.URL.REFRESH_TOKEN,
                 self.URL.API,
+                self.URL.SNDCDN,
             )
         ):
             raise UnsupportedApiEndpointException(

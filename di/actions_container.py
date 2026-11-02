@@ -1,3 +1,4 @@
+from actions.fetch_image_action import FetchImageAction
 from actions.fetch_track_streams_action import FetchTrackStreamsAction
 from core.auth import Auth
 from core.http_client import HttpClient
@@ -11,6 +12,13 @@ class ActionsContainer:
     ) -> None:
         self.fetch_track_streams: FetchTrackStreamsAction = (
             FetchTrackStreamsAction(
+                auth=auth,
+                http_client=http_client,
+            )
+        )
+
+        self.fetch_image: FetchImageAction = (
+            FetchImageAction(
                 auth=auth,
                 http_client=http_client,
             )

@@ -6,6 +6,7 @@ from textual.widgets import Footer, Header
 from core.di_container import DiContainer
 from core.logger import Logger
 from core.player import Player
+from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from repositories.track_repository import TrackRepository
 from ui.events.track_selected import TrackSelected
@@ -31,6 +32,7 @@ class App(BaseApp[None]):
         self.logger: Logger = di_container.logger
         self.commands: CommandsContainer = di_container.commands
         self.player: Player = di_container.player
+        self.actions: ActionsContainer = di_container.actions
 
         super().__init__()
 
@@ -45,6 +47,7 @@ class App(BaseApp[None]):
                 yield MusicPlayer(
                     player=self.player,
                     commands=self.commands,
+                    actions=self.actions,
                 ).data_bind(
                     playlist=App.playlist,
                 )
@@ -84,10 +87,6 @@ class App(BaseApp[None]):
             tracks=self.track_repository.get(),
         )
 
-    def on_track_selected(
-        self,
-        message: TrackSelected,
-    ) -> None:
-        self.playlist.select(
-            index=message.index,
-        )
+    def on_track_selected(self, event: TrackSelected) -> None:
+        track = self.playlist.select(index=event.index)
+        self.query_one(MusicPlayer).play(track)

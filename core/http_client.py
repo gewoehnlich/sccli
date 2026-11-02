@@ -1,5 +1,6 @@
 from typing import Any, cast
 
+from loguru import logger
 import requests
 
 from core.request import Request

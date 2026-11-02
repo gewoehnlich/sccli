@@ -4,7 +4,9 @@ from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 
 from core.player import Player
+from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
+from models.track import Track
 from ui.components.statics.track_username import TrackUsername
 from ui.components.statics.track_title import TrackTitle
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
@@ -20,6 +22,7 @@ from values.playlist import Playlist
 
 class MusicPlayer(Widget):
     playlist: Reactive[Playlist] = reactive(Playlist(tracks=()))
+    current_track: Reactive[Track | None] = reactive(None)
 
     is_playing: Reactive[bool] = reactive(False)
 
@@ -32,15 +35,19 @@ class MusicPlayer(Widget):
         self,
         player: Player,
         commands: CommandsContainer,
+        actions: ActionsContainer,
     ) -> None:
         self.player: Player = player
         self.commands: CommandsContainer = commands
+        self.actions: ActionsContainer = actions
 
         super().__init__()
 
     def compose(self) -> ComposeResult:
         with Center():
-            yield Image()
+            yield Image(
+                fetch_image_action=self.actions.fetch_image,
+            )
 
         with Center():
             yield MusicPlayerButtonsComponent().data_bind(
@@ -90,18 +97,13 @@ class MusicPlayer(Widget):
         self.current_track_playtime = self.player.get_current_track_playtime()
         self.current_track_duration = self.player.get_current_track_duration()
 
-        track = self.playlist.current()
-
-        if track:
-            self.current_track_username = track.user.username
-            self.current_track_title = track.title
+    def play(self, track: Track) -> None:
+        self.current_track = track
+        self.is_playing = True
+        self.commands.play_track.run(track=track)
 
     def on_previous_track_button_pressed(self) -> None:
-        self.is_playing = True
-
-        self.commands.play_track.run(
-            track=self.playlist.prev(),
-        )
+        self.play(track=self.playlist.prev())
 
     def on_play_button_pressed(self) -> None:
         track = self.playlist.current()
@@ -109,11 +111,7 @@ class MusicPlayer(Widget):
         if not track:
             return
 
-        self.is_playing = True
-
-        self.commands.play_track.run(
-            track=track,
-        )
+        self.play(track=track)
 
     def on_pause_button_pressed(self) -> None:
         self.is_playing = False
@@ -121,11 +119,7 @@ class MusicPlayer(Widget):
         self.player.stop()
 
     def on_next_track_button_pressed(self) -> None:
-        self.is_playing = True
-
-        self.commands.play_track.run(
-            track=self.playlist.next(),
-        )
+        self.play_next_track()
 
     def register_player_events(self) -> None:
         self.player.on_track_finished(
@@ -133,14 +127,9 @@ class MusicPlayer(Widget):
         )
 
     def play_next_track(self) -> None:
-        self.commands.play_track.run(
-            track=self.playlist.next(),
-        )
+        self.play(track=self.playlist.next())
 
-    def on_track_current_playtime_changed(
-        self,
-        message: TrackCurrentPlaytimeChanged,
-    ) -> None:
+    def on_track_current_playtime_changed(self, message: TrackCurrentPlaytimeChanged) -> None:
         message.stop()
 
         if self.playlist.current() is None:
@@ -149,3 +138,14 @@ class MusicPlayer(Widget):
         self.player.update_current_track_playtime(
             playtime=message.playtime,
         )
+
+    def watch_current_track(self, track: Track | None) -> None:
+        if track is None:
+            self.current_track_username = ""
+            self.current_track_title = ""
+            self.query_one(Image).show_default()
+            return
+
+        self.current_track_username = track.user.username
+        self.current_track_title = track.title
+        self.query_one(Image).load_artwork(track.artwork_url)
