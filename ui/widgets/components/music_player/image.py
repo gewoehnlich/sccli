@@ -17,12 +17,12 @@ class Image(Widget):
     def compose(self) -> ComposeResult:
         pil_image: ImageFile = PILImage.open(self.DEFAULT_IMAGE)
 
-        self.base_image = BaseImage(pil_image)
-        yield self.base_image
+        yield BaseImage(pil_image)
 
     def on_mount(self) -> None:
-        self.base_image.styles.width = "100%"
-        self.base_image.styles.height = "100%"
+        base_image = self.query_one(BaseImage)
+        base_image.styles.width = "100%"
+        base_image.styles.height = "100%"
 
     def update(
         self,
