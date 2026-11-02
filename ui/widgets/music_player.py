@@ -76,8 +76,8 @@ class MusicPlayer(Widget):
         self.styles.align_horizontal = "center"
 
         image = self.query_one(Image)
-        image.styles.width = 30
-        image.styles.height = 15
+        image.styles.width = 50
+        image.styles.height = 25
         image.styles.align_horizontal = "center"
 
         buttons = self.query_one(MusicPlayerButtonsComponent)
@@ -148,4 +148,4 @@ class MusicPlayer(Widget):
 
         self.current_track_username = track.user.username
         self.current_track_title = track.title
-        self.query_one(Image).load_artwork(track.artwork_url)
+        self.query_one(Image).load_artwork(track.artwork_url_large)

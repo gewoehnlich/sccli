@@ -37,3 +37,10 @@ class Track(Model):
         minutes, seconds = divmod(self.duration, 60)
 
         return f"{minutes}:{seconds:02d}"
+
+    @property
+    def artwork_url_large(self) -> str | None:
+        if not self.artwork_url:
+            return None
+
+        return self.artwork_url.replace('-large', '-t500x500')

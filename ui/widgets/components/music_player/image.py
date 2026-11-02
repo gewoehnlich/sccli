@@ -47,7 +47,6 @@ class Image(Widget):
         image: ImageFile | None = None
 
         if url:
-            logger.info(f"url: {url}")
             try:
                 proxy_endpoint = "http://172.17.0.1:52048"
                 response = requests.get(url, timeout=5, proxies={"http": proxy_endpoint, "https": proxy_endpoint})
