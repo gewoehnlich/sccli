@@ -20,12 +20,9 @@ class TrackList(DataTable[None]):
         self,
         logger: Logger,
         user_repository: UserRepository,
-        track_selected_event: type[TrackSelected],
     ) -> None:
         self.logger: Logger = logger
         self.user_repository: UserRepository = user_repository
-
-        self.track_selected_event: type[TrackSelected] = track_selected_event
 
         super().__init__()
 
@@ -110,7 +107,7 @@ class TrackList(DataTable[None]):
         event: DataTable.RowSelected,
     ) -> None:
         self.post_message(
-            message=self.track_selected_event(
+            message=TrackSelected(
                 index=event.cursor_row,
             ),
         )

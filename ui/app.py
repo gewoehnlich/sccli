@@ -20,7 +20,6 @@ class App(BaseApp[None]):
     TITLE = "sccli"
 
     playlist: Reactive[Playlist] = reactive(Playlist(tracks=()))
-    track_selected_event: type[TrackSelected] = TrackSelected
 
     def __init__(
         self,
@@ -59,7 +58,6 @@ class App(BaseApp[None]):
             yield TrackList(
                 logger=self.logger,
                 user_repository=self.di_container.repositories.user,
-                track_selected_event=self.track_selected_event,
             ).data_bind(
                 playlist=App.playlist,
             )
