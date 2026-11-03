@@ -45,6 +45,27 @@ class HttpClient:
 
         raise error
 
+    def fetch_image(self, request: Request) -> bytes:
+        prepared: requests.PreparedRequest = self._session.prepare_request(
+            request=request.base_request,
+        )
+
+        try:
+            response: requests.Response = self._session.send(
+                request=prepared,
+            )
+        except requests.RequestException as e:
+            raise SoundcloudConnectionError(
+                f"Could not reach SoundCloud: {type(e).__name__})"
+            ) from e
+
+        if response.ok:
+            return response.content
+
+        error = self._build_error(response=response)
+
+        raise error
+
     @staticmethod
     def _parse_body(
         response: requests.Response,

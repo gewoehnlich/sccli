@@ -46,14 +46,9 @@ class Image(Widget):
 
         if url:
             try:
-                proxy_endpoint = "http://172.17.0.1:52048"
-                response = requests.get(
-                    url,
-                    timeout=5,
-                    proxies={"http": proxy_endpoint, "https": proxy_endpoint},
-                )
+                data = self.fetch_image_action.run(url=url)
 
-                image = PILImage.open(BytesIO(response.content))
+                image = PILImage.open(BytesIO(data))
                 image.load()
             except requests.RequestException, OSError:
                 image = None

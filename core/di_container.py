@@ -72,6 +72,7 @@ class DiContainer:
         self.actions: ActionsContainer = ActionsContainer(
             auth=self.auth,
             http_client=self.http_client,
+            repositories=self.repositories,
         )
 
         self.commands: CommandsContainer = CommandsContainer(

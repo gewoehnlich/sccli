@@ -1,5 +1,6 @@
 from core.database import Database
 from repositories.account_repository import AccountRepository
+from repositories.image_repository import ImageRepository
 from repositories.track_repository import TrackRepository
 from repositories.user_repository import UserRepository
 
@@ -18,5 +19,9 @@ class RepositoriesContainer:
         )
 
         self.user = UserRepository(
+            database=database,
+        )
+
+        self.image = ImageRepository(
             database=database,
         )
