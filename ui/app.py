@@ -86,5 +86,6 @@ class App(BaseApp[None]):
         )
 
     def on_track_selected(self, event: TrackSelected) -> None:
+        event.stop()
         track = self.playlist.select(index=event.index)
         self.query_one(MusicPlayer).play(track)
