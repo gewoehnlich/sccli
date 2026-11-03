@@ -1,25 +1,13 @@
-from typing import Any
-
 from textual.reactive import Reactive, reactive
 from textual.widgets import Static
 
 
 class TrackTitle(Static):
-    title: Reactive[str] = reactive('')
-
-    def __init__(
-        self,
-        **kwargs: Any,
-    ) -> None:
-        super().__init__(
-            content='',
-            id="track_title",
-            **kwargs,
-        )
+    title: Reactive[str] = reactive("")
 
     def on_mount(self) -> None:
-        self.styles.width = "auto"
-        self.styles.margin = (0, 0, 0, 1)
+        self.styles.width = "100%"
+        self.styles.height = "auto"
 
     def watch_title(self) -> None:
-        self.content = self.title
+        self.update(self.title)

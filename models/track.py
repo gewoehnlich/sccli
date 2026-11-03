@@ -43,4 +43,4 @@ class Track(Model):
         if not self.artwork_url:
             return None
 
-        return self.artwork_url.replace('-large', '-t500x500')
+        return self.artwork_url.replace("-large", "-t500x500")

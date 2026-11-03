@@ -8,8 +8,6 @@ from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 from textual_image.widget import Image as BaseImage
 
-from loguru import logger
-
 from actions.fetch_image_action import FetchImageAction
 
 
@@ -49,11 +47,15 @@ class Image(Widget):
         if url:
             try:
                 proxy_endpoint = "http://172.17.0.1:52048"
-                response = requests.get(url, timeout=5, proxies={"http": proxy_endpoint, "https": proxy_endpoint})
+                response = requests.get(
+                    url,
+                    timeout=5,
+                    proxies={"http": proxy_endpoint, "https": proxy_endpoint},
+                )
 
                 image = PILImage.open(BytesIO(response.content))
                 image.load()
-            except (requests.RequestException, OSError):
+            except requests.RequestException, OSError:
                 image = None
 
         if image is None:

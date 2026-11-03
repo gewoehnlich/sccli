@@ -17,9 +17,7 @@ class ActionsContainer:
             )
         )
 
-        self.fetch_image: FetchImageAction = (
-            FetchImageAction(
-                auth=auth,
-                http_client=http_client,
-            )
+        self.fetch_image: FetchImageAction = FetchImageAction(
+            auth=auth,
+            http_client=http_client,
         )

@@ -7,13 +7,12 @@ from core.player import Player
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from models.track import Track
-from ui.components.statics.track_username import TrackUsername
-from ui.components.statics.track_title import TrackTitle
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
 )
 from ui.widgets.components.music_player.image import Image
+from ui.widgets.components.music_player.track_metadata import TrackMetadata
 from ui.widgets.components.music_player.track_progress_bar import (
     TrackProgressBarComponent,
 )
@@ -28,8 +27,6 @@ class MusicPlayer(Widget):
 
     current_track_playtime: Reactive[int] = reactive(0)
     current_track_duration: Reactive[int] = reactive(0)
-    current_track_username: Reactive[str] = reactive('')
-    current_track_title: Reactive[str] = reactive('')
 
     def __init__(
         self,
@@ -55,13 +52,8 @@ class MusicPlayer(Widget):
             )
 
         with Center():
-            yield TrackUsername().data_bind(
-                username=MusicPlayer.current_track_username,
-            )
-
-        with Center():
-            yield TrackTitle().data_bind(
-                title=MusicPlayer.current_track_title,
+            yield TrackMetadata().data_bind(
+                current_track=MusicPlayer.current_track,
             )
 
         with Center():
@@ -129,7 +121,9 @@ class MusicPlayer(Widget):
     def play_next_track(self) -> None:
         self.play(track=self.playlist.next())
 
-    def on_track_current_playtime_changed(self, message: TrackCurrentPlaytimeChanged) -> None:
+    def on_track_current_playtime_changed(
+        self, message: TrackCurrentPlaytimeChanged
+    ) -> None:
         message.stop()
 
         if self.playlist.current() is None:
@@ -140,12 +134,10 @@ class MusicPlayer(Widget):
         )
 
     def watch_current_track(self, track: Track | None) -> None:
+        image = self.query_one(Image)
+
         if track is None:
-            self.current_track_username = ""
-            self.current_track_title = ""
-            self.query_one(Image).show_default()
+            image.show_default()
             return
 
-        self.current_track_username = track.user.username
-        self.current_track_title = track.title
-        self.query_one(Image).load_artwork(track.artwork_url_large)
+        image.load_artwork(track.artwork_url_large)
