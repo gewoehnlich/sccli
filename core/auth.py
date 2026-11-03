@@ -11,6 +11,7 @@ from core.request import Request
 from core.server import Server
 from exceptions.auth.authorization_denied_error import AuthorizationDeniedError
 from exceptions.auth.state_mismatch_error import StateMismatchError
+from exceptions.soundcloud_errors import InvalidGrantError
 from models.account import Account
 from repositories.account_repository import AccountRepository
 
@@ -43,11 +44,16 @@ class Auth:
         if not account:
             account = self._authenticate_user()
 
-        current_timestamp = int(time.time())
-        if current_timestamp > account.expire_timestamp - 100:
-            account = self._refresh_token(
-                account=account,
-            )
+        try:
+            current_timestamp = int(time.time())
+            if current_timestamp > account.expire_timestamp - 100:
+                account = self._refresh_token(
+                    account=account,
+                )
+        except InvalidGrantError:
+            # something went wrong with refresh token
+            # gotta authenticate again
+            account = self._authenticate_user()
 
         assert account is not None
 
