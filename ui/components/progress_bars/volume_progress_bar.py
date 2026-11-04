@@ -9,7 +9,7 @@ from ui.events.volume_changed import VolumeChanged
 
 
 class VolumeProgressBar(ProgressBar):
-    volume: Reactive[int] = reactive(0)
+    volume: Reactive[int | None] = reactive(None)
 
     MAX_VOLUME: int = 100
 
@@ -25,8 +25,8 @@ class VolumeProgressBar(ProgressBar):
             **kwargs,
         )
 
-    def watch_volume(self, volume: int) -> None:
-        self.progress = volume
+    def watch_volume(self, volume: int | None) -> None:
+        self.progress = volume or 0
 
     def on_click(self, event: events.Click) -> None:
         event.stop()

@@ -7,6 +7,7 @@ from core.player import Player
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from models.track import Track
+from repositories.setting_repository import SettingRepository
 from ui.widgets.components.music_player.volume_slider import VolumeSlider
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
@@ -34,10 +35,12 @@ class MusicPlayer(Widget):
         player: Player,
         commands: CommandsContainer,
         actions: ActionsContainer,
+        setting_repository: SettingRepository,
     ) -> None:
         self.player: Player = player
         self.commands: CommandsContainer = commands
         self.actions: ActionsContainer = actions
+        self.setting_repository: SettingRepository = setting_repository
 
         super().__init__()
 
@@ -45,6 +48,7 @@ class MusicPlayer(Widget):
         with Center():
             yield VolumeSlider(
                 player=self.player,
+                setting_repository=self.setting_repository,
             )
 
         with Center():

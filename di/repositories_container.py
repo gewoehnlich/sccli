@@ -3,6 +3,7 @@ from repositories.account_repository import AccountRepository
 from repositories.image_repository import ImageRepository
 from repositories.track_repository import TrackRepository
 from repositories.user_repository import UserRepository
+from repositories.setting_repository import SettingRepository
 
 
 class RepositoriesContainer:
@@ -23,5 +24,9 @@ class RepositoriesContainer:
         )
 
         self.image = ImageRepository(
+            database=database,
+        )
+
+        self.setting = SettingRepository(
             database=database,
         )
