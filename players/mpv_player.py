@@ -34,40 +34,26 @@ class MpvPlayer(Player):
             if event["reason"] == b"eof":
                 self.emit_track_finished()
 
-    def _log(
-        self,
-        level: str,
-        prefix: str,
-        text: str,
-    ) -> None:
+    def _log(self, level: str, prefix: str, text: str) -> None:
         self.logger.debug(f"[{level}] {prefix}: {text}")
 
-    def play(
-        self,
-        link: str,
-    ) -> None:
+    def play(self, link: str) -> None:
         if cast(bool, self.player.pause):
             self.player.pause = False
         else:
             cast(Callable[..., None], self.player.play)(filename=link)
 
-    def stop(
-        self,
-    ) -> None:
+    def stop(self) -> None:
         self.player.pause = True
 
-    def get_current_track_playtime(
-        self,
-    ) -> int:
+    def get_current_track_playtime(self) -> int:
         return cast(int, self.player.time_pos) or 0
 
-    def get_current_track_duration(
-        self,
-    ) -> int:
+    def get_current_track_duration(self) -> int:
         return cast(int, self.player.duration) or 0
 
-    def update_current_track_playtime(
-        self,
-        playtime: int,
-    ) -> None:
+    def update_current_track_playtime(self, playtime: int) -> None:
         self.player.time_pos = playtime
+
+    def update_volume(self, volume: int) -> None:
+        self.player.volume = volume

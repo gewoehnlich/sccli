@@ -11,3 +11,4 @@ test.db
 .test_tokens.json
 config.yml
 logs/
+todo.txt

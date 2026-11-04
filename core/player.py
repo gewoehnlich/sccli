@@ -39,3 +39,7 @@ class Player:
     @abstractmethod
     def update_current_track_playtime(self, playtime: int) -> None:
         pass
+
+    @abstractmethod
+    def update_volume(self, volume: int) -> None:
+        pass

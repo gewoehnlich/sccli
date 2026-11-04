@@ -7,6 +7,7 @@ from core.player import Player
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from models.track import Track
+from ui.widgets.components.music_player.volume_slider import VolumeSlider
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
@@ -42,6 +43,11 @@ class MusicPlayer(Widget):
 
     def compose(self) -> ComposeResult:
         with Center():
+            yield VolumeSlider(
+                player=self.player,
+            )
+
+        with Center():
             yield Image(
                 fetch_image_action=self.actions.fetch_image,
             )
@@ -66,6 +72,10 @@ class MusicPlayer(Widget):
         self.styles.width = "auto"
         self.styles.height = "auto"
         self.styles.align_horizontal = "center"
+
+        # volume_slider = self.query_one(VolumeSlider)
+        # volume_slider.styles.width = "auto"
+        # volume_slider.styles.align_horizontal = "center"
 
         image = self.query_one(Image)
         image.styles.width = 50
