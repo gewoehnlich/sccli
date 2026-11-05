@@ -1,7 +1,8 @@
 from textual.app import ComposeResult
-from textual.containers import Center
+from textual.containers import Center, Container, Horizontal
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
+from loguru import logger
 
 from core.player import Player
 from di.actions_container import ActionsContainer
@@ -46,12 +47,6 @@ class MusicPlayer(Widget):
 
     def compose(self) -> ComposeResult:
         with Center():
-            yield VolumeSlider(
-                player=self.player,
-                setting_repository=self.setting_repository,
-            )
-
-        with Center():
             yield Image(
                 fetch_image_action=self.actions.fetch_image,
             )
@@ -72,14 +67,15 @@ class MusicPlayer(Widget):
                 current_track_duration=MusicPlayer.current_track_duration,
             )
 
-    def on_mount(self) -> None:
-        self.styles.width = "auto"
-        self.styles.height = "auto"
-        self.styles.align_horizontal = "center"
+        with Horizontal(id="music-player-footer"):
+            with Container(id="volume"):
+                yield VolumeSlider(
+                    player=self.player,
+                    setting_repository=self.setting_repository,
+                )
 
-        # volume_slider = self.query_one(VolumeSlider)
-        # volume_slider.styles.width = "auto"
-        # volume_slider.styles.align_horizontal = "center"
+    def on_mount(self) -> None:
+        self.styles.align_horizontal = "center"
 
         image = self.query_one(Image)
         image.styles.width = 50
@@ -97,6 +93,19 @@ class MusicPlayer(Widget):
         progress_bar = self.query_one(TrackProgressBarComponent)
         progress_bar.styles.width = "auto"
         progress_bar.styles.align_horizontal = "center"
+
+        footer = self.query_one("#music-player-footer")
+        footer.styles.dock = "bottom"
+        footer.styles.width = "100%"
+        footer.styles.height = "auto"
+
+        volume = self.query_one("#volume")
+        volume.styles.height = "auto"
+        volume.styles.align_horizontal = "right"
+
+        volume_slider = self.query_one(VolumeSlider)
+        volume_slider.styles.width = "auto"
+        volume_slider.styles.height = "auto"
 
         self.set_interval(1, self.update_current_track_info)
 

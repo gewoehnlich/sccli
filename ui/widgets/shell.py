@@ -30,14 +30,7 @@ class Shell(Vertical):
                 id="shell-input",
             )
 
-    def on_mount(
-        self,
-    ) -> None:
-        self.styles.height = "100%"
-
-        container = self.query_one(Container)
-        container.styles.padding = 1
-
+    def on_mount(self) -> None:
         rich_log = self.query_one(RichLog)
         rich_log.styles.width = "100%"
         rich_log.styles.height = "1fr"
@@ -53,16 +46,10 @@ class Shell(Vertical):
             output=self.write,
         )
 
-    def write(
-        self,
-        text: str,
-    ) -> None:
+    def write(self, text: str) -> None:
         self.query_one(RichLog).write(text)
 
-    def on_input_submitted(
-        self,
-        event: Input.Submitted,
-    ) -> None:
+    def on_input_submitted(self, event: Input.Submitted) -> None:
         event.stop()
 
         command_line = event.value.strip()
@@ -74,10 +61,7 @@ class Shell(Vertical):
         self.write(f"[plum2]sccli>[/plum2] [thistle1]{command_line}[/thistle1]")
         self.process_command(command_line)
 
-    def process_command(
-        self,
-        command_line: str,
-    ) -> None:
+    def process_command(self, command_line: str) -> None:
         try:
             command, _args = self._parse_input(command_line)
         except ValueError:  # e.g. unbalanced quotes
@@ -102,9 +86,7 @@ class Shell(Vertical):
                 )
 
     @staticmethod
-    def _parse_input(
-        command_line: str,
-    ) -> tuple[str, list[str]]:
+    def _parse_input(command_line: str) -> tuple[str, list[str]]:
         parts = shlex.split(command_line)
 
         return parts[0].lower(), parts[1:]

@@ -74,6 +74,9 @@ class App(BaseApp[None]):
         self.theme = "rose-pine"
         self.styles.height = "100%"
 
+        left = self.query_one("#left")
+        left.styles.padding = 1
+
         music_player = self.query_one(MusicPlayer)
         music_player.styles.width = "1fr"
         music_player.styles.height = "1fr"

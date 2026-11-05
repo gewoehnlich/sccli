@@ -6,7 +6,7 @@ class VolumeStatic(Static):
     volume: Reactive[int | None] = reactive(None)
 
     def on_mount(self) -> None:
-        self.styles.width = "100%"
+        self.styles.width = "auto"
         self.styles.height = "auto"
 
     def watch_volume(self, volume: int) -> None:
