@@ -1,7 +1,6 @@
 from typing import Any, cast
 
 import requests
-from loguru import logger
 
 from core.request import Request
 from exceptions.soundcloud_errors import *

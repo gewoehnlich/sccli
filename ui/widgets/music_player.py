@@ -2,14 +2,12 @@ from textual.app import ComposeResult
 from textual.containers import Center, Container, Horizontal
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
-from loguru import logger
 
 from core.player import Player
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from models.track import Track
 from repositories.setting_repository import SettingRepository
-from ui.widgets.components.music_player.volume_slider import VolumeSlider
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
@@ -19,6 +17,7 @@ from ui.widgets.components.music_player.track_metadata import TrackMetadata
 from ui.widgets.components.music_player.track_progress_bar import (
     TrackProgressBarComponent,
 )
+from ui.widgets.components.music_player.volume_slider import VolumeSlider
 from values.playlist import Playlist
 
 
@@ -94,7 +93,7 @@ class MusicPlayer(Widget):
         buttons.styles.width = "auto"
         buttons.styles.align_horizontal = "center"
 
-        metadata = self.query_one(TrackMetadata)
+        self.query_one(TrackMetadata)
 
         progress_bar = self.query_one(TrackProgressBarComponent)
         progress_bar.styles.width = "auto"

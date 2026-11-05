@@ -3,7 +3,6 @@ from typing import Any
 from textual import events
 from textual.reactive import Reactive, reactive
 from textual.widgets import ProgressBar
-from loguru import logger
 
 from ui.events.volume_changed import VolumeChanged
 

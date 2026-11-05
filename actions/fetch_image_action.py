@@ -1,5 +1,3 @@
-from typing import Any
-
 from core.action import Action
 from core.auth import Auth
 from core.http_client import HttpClient
@@ -40,8 +38,6 @@ class FetchImageAction(Action):
             request=request,
         )
 
-        self.image_repository.store(
-            model=Image(url=url, data=data)
-        )
+        self.image_repository.store(model=Image(url=url, data=data))
 
         return data

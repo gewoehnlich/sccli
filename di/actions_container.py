@@ -3,7 +3,6 @@ from actions.fetch_track_streams_action import FetchTrackStreamsAction
 from core.auth import Auth
 from core.http_client import HttpClient
 from di.repositories_container import RepositoriesContainer
-from repositories import image_repository
 
 
 class ActionsContainer:

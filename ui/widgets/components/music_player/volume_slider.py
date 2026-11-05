@@ -21,9 +21,7 @@ class VolumeSlider(Widget):
         self.player: Player = player
         self.setting_repository: SettingRepository = setting_repository
 
-        super().__init__(
-            id="volume-slider"
-        )
+        super().__init__(id="volume-slider")
 
     def compose(self) -> ComposeResult:
         yield VolumeProgressBar().data_bind(
@@ -37,7 +35,7 @@ class VolumeSlider(Widget):
     def on_mount(self) -> None:
         self.styles.layout = "horizontal"
 
-        progress_bar = self.query_one(VolumeProgressBar)
+        self.query_one(VolumeProgressBar)
 
         volume_static = self.query_one(VolumeStatic)
         volume_static.styles.padding = (0, 0, 0, 1)

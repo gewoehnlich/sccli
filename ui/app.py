@@ -9,8 +9,8 @@ from core.player import Player
 from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from models.track import Track
-from repositories.track_repository import TrackRepository
 from repositories.setting_repository import SettingRepository
+from repositories.track_repository import TrackRepository
 from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
 from ui.widgets.shell import Shell
@@ -35,7 +35,9 @@ class App(BaseApp[None]):
         self.commands: CommandsContainer = di_container.commands
         self.player: Player = di_container.player
         self.actions: ActionsContainer = di_container.actions
-        self.setting_repository: SettingRepository = di_container.repositories.setting
+        self.setting_repository: SettingRepository = (
+            di_container.repositories.setting
+        )
 
         super().__init__()
 
