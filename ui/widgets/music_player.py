@@ -46,49 +46,55 @@ class MusicPlayer(Widget):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        with Center():
-            yield Image(
-                fetch_image_action=self.actions.fetch_image,
-            )
-
-        with Center():
-            yield MusicPlayerButtonsComponent().data_bind(
-                is_playing=MusicPlayer.is_playing,
-            )
-
-        with Center():
-            yield TrackMetadata().data_bind(
-                current_track=MusicPlayer.current_track,
-            )
-
-        with Center():
-            yield TrackProgressBarComponent().data_bind(
-                current_track_playtime=MusicPlayer.current_track_playtime,
-                current_track_duration=MusicPlayer.current_track_duration,
-            )
-
-        with Horizontal(id="music-player-footer"):
-            with Container(id="volume"):
-                yield VolumeSlider(
-                    player=self.player,
-                    setting_repository=self.setting_repository,
+        with Container(id="music-player-container"):
+            with Center():
+                yield Image(
+                    fetch_image_action=self.actions.fetch_image,
                 )
+
+            with Center():
+                yield MusicPlayerButtonsComponent().data_bind(
+                    is_playing=MusicPlayer.is_playing,
+                )
+
+            with Center():
+                yield TrackMetadata().data_bind(
+                    current_track=MusicPlayer.current_track,
+                )
+
+            with Center():
+                yield TrackProgressBarComponent().data_bind(
+                    current_track_playtime=MusicPlayer.current_track_playtime,
+                    current_track_duration=MusicPlayer.current_track_duration,
+                )
+
+            with Horizontal(id="music-player-footer"):
+                with Container(id="volume"):
+                    yield VolumeSlider(
+                        player=self.player,
+                        setting_repository=self.setting_repository,
+                    )
 
     def on_mount(self) -> None:
         self.styles.align_horizontal = "center"
 
+        container = self.query_one("#music-player-container")
+
+        for child in container.children:
+            child.styles.padding = (0, 0, 1, 0)
+
+        container.styles.align_vertical = "middle"
+
         image = self.query_one(Image)
         image.styles.width = 50
-        image.styles.height = 25
+        image.styles.height = 23
         image.styles.align_horizontal = "center"
 
         buttons = self.query_one(MusicPlayerButtonsComponent)
         buttons.styles.width = "auto"
         buttons.styles.align_horizontal = "center"
-        buttons.styles.padding = 1
 
         metadata = self.query_one(TrackMetadata)
-        metadata.styles.padding = (0, 0, 1, 0)
 
         progress_bar = self.query_one(TrackProgressBarComponent)
         progress_bar.styles.width = "auto"
