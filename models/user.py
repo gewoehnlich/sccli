@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import String, Text
@@ -32,3 +32,17 @@ class User(Model):
     @property
     def urn(self) -> str:
         return f"soundcloud:users:{self.id}"
+
+    @staticmethod
+    def from_api(data: dict[str, Any]) -> User:
+        return User(
+            avatar_url=data["avatar_url"],
+            city=data["city"],
+            country=data["country"],
+            created_at=data["created_at"],
+            description=data["description"],
+            id=data["id"],
+            permalink=data["permalink"],
+            permalink_url=data["permalink_url"],
+            username=data["username"],
+        )

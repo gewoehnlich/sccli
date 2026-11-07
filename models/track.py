@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -44,3 +44,16 @@ class Track(Model):
             return None
 
         return self.artwork_url.replace("-large", "-t500x500")
+
+    @staticmethod
+    def from_api(data: dict[str, Any], user_id: int) -> Track:
+        return Track(
+            artwork_url=data["artwork_url"],
+            created_at=data["created_at"],
+            description=data["description"],
+            duration=data["duration"],
+            id=data["id"],
+            permalink_url=data["permalink_url"],
+            title=data["title"],
+            user_id=user_id,
+        )

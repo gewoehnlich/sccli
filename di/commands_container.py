@@ -1,6 +1,6 @@
-from commands.fetch_my_liked_tracks_command import FetchMyLikedTracksCommand
 from commands.output_message_command import OutputMessageCommand
 from commands.play_track_command import PlayTrackCommand
+from commands.sync_my_liked_tracks_command import SyncMyLikedTracksCommand
 from config.messages import MessagesConfig
 from core.auth import Auth
 from core.command import Command
@@ -36,8 +36,8 @@ class CommandsContainer:
             message=messages.unknown,
         )
 
-        self.fetch_my_liked_tracks: FetchMyLikedTracksCommand = (
-            FetchMyLikedTracksCommand(
+        self.sync_my_liked_tracks: SyncMyLikedTracksCommand = (
+            SyncMyLikedTracksCommand(
                 auth=auth,
                 track_repository=repositories.track,
                 user_repository=repositories.user,

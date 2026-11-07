@@ -73,8 +73,8 @@ class Shell(Vertical):
                 self.commands.help.run(
                     output=self.write,
                 )
-            case "sync:liked_tracks" | "slt":
-                self.commands.fetch_my_liked_tracks.run(
+            case "sync:my_liked_tracks" | "smlt":
+                self.commands.sync_my_liked_tracks.run(
                     output=self.write,
                 )
             case "exit" | "quit" | "q":
