@@ -8,6 +8,7 @@ from core.http_client import HttpClient
 from core.player import Player
 from di.actions_container import ActionsContainer
 from di.repositories_container import RepositoriesContainer
+from repositories import image_repository
 
 
 class CommandsContainer:
@@ -41,6 +42,7 @@ class CommandsContainer:
                 auth=auth,
                 track_repository=repositories.track,
                 user_repository=repositories.user,
+                image_repository=repositories.image,
                 http_client=http_client,
             )
         )

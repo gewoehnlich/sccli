@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from core.model import Model
 
 if TYPE_CHECKING:
+    from models.image import Image
     from models.user import User
 
 
@@ -23,6 +24,12 @@ class Track(Model):
     user: Mapped[User] = relationship(
         back_populates="tracks",
         lazy="joined",
+    )
+    image: Mapped[Image | None] = relationship(
+        "Image",
+        primaryjoin="foreign(Track.artwork_url) == Image.url",
+        viewonly=True,
+        lazy="select",
     )
 
     def __repr__(self) -> str:

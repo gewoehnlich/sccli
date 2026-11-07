@@ -6,8 +6,11 @@ from core.auth import Auth
 from core.command import Command
 from core.http_client import HttpClient
 from core.request import Request
+from exceptions.soundcloud_errors import SoundcloudError
+from models.image import Image
 from models.track import Track
 from models.user import User
+from repositories.image_repository import ImageRepository
 from repositories.track_repository import TrackRepository
 from repositories.user_repository import UserRepository
 
@@ -18,11 +21,13 @@ class SyncMyLikedTracksCommand(Command):
         auth: Auth,
         track_repository: TrackRepository,
         user_repository: UserRepository,
+        image_repository: ImageRepository,
         http_client: HttpClient,
     ) -> None:
         self.auth: Auth = auth
         self.track_repository: TrackRepository = track_repository
         self.user_repository: UserRepository = user_repository
+        self.image_repository: ImageRepository = image_repository
         self.http_client: HttpClient = http_client
 
     def run(self, output: Callable[[str], None] | None = None) -> None:
@@ -38,12 +43,17 @@ class SyncMyLikedTracksCommand(Command):
             users[user.id] = user
             tracks[track.id] = track
 
+            if track.artwork_url_large:
+                self._store_image(
+                    url=track.artwork_url_large,
+                )
+
         self.user_repository.store_many(
-            models=list(users.values())
+            models=list(users.values()),
         )
 
         self.track_repository.store_many(
-            models=list(tracks.values())
+            models=list(tracks.values()),
         )
 
         track_ids = tracks.keys()
@@ -80,3 +90,25 @@ class SyncMyLikedTracksCommand(Command):
 
             if url:
                 sleep(0.7)
+
+    def _store_image(self, url: str) -> None:
+        try:
+            data: bytes = self.http_client.fetch_image(
+                request=Request(
+                    method=Request.METHOD.GET,
+                    url=url,
+                    access_token=self.auth.get_access_token(),
+                    headers={
+                        "Content-Type": "image/jpeg",
+                    },
+                ),
+            )
+
+            self.image_repository.store(
+                model=Image(
+                    url=url,
+                    data=data,
+                ),
+            )
+        except SoundcloudError:
+            pass

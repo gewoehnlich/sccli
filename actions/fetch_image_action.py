@@ -38,6 +38,11 @@ class FetchImageAction(Action):
             request=request,
         )
 
-        self.image_repository.store(model=Image(url=url, data=data))
+        self.image_repository.store(
+            model=Image(
+                url=url,
+                data=data,
+            ),
+        )
 
         return data
