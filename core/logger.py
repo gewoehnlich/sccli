@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any, Callable
 
 from loguru import logger
 
@@ -11,6 +12,8 @@ class Logger:
         directory: Path,
         level: LoggerLevelEnum,
     ) -> None:
+        logger.remove()
+
         self._logger = logger.opt(depth=1)
 
         self._handler_id: int = self._logger.add(
@@ -23,10 +26,30 @@ class Logger:
             backtrace=True,
         )
 
+        self._sink_handler_id: int | None = None
+
     def close(self) -> None:
         self._logger.remove(self._handler_id)
 
         self._logger.complete()
+
+    def attach_sink(self, write: Callable[[str], None]) -> None:
+        def sink(message: Any) -> None:
+            write(str(message).rstrip("\n"))
+
+        self._sink_handler_id = self._logger.add(
+            sink,
+            level="INFO",
+            format="{time:HH:mm:ss} | {level: <8} | {message}",
+            colorize=True,
+            enqueue=True,
+            backtrace=True,
+        )
+
+    def detach_sink(self) -> None:
+        if self._sink_handler_id is not None:
+            logger.remove(self._sink_handler_id)
+            self._sink_handler_id = None
 
     # https://loguru.readthedocs.io/en/stable/api/logger.html#levels
 

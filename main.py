@@ -13,7 +13,6 @@ def main() -> int:
         )
 
         di_container.database.run_migrations()
-        di_container.logger.info("Starting sccli...")
 
         app = App(di_container=di_container)
         app.run()

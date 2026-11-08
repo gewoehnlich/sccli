@@ -61,6 +61,7 @@ class App(BaseApp[None]):
                 yield Shell(
                     id="shell",
                     commands=self.commands,
+                    logger=self.logger,
                 )
 
             yield TrackList(
@@ -87,6 +88,8 @@ class App(BaseApp[None]):
         shell = self.query_one(Shell)
         shell.styles.max_width = "100%"
         shell.styles.height = "40%"
+
+        self.logger.attach_sink(shell.write)
 
         track_list = self.query_one(TrackList)
         track_list.styles.max_width = "100%"

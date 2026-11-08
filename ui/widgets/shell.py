@@ -5,18 +5,21 @@ from textual.app import ComposeResult
 from textual.containers import Container, Vertical
 from textual.widgets import Input, RichLog
 
+from core.logger import Logger
 from di.commands_container import CommandsContainer
 
 
 class Shell(Vertical):
     def __init__(
         self,
+        logger: Logger,
         commands: CommandsContainer,
         **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
 
         self.commands: CommandsContainer = commands
+        self.logger: Logger = logger
 
     def compose(self) -> ComposeResult:
         with Container(id="shell-container"):
