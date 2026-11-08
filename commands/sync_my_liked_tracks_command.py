@@ -93,6 +93,9 @@ class SyncMyLikedTracksCommand(Command):
 
     def _store_image(self, url: str) -> None:
         try:
+            if self.image_repository.get_one(primary_key=url):
+                return
+
             data: bytes = self.http_client.fetch_image(
                 request=Request(
                     method=Request.METHOD.GET,
