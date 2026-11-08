@@ -120,37 +120,41 @@ class MusicPlayer(Widget):
         self.current_track_playtime = self.player.get_current_track_playtime()
         self.current_track_duration = self.player.get_current_track_duration()
 
-    def play(self, track: Track) -> None:
+    async def play(self, track: Track) -> None:
         self.current_track = track
         self.is_playing = True
-        self.commands.play_track.run(track=track)
+        await self.commands.play_track.run(track=track)
 
-    def on_previous_track_button_pressed(self) -> None:
-        self.play(track=self.playlist.prev())
+    async def on_previous_track_button_pressed(self) -> None:
+        await self.play(track=self.playlist.prev())
 
-    def on_play_button_pressed(self) -> None:
+    async def on_play_button_pressed(self) -> None:
         track = self.playlist.current()
 
         if not track:
             return
 
-        self.play(track=track)
+        await self.play(track=track)
 
     def on_pause_button_pressed(self) -> None:
         self.is_playing = False
 
         self.player.stop()
 
-    def on_next_track_button_pressed(self) -> None:
-        self.play_next_track()
+    async def on_next_track_button_pressed(self) -> None:
+        await self.play_next_track()
 
     def register_player_events(self) -> None:
         self.player.on_track_finished(
-            self.play_next_track,
+            self._on_track_finished,
         )
 
-    def play_next_track(self) -> None:
-        self.play(track=self.playlist.next())
+    def _on_track_finished(self) -> None:
+        # runs on mpv's thread, so hand over to the UI thread
+        self.app.call_from_thread(self.play_next_track)
+
+    async def play_next_track(self) -> None:
+        await self.play(track=self.playlist.next())
 
     def on_track_current_playtime_changed(
         self, message: TrackCurrentPlaytimeChanged
@@ -164,11 +168,11 @@ class MusicPlayer(Widget):
             playtime=message.playtime,
         )
 
-    def watch_current_track(self, track: Track | None) -> None:
+    async def watch_current_track(self, track: Track | None) -> None:
         image = self.query_one(Image)
 
         if track is None:
             image.show_default()
             return
 
-        image.load_artwork(track.artwork_url_large)
+        await image.load_artwork(track.artwork_url_large)

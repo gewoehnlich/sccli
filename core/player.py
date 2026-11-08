@@ -8,10 +8,7 @@ class Player:
     ) -> None:
         self._track_finished_callbacks: list[Callable[[], None]] = []
 
-    def on_track_finished(
-        self,
-        callback: Callable[[], None],
-    ) -> None:
+    def on_track_finished(self, callback: Callable[[], None]) -> None:
         self._track_finished_callbacks.append(callback)
 
     def emit_track_finished(
@@ -21,7 +18,7 @@ class Player:
             callback()
 
     @abstractmethod
-    def play(self, link: str) -> None:
+    async def play(self, link: str) -> None:
         pass
 
     @abstractmethod

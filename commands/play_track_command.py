@@ -2,7 +2,6 @@ from collections.abc import Callable
 from typing import Any, cast
 
 from actions.fetch_track_streams_action import FetchTrackStreamsAction
-from core.action import Action
 from core.auth import Auth
 from core.command import Command
 from core.player import Player
@@ -14,7 +13,7 @@ class PlayTrackCommand(Command):
         self,
         auth: Auth,
         player: Player,
-        fetch_track_streams_action: Action,
+        fetch_track_streams_action: FetchTrackStreamsAction,
     ) -> None:
         self.auth: Auth = auth
         self.player: Player = player
@@ -22,12 +21,12 @@ class PlayTrackCommand(Command):
             fetch_track_streams_action
         )
 
-    def run(
+    async def run(
         self,
         track: Track,
         output: Callable[[str], None] | None = None,
     ) -> Any:
-        streams: dict[str, Any] = self.fetch_track_streams_action.run(
+        streams: dict[str, Any] = await self.fetch_track_streams_action.run(
             track_urn=track.urn,
         )
 
@@ -36,7 +35,7 @@ class PlayTrackCommand(Command):
             streams.get("hls_aac_160_url") or streams.get("hls_mp3_128_url"),
         )
 
-        self.player.play(
+        await self.player.play(
             link=streaming_url,
         )
 

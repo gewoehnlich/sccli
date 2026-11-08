@@ -20,17 +20,20 @@ class RemoveLikedTrackCommand(Command):
         self.http_client: HttpClient = http_client
         self.track_repository: TrackRepository = track_repository
 
-    def run(self, track: Track, output: Callable[[str], None] | None = None) -> None:
+    async def run(self, track: Track | None, output: Callable[[str], None] | None = None) -> None:
         try:
+            if not track:
+                return
+
             response: dict[str, Any] = self.http_client.send(
                 request=Request(
                     method=Request.METHOD.DELETE,
                     url=Request.URL.API + f"/likes/tracks/{track.urn}",
-                    access_token=self.auth.get_access_token(),
+                    access_token=await self.auth.get_access_token(),
                 ),
             )
 
-            result: bool = self.track_repository.delete(
+            result: bool = await self.track_repository.delete(
                 model=track,
             )
 

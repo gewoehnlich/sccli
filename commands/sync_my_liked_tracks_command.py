@@ -1,4 +1,5 @@
-from collections.abc import Callable, Generator, Sequence
+import asyncio
+from collections.abc import Callable, AsyncGenerator, Sequence
 from time import sleep
 from typing import Any
 
@@ -30,13 +31,13 @@ class SyncMyLikedTracksCommand(Command):
         self.image_repository: ImageRepository = image_repository
         self.http_client: HttpClient = http_client
 
-    def run(self, output: Callable[[str], None] | None = None) -> None:
+    async def run(self, output: Callable[[str], None] | None = None) -> None:
         users: dict[int, User] = {}
         tracks: dict[int, Track] = {}
 
-        database_tracks: Sequence[Track] = self.track_repository.get()
+        database_tracks: Sequence[Track] = await self.track_repository.get()
 
-        for item in self._fetch_tracks():
+        async for item in self._fetch_tracks():
             user: User = User.from_api(data=item["user"])
             track: Track = Track.from_api(data=item, user_id=user.id)
 
@@ -44,15 +45,15 @@ class SyncMyLikedTracksCommand(Command):
             tracks[track.id] = track
 
             if track.artwork_url_large:
-                self._store_image(
+                await self._store_image(
                     url=track.artwork_url_large,
                 )
 
-        self.user_repository.store_many(
+        await self.user_repository.store_many(
             models=list(users.values()),
         )
 
-        self.track_repository.store_many(
+        await self.track_repository.store_many(
             models=list(tracks.values()),
         )
 
@@ -60,12 +61,12 @@ class SyncMyLikedTracksCommand(Command):
 
         for track in database_tracks:
             if track.id not in track_ids:
-                self.track_repository.delete(track)
+                await self.track_repository.delete(track)
 
         if output:
             output(f"Synced {len(track_ids)} liked tracks!")
 
-    def _fetch_tracks(self) -> Generator[dict[str, Any]]:
+    async def _fetch_tracks(self) -> AsyncGenerator[dict[str, Any]]:
         url: str | None = Request.URL.API + "/me/likes/tracks"
         data: dict[str, Any] | None = {
             "limit": 200,
@@ -79,35 +80,38 @@ class SyncMyLikedTracksCommand(Command):
                     method=Request.METHOD.GET,
                     url=url,
                     data=data,
-                    access_token=self.auth.get_access_token(),
+                    access_token=await self.auth.get_access_token(),
                 ),
             )
 
-            yield from response.get("collection", [])
+            for item in response.get("collection", []):
+                yield item
 
             url = response.get("next_href")
             data = None
 
             if url:
-                sleep(0.7)
+                await asyncio.sleep(0.7)
 
-    def _store_image(self, url: str) -> None:
+    async def _store_image(self, url: str) -> None:
         try:
-            if self.image_repository.get_one(primary_key=url):
+            image: Image | None = await self.image_repository.get_one(primary_key=url)
+
+            if image:
                 return
 
             data: bytes = self.http_client.fetch_image(
                 request=Request(
                     method=Request.METHOD.GET,
                     url=url,
-                    access_token=self.auth.get_access_token(),
+                    access_token=await self.auth.get_access_token(),
                     headers={
                         "Content-Type": "image/jpeg",
                     },
                 ),
             )
 
-            self.image_repository.store(
+            await self.image_repository.store(
                 model=Image(
                     url=url,
                     data=data,

@@ -10,7 +10,7 @@ class OutputMessageCommand(Command):
     ) -> None:
         self.message: str = message
 
-    def run(
+    async def run(
         self,
         output: Callable[[str], None] | None = None,
     ) -> None:

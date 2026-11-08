@@ -75,7 +75,7 @@ class App(BaseApp[None]):
 
         yield Footer(id="footer")
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         self.theme = "rose-pine"
         self.styles.height = "100%"
 
@@ -98,13 +98,13 @@ class App(BaseApp[None]):
         track_list.styles.height = "100%"
 
         self.playlist = Playlist(
-            tracks=self.track_repository.get(),
+            tracks=await self.track_repository.get(),
         )
 
         if len(self.playlist) > 0:
             self.current_track = self.playlist.random()
 
-    def on_track_selected(self, event: TrackSelected) -> None:
+    async def on_track_selected(self, event: TrackSelected) -> None:
         event.stop()
         track = self.playlist.select(index=event.index)
-        self.query_one(MusicPlayer).play(track)
+        await self.query_one(MusicPlayer).play(track)

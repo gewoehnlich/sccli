@@ -1,46 +1,35 @@
-from collections.abc import Generator
-from contextlib import contextmanager
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
-import sqlalchemy
 from alembic import command
 from alembic.config import Config as AlembicConfig
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 
 class Database:
     def __init__(
         self,
-        engine: sqlalchemy.Engine,
+        engine: AsyncEngine,
         alembic_config: AlembicConfig,
+        migrations_url: str,
     ) -> None:
-        self._engine: sqlalchemy.Engine = engine
+        self._engine: AsyncEngine = engine
 
-        self._sessions: sessionmaker[Session] = sessionmaker(
+        self._sessions: async_sessionmaker[AsyncSession] = async_sessionmaker(
             bind=engine,
             expire_on_commit=False,
         )
 
-        alembic_config.set_main_option(
-            "sqlalchemy.url", engine.url.render_as_string()
-        )
-
+        alembic_config.set_main_option("sqlalchemy.url", migrations_url)
         self._alembic_config: AlembicConfig = alembic_config
 
-    def run_migrations(
-        self,
-    ) -> None:
-        """Apply all pending migrations."""
+    def run_migrations(self) -> None:
         command.upgrade(self._alembic_config, "head")
 
-    @contextmanager
-    def session(
-        self,
-    ) -> Generator[Session]:
-        """Commit on success, roll back on error, always close."""
-        with self._sessions.begin() as session:
+    @asynccontextmanager
+    async def session(self) -> AsyncGenerator[AsyncSession]:
+        async with self._sessions.begin() as session:
             yield session
 
-    def close(
-        self,
-    ) -> None:
-        self._engine.dispose()
+    async def close(self) -> None:
+        await self._engine.dispose()

@@ -1,3 +1,4 @@
+import asyncio
 import sys
 from pathlib import Path
 
@@ -6,16 +7,16 @@ from exceptions.config.config_error import ConfigError
 from ui.app import App
 
 
-def main() -> int:
+async def main() -> int:
     try:
         di_container: DiContainer = DiContainer(
             config_file=Path("config.yml"),
         )
 
-        di_container.database.run_migrations()
+        await asyncio.to_thread(di_container.database.run_migrations)
 
         app = App(di_container=di_container)
-        app.run()
+        await app.run_async()
     except ConfigError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
         return 1
@@ -24,4 +25,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(asyncio.run(main()))

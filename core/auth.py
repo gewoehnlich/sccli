@@ -34,34 +34,30 @@ class Auth:
         self._account_repository: AccountRepository = account_repository
         self._http_client: HttpClient = http_client
 
-    def get_access_token(
-        self,
-    ) -> str:
-        account: Account | None = self._account_repository.get_one(
+    async def get_access_token(self) -> str:
+        account: Account | None = await self._account_repository.get_one(
             primary_key=self._client_id,
         )
 
         if not account:
-            account = self._authenticate_user()
+            account = await self._authenticate_user()
 
         try:
             current_timestamp = int(time.time())
             if current_timestamp > account.expire_timestamp - 100:
-                account = self._refresh_token(
+                account = await self._refresh_token(
                     account=account,
                 )
         except InvalidGrantError:
             # something went wrong with refresh token
             # gotta authenticate again
-            account = self._authenticate_user()
+            account = await self._authenticate_user()
 
         assert account is not None
 
         return account.access_token
 
-    def _authenticate_user(
-        self,
-    ) -> Account:
+    async def _authenticate_user(self) -> Account:
         code_verifier, code_challenge = self._generate_pkce()
         state = self._generate_state()
 
@@ -115,7 +111,7 @@ class Auth:
 
         response: dict[str, Any] = self._http_client.send(request)
 
-        account: Account = self._account_repository.store(
+        account: Account = await self._account_repository.store(
             model=Account(
                 client_id=self._client_id,
                 client_secret=self._client_secret,
@@ -127,10 +123,7 @@ class Auth:
 
         return account
 
-    def _refresh_token(
-        self,
-        account: Account,
-    ) -> Account:
+    async def _refresh_token(self, account: Account) -> Account:
         request: Request = Request(
             method=Request.METHOD.POST,
             url=Request.URL.REFRESH_TOKEN,
@@ -144,7 +137,7 @@ class Auth:
 
         response: dict[str, Any] = self._http_client.send(request)
 
-        updated_account: Account = self._account_repository.store(
+        updated_account: Account = await self._account_repository.store(
             model=Account(
                 client_id=account.client_id,
                 client_secret=account.client_secret,

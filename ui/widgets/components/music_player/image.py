@@ -41,12 +41,12 @@ class Image(Widget):
     def show_default(self) -> None:
         self.image = PILImage.open(self.DEFAULT_IMAGE)
 
-    def load_artwork(self, url: str | None) -> None:
+    async def load_artwork(self, url: str | None) -> None:
         image: ImageFile | None = None
 
         if url:
             try:
-                data = self.fetch_image_action.run(url=url)
+                data = await self.fetch_image_action.run(url=url)
 
                 image = PILImage.open(BytesIO(data))
                 image.load()

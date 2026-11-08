@@ -17,8 +17,8 @@ class FetchImageAction(Action):
         self.http_client: HttpClient = http_client
         self.image_repository: ImageRepository = image_repository
 
-    def run(self, url: str) -> bytes:
-        cached = self.image_repository.get_one(
+    async def run(self, url: str) -> bytes:
+        cached: Image | None = await self.image_repository.get_one(
             primary_key=url,
         )
 
@@ -28,7 +28,7 @@ class FetchImageAction(Action):
         request: Request = Request(
             method=Request.METHOD.GET,
             url=url,
-            access_token=self.auth.get_access_token(),
+            access_token=await self.auth.get_access_token(),
             headers={
                 "Content-Type": "image/jpeg",
             },
@@ -38,7 +38,7 @@ class FetchImageAction(Action):
             request=request,
         )
 
-        self.image_repository.store(
+        await self.image_repository.store(
             model=Image(
                 url=url,
                 data=data,

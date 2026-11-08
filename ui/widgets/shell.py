@@ -37,7 +37,7 @@ class Shell(Vertical):
                 id="shell-input",
             )
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         rich_log = self.query_one(RichLog)
         rich_log.styles.width = "100%"
         rich_log.styles.height = "1fr"
@@ -49,14 +49,14 @@ class Shell(Vertical):
         input_widget.styles.height = 3
         input_widget.focus()
 
-        self.commands.welcome.run(
+        await self.commands.welcome.run(
             output=self.write,
         )
 
     def write(self, text: str) -> None:
         self.query_one(RichLog).write(text)
 
-    def on_input_submitted(self, event: Input.Submitted) -> None:
+    async def on_input_submitted(self, event: Input.Submitted) -> None:
         event.stop()
 
         command_line = event.value.strip()
@@ -66,9 +66,9 @@ class Shell(Vertical):
             return
 
         self.write(f"[plum2]sccli>[/plum2] [thistle1]{command_line}[/thistle1]")
-        self.process_command(command_line)
+        await self.process_command(command_line)
 
-    def process_command(self, command_line: str) -> None:
+    async def process_command(self, command_line: str) -> None:
         try:
             command, _args = self._parse_input(command_line)
         except ValueError:  # e.g. unbalanced quotes
@@ -77,23 +77,23 @@ class Shell(Vertical):
 
         match command:
             case "help":
-                self.commands.help.run(
+                await self.commands.help.run(
                     output=self.write,
                 )
             case "sync:my_liked_tracks" | "smlt":
-                self.commands.sync_my_liked_tracks.run(
+                await self.commands.sync_my_liked_tracks.run(
                     output=self.write,
                 )
             case "exit" | "quit" | "q":
                 self.write("exit")
                 # self.app.exit()
             case "unlike":
-                self.commands.remove_liked_track.run(
+                await self.commands.remove_liked_track.run(
                     track=self.current_track,
                     output=self.write,
                 )
             case _:
-                self.commands.unknown.run(
+                await self.commands.unknown.run(
                     output=self.write,
                 )
 

@@ -32,7 +32,7 @@ class VolumeSlider(Widget):
             volume=VolumeSlider.volume,
         )
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         self.styles.layout = "horizontal"
 
         self.query_one(VolumeProgressBar)
@@ -41,16 +41,16 @@ class VolumeSlider(Widget):
         volume_static.styles.padding = (0, 0, 0, 1)
         volume_static.styles.width = 4
 
-        volume_setting = self.setting_repository.get_one(
+        volume_setting = await self.setting_repository.get_one(
             primary_key="volume",
         )
 
         if volume_setting:
             self.volume = int(volume_setting.value)
 
-    def watch_volume(self, volume: int | None) -> None:
+    async def watch_volume(self, volume: int | None) -> None:
         if volume:
-            self.setting_repository.store(
+            await self.setting_repository.store(
                 model=Setting(
                     name="volume",
                     value=str(volume),

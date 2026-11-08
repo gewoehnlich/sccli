@@ -16,30 +16,33 @@ class Repository[ModelT: Model]:
     ) -> None:
         self._database: Database = database
 
-    def get(self, **kwargs: dict[str, Any]) -> Sequence[ModelT]:
-        with self._database.session() as session:
+    async def get(self, **kwargs: dict[str, Any]) -> Sequence[ModelT]:
+        async with self._database.session() as session:
             stmt = select(self.model).filter_by(**kwargs)
 
-            return session.execute(stmt).scalars().all()
+            result = await session.execute(stmt)
 
-    def get_one(self, primary_key: str | int) -> ModelT | None:
-        with self._database.session() as session:
-            return session.get(self.model, primary_key)
+            return result.scalars().all()
 
-    def store(self, model: ModelT) -> ModelT:
-        with self._database.session() as session:
-            merged = session.merge(model)
-            session.flush()
+    async def get_one(self, primary_key: str | int) -> ModelT | None:
+        async with self._database.session() as session:
+            return await session.get(self.model, primary_key)
+
+    async def store(self, model: ModelT) -> ModelT:
+        async with self._database.session() as session:
+            merged = await session.merge(model)
+            await session.flush()
 
             return merged
 
-    def store_many(self, models: Sequence[ModelT]) -> None:
-        with self._database.session() as session:
+    async def store_many(self, models: Sequence[ModelT]) -> None:
+        async with self._database.session() as session:
             for model in models:
-                session.merge(model)
+                await session.merge(model)
 
-    def delete(self, model: ModelT) -> bool:
-        with self._database.session() as session:
-            session.delete(model)
+    async def delete(self, model: ModelT) -> bool:
+        async with self._database.session() as session:
+            attached = await session.merge(model)
+            await session.delete(attached)
 
             return True

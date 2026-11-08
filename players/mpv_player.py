@@ -23,7 +23,6 @@ class MpvPlayer(Player):
             # log_handler=self._log,
             ytdl=True,
             volume=60,
-            http_header_fields=f"Authorization: Bearer {self.auth.get_access_token()}",
             http_proxy=http_proxy,
         )
 
@@ -37,10 +36,11 @@ class MpvPlayer(Player):
     def _log(self, level: str, prefix: str, text: str) -> None:
         self.logger.debug(f"[{level}] {prefix}: {text}")
 
-    def play(self, link: str) -> None:
+    async def play(self, link: str) -> None:
         if cast(bool, self.player.pause):
             self.player.pause = False
         else:
+            self.player.http_header_fields = [f"Authorization: Bearer {await self.auth.get_access_token()}"]
             cast(Callable[..., None], self.player.play)(filename=link)
 
     def stop(self) -> None:
