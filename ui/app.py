@@ -62,6 +62,8 @@ class App(BaseApp[None]):
                     id="shell",
                     commands=self.commands,
                     logger=self.logger,
+                ).data_bind(
+                    current_track=App.current_track,
                 )
 
             yield TrackList(

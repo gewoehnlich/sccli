@@ -3,13 +3,17 @@ from typing import Any
 
 from textual.app import ComposeResult
 from textual.containers import Container, Vertical
+from textual.reactive import Reactive, reactive
 from textual.widgets import Input, RichLog
 
 from core.logger import Logger
 from di.commands_container import CommandsContainer
+from models.track import Track
 
 
 class Shell(Vertical):
+    current_track: Reactive[Track | None] = reactive(None)
+
     def __init__(
         self,
         logger: Logger,
@@ -83,6 +87,11 @@ class Shell(Vertical):
             case "exit" | "quit" | "q":
                 self.write("exit")
                 # self.app.exit()
+            case "unlike":
+                self.commands.remove_liked_track.run(
+                    track=self.current_track,
+                    output=self.write,
+                )
             case _:
                 self.commands.unknown.run(
                     output=self.write,

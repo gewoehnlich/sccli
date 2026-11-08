@@ -1,5 +1,6 @@
 from commands.output_message_command import OutputMessageCommand
 from commands.play_track_command import PlayTrackCommand
+from commands.remove_liked_track_command import RemoveLikedTrackCommand
 from commands.sync_my_liked_tracks_command import SyncMyLikedTracksCommand
 from config.messages import MessagesConfig
 from core.auth import Auth
@@ -8,7 +9,6 @@ from core.http_client import HttpClient
 from core.player import Player
 from di.actions_container import ActionsContainer
 from di.repositories_container import RepositoriesContainer
-from repositories import image_repository
 
 
 class CommandsContainer:
@@ -51,4 +51,10 @@ class CommandsContainer:
             auth=auth,
             player=player,
             fetch_track_streams_action=actions.fetch_track_streams,
+        )
+
+        self.remove_liked_track: RemoveLikedTrackCommand = RemoveLikedTrackCommand(
+            auth=auth,
+            http_client=http_client,
+            track_repository=repositories.track,
         )
