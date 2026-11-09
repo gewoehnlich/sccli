@@ -29,10 +29,8 @@ type ConfigFileData = dict[str, str | None]
 
 
 class ConfigLoader:
-    def load(
-        self,
-        path: Path,
-    ) -> Config:
+    @staticmethod
+    def load(path: Path) -> Config:
         try:
             with path.open(mode="r", encoding="utf-8") as f:
                 data: Any = yaml.safe_load(f)
