@@ -1,80 +1,79 @@
+import json
+from collections.abc import Mapping
+from dataclasses import dataclass
 from typing import Any, cast
 
-import requests
+import aiohttp
 
 from core.request import Request
 from exceptions.soundcloud_errors import *
 
 
+@dataclass(frozen=True, slots=True)
+class RawResponse:
+    status: int
+    headers: Mapping[str, str]
+    body: bytes
+
+
 class HttpClient:
-    _session = requests.Session()
+    TIMEOUT = aiohttp.ClientTimeout(total=10)
 
-    def __init__(
-        self,
-        proxy_endpoint: str | None = None,
-    ) -> None:
-        if proxy_endpoint:
-            self._session.proxies.update(
-                {
-                    "http": proxy_endpoint,
-                    "https": proxy_endpoint,
-                }
-            )
+    def __init__(self, proxy_endpoint: str | None = None) -> None:
+        self._proxy: str | None = proxy_endpoint
+        self._session: aiohttp.ClientSession | None = None
 
-    def send(
-        self,
-        request: Request,
-    ) -> dict[str, Any]:
-        prepared: requests.PreparedRequest = self._session.prepare_request(
-            request=request.base_request,
-        )
+    async def close(self) -> None:
+        if self._session is not None and not self._session.closed:
+            await self._session.close()
 
+    async def send(self, request: Request) -> dict[str, Any]:
+        raw = await self._execute(request)
+
+        return self._parse_body(raw)
+
+    async def fetch_image(self, request: Request) -> bytes:
+        raw = await self._execute(request)
+
+        return raw.body
+
+    def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(timeout=self.TIMEOUT)
+
+        return self._session
+
+    async def _execute(self, request: Request) -> RawResponse:
         try:
-            response: requests.Response = self._session.send(
-                request=prepared,
-            )
-        except requests.RequestException as e:
+            async with self._get_session().request(
+                method=request.method.value,
+                url=request.build_url(),
+                headers=request.headers,
+                data=request.data or None,
+                proxy=self._proxy,
+            ) as response:
+                raw = RawResponse(
+                    status=response.status,
+                    headers=response.headers,
+                    body=await response.read(),
+                )
+        except (aiohttp.ClientError, TimeoutError) as e:
             raise SoundcloudConnectionError(
-                f"Could not reach SoundCloud: {type(e).__name__})"
+                f"Could not reach SoundCloud: {type(e).__name__}"
             ) from e
 
-        if response.ok:
-            return self._parse_body(response=response)
+        if raw.status >= 400:
+            raise self._build_error(raw)
 
-        error = self._build_error(response=response)
-
-        raise error
-
-    def fetch_image(self, request: Request) -> bytes:
-        prepared: requests.PreparedRequest = self._session.prepare_request(
-            request=request.base_request,
-        )
-
-        try:
-            response: requests.Response = self._session.send(
-                request=prepared,
-            )
-        except requests.RequestException as e:
-            raise SoundcloudConnectionError(
-                f"Could not reach SoundCloud: {type(e).__name__})"
-            ) from e
-
-        if response.ok:
-            return response.content
-
-        error = self._build_error(response=response)
-
-        raise error
+        return raw
 
     @staticmethod
-    def _parse_body(
-        response: requests.Response,
-    ) -> dict[str, Any]:
-        if response.status_code == 204 or not response.content:
+    def _parse_body(raw: RawResponse) -> dict[str, Any]:
+        if raw.status == 204 or not raw.body:
             return {}
 
         try:
-            data: Any = response.json()
+            data: Any = json.loads(raw.body)
         except ValueError as e:
             raise InvalidResponseError(
                 "SoundCloud returned a non-JSON response"
@@ -87,16 +86,15 @@ class HttpClient:
 
         return cast("dict[str, Any]", data)
 
-    def _build_error(
-        self,
-        response: requests.Response,
-    ) -> ApiError:
-        body = self._parse_body(response=response)
+    def _build_error(self, raw: RawResponse) -> ApiError:
+        try:
+            body = self._parse_body(raw)
+        except InvalidResponseError:
+            body = {}
 
-        # might also be message, check later
         message = str(body.get("error"))
 
-        status = response.status_code
+        status = raw.status
 
         oauth_errors: dict[str, type[ApiError]] = {
             "invalid_grant": InvalidGrantError,

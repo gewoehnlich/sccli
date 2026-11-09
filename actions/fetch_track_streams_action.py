@@ -25,6 +25,6 @@ class FetchTrackStreamsAction(Action):
             access_token=await self.auth.get_access_token(),
         )
 
-        response: dict[str, Any] = self.http_client.send(request)
+        response: dict[str, Any] = await self.http_client.send(request)
 
         return response

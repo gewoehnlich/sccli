@@ -1,6 +1,6 @@
 from typing import Any
 
-from requests import Request as BaseRequest
+from yarl import URL  # installed together with aiohttp
 
 from domain.enums.http_method_enum import HttpMethodEnum
 from exceptions.soundcloud_errors import (
@@ -51,41 +51,43 @@ class Request:
                 f"Unsupported API endpoint: {url}"
             )
 
-        if data is None:
-            params = {}
-            data = {}
-        elif method in (self.METHOD.GET, self.METHOD.DELETE):
-            params = data
-            data = {}
+        self.method: HttpMethodEnum = method
+        self.url: str = url
+
+        values = self._stringify(data or {})
+
+        if method in (self.METHOD.GET, self.METHOD.DELETE):
+            self.params: dict[str, str] = values
+            self.data: dict[str, str] = {}
         else:
-            params = {}
+            self.params = {}
+            self.data = values
 
-        if headers is None:
-            headers = {}
+        self.headers: dict[str, str] = dict(headers or {})
+        self.headers.setdefault("Accept", "application/json; charset=utf-8")
+        self.headers.setdefault("Content-Type", "application/x-www-form-urlencoded")
 
-        if headers.get("Accept") is None:
-            headers["Accept"] = "application/json; charset=utf-8"
+        if access_token and not self.is_image:
+            self.headers["Authorization"] = f"OAuth {access_token}"
 
-        if headers.get("Content-Type") is None:
-            headers["Content-Type"] = "application/x-www-form-urlencoded"
+    @property
+    def is_image(self) -> bool:
+        return self.url.startswith(self.URL.SNDCDN)
 
-        if access_token:
-            headers["Authorization"] = f"OAuth {access_token}"
+    def build_url(self) -> str:
+        try:
+            return str(URL(self.url).update_query(self.params))
+        except (TypeError, ValueError) as e:
+            raise BuildUrlError("Could not build the URL") from e
 
-        self.base_request = BaseRequest(
-            method=method.value,
-            url=url,
-            headers=headers,
-            params=params,
-            data=data,
-        )
-
-    def build_url(
-        self,
-    ) -> str:
-        url = self.base_request.prepare().url
-
-        if url is None:
-            raise BuildUrlError("Could not build the URL")
-
-        return url
+    @staticmethod
+    def _stringify(values: dict[str, Any]) -> dict[str, str]:
+        return {
+            key: (
+                "true" if value is True
+                else "false" if value is False
+                else str(value)
+            )
+            for key, value in values.items()
+            if value is not None
+        }

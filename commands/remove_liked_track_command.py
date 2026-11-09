@@ -25,7 +25,7 @@ class RemoveLikedTrackCommand(Command):
             if not track:
                 return
 
-            response: dict[str, Any] = self.http_client.send(
+            response: dict[str, Any] = await self.http_client.send(
                 request=Request(
                     method=Request.METHOD.DELETE,
                     url=Request.URL.API + f"/likes/tracks/{track.urn}",

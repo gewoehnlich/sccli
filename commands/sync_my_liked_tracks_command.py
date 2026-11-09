@@ -1,6 +1,5 @@
 import asyncio
 from collections.abc import Callable, AsyncGenerator, Sequence
-from time import sleep
 from typing import Any
 
 from core.auth import Auth
@@ -75,7 +74,7 @@ class SyncMyLikedTracksCommand(Command):
         }
 
         while url:
-            response: dict[str, Any] = self.http_client.send(
+            response: dict[str, Any] = await self.http_client.send(
                 request=Request(
                     method=Request.METHOD.GET,
                     url=url,
@@ -100,7 +99,7 @@ class SyncMyLikedTracksCommand(Command):
             if image:
                 return
 
-            data: bytes = self.http_client.fetch_image(
+            data: bytes = await self.http_client.fetch_image(
                 request=Request(
                     method=Request.METHOD.GET,
                     url=url,

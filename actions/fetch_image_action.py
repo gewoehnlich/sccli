@@ -34,7 +34,7 @@ class FetchImageAction(Action):
             },
         )
 
-        data = self.http_client.fetch_image(
+        data = await self.http_client.fetch_image(
             request=request,
         )
 

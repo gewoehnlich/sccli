@@ -109,7 +109,7 @@ class Auth:
             },
         )
 
-        response: dict[str, Any] = self._http_client.send(request)
+        response: dict[str, Any] = await self._http_client.send(request)
 
         account: Account = await self._account_repository.store(
             model=Account(
@@ -135,7 +135,7 @@ class Auth:
             },
         )
 
-        response: dict[str, Any] = self._http_client.send(request)
+        response: dict[str, Any] = await self._http_client.send(request)
 
         updated_account: Account = await self._account_repository.store(
             model=Account(
