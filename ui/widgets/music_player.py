@@ -8,6 +8,7 @@ from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from models.track import Track
 from repositories.setting_repository import SettingRepository
+from ui.events.current_track_changed import CurrentTrackChanged
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
     MusicPlayerButtonsComponent,
@@ -121,6 +122,12 @@ class MusicPlayer(Widget):
         self.current_track_duration = self.player.get_current_track_duration()
 
     async def play(self, track: Track) -> None:
+        self.post_message(
+            message=CurrentTrackChanged(
+                track=track,
+            )
+        )
+
         self.current_track = track
         self.is_playing = True
         await self.commands.play_track.run(track=track)

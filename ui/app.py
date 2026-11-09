@@ -11,6 +11,7 @@ from di.commands_container import CommandsContainer
 from models.track import Track
 from repositories.setting_repository import SettingRepository
 from repositories.track_repository import TrackRepository
+from ui.events.current_track_changed import CurrentTrackChanged
 from ui.events.track_selected import TrackSelected
 from ui.widgets.music_player import MusicPlayer
 from ui.widgets.shell import Shell
@@ -108,3 +109,6 @@ class App(BaseApp[None]):
         event.stop()
         track = self.playlist.select(index=event.index)
         await self.query_one(MusicPlayer).play(track)
+
+    async def on_current_track_changed(self, event: CurrentTrackChanged) -> None:
+        self.current_track = event.track
