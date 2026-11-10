@@ -5,6 +5,7 @@ from actions.fetch_track_streams_action import FetchTrackStreamsAction
 from core.auth import Auth
 from core.command import Command
 from core.player import Player
+from exceptions.soundcloud_errors import SoundcloudError
 from models.track import Track
 
 
@@ -26,9 +27,15 @@ class PlayTrackCommand(Command):
         track: Track,
         output: Callable[[str], None] | None = None,
     ) -> Any:
-        streams: dict[str, Any] = await self.fetch_track_streams_action.run(
-            track_urn=track.urn,
-        )
+        streams: dict[str, str] | None = track.streams
+
+        if not streams:
+            streams = await self.fetch_track_streams_action.run(
+                track=track,
+            )
+
+        if not streams:
+            raise SoundcloudError(f"no streams for track {track.id}: {track.title}")
 
         streaming_url: str = cast(
             str,

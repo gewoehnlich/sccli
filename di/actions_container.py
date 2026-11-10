@@ -16,6 +16,7 @@ class ActionsContainer:
             FetchTrackStreamsAction(
                 auth=auth,
                 http_client=http_client,
+                track_repository=repositories.track,
             )
         )
 

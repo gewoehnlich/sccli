@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import ForeignKey, Integer, String, Text
+from sqlalchemy import JSON, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.model import Model
@@ -31,6 +31,7 @@ class Track(Model):
         viewonly=True,
         lazy="select",
     )
+    streams: Mapped[dict[str, str] | None] = mapped_column(JSON, nullable=True)
 
     def __repr__(self) -> str:
         return f"<Track(id={self.id}, title='{self.title}')>"
