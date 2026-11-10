@@ -18,10 +18,11 @@ class MpvPlayer(Player):
         super().__init__()
 
         self.auth: Auth = auth
-        self.logger = logger
-        self.player = mpv.MPV(
+        self.logger: Logger = logger
+        self.player: mpv.MPV = mpv.MPV(
             # log_handler=self._log,
             ytdl=True,
+            vid="no",
             volume=60,
             http_proxy=http_proxy,
         )
