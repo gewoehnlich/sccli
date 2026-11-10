@@ -25,6 +25,7 @@ class MpvPlayer(Player):
             volume=60,
             http_proxy=http_proxy,
         )
+        self._current_streaming_link: str | None = None
 
         @self.player.event_callback("end-file")
         def on_end_file(event: mpv.MpvEventEndFile) -> None:
@@ -39,8 +40,10 @@ class MpvPlayer(Player):
     async def play(self, link: str) -> None:
         if cast(bool, self.player.pause):
             self.player.pause = False
-        else:
+
+        if self._current_streaming_link != link:
             self.player.http_header_fields = [f"Authorization: Bearer {await self.auth.get_access_token()}"]
+            self._current_streaming_link = link
             cast(Callable[..., None], self.player.play)(filename=link)
 
     def stop(self) -> None:
