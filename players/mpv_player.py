@@ -43,7 +43,9 @@ class MpvPlayer(Player):
             self.player.pause = False
 
         if self._current_streaming_link != link:
-            self.player.http_header_fields = [f"Authorization: Bearer {await self.auth.get_access_token()}"]
+            self.player.http_header_fields = [
+                f"Authorization: Bearer {await self.auth.get_access_token()}"
+            ]
             self._current_streaming_link = link
             cast(Callable[..., None], self.player.play)(filename=link)
 

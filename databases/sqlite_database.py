@@ -4,8 +4,8 @@ from pathlib import Path
 from alembic.config import Config as AlembicConfig
 from sqlalchemy import event
 from sqlalchemy.engine import URL
-from sqlalchemy.pool import ConnectionPoolEntry
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from sqlalchemy.pool import ConnectionPoolEntry
 
 from core.database import Database
 
@@ -28,7 +28,9 @@ class SqliteDatabase(Database):
 
         return engine
 
-    def _configure(self, dbapi_connection: sqlite3.Connection, _: ConnectionPoolEntry) -> None:
+    def _configure(
+        self, dbapi_connection: sqlite3.Connection, _: ConnectionPoolEntry
+    ) -> None:
         # synchronous on purpose, exactly like your original
         cursor = dbapi_connection.cursor()
 

@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from collections.abc import Callable
 
 from core.auth import Auth
 from core.command import Command
@@ -20,12 +20,14 @@ class RemoveLikedTrackCommand(Command):
         self.http_client: HttpClient = http_client
         self.track_repository: TrackRepository = track_repository
 
-    async def run(self, track: Track | None, output: Callable[[str], None] | None = None) -> None:
+    async def run(
+        self, track: Track | None, output: Callable[[str], None] | None = None
+    ) -> None:
         try:
             if not track:
                 return
 
-            response: dict[str, Any] = await self.http_client.send(
+            await self.http_client.send(
                 request=Request(
                     method=Request.METHOD.DELETE,
                     url=Request.URL.API + f"/likes/tracks/{track.urn}",
@@ -33,11 +35,13 @@ class RemoveLikedTrackCommand(Command):
                 ),
             )
 
-            result: bool = await self.track_repository.delete(
+            await self.track_repository.delete(
                 model=track,
             )
 
             if output:
-                output(f"Removed a like from {track.user.username} - {track.title}")
+                output(
+                    f"Removed a like from {track.user.username} - {track.title}"
+                )
         except SoundcloudError as e:
             raise e

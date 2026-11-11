@@ -35,7 +35,9 @@ class PlayTrackCommand(Command):
             )
 
         if not streams:
-            raise SoundcloudError(f"no streams for track {track.id}: {track.title}")
+            raise SoundcloudError(
+                f"no streams for track {track.id}: {track.title}"
+            )
 
         streaming_url: str = cast(
             str,

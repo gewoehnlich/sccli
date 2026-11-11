@@ -53,8 +53,10 @@ class CommandsContainer:
             fetch_track_streams_action=actions.fetch_track_streams,
         )
 
-        self.remove_liked_track: RemoveLikedTrackCommand = RemoveLikedTrackCommand(
-            auth=auth,
-            http_client=http_client,
-            track_repository=repositories.track,
+        self.remove_liked_track: RemoveLikedTrackCommand = (
+            RemoveLikedTrackCommand(
+                auth=auth,
+                http_client=http_client,
+                track_repository=repositories.track,
+            )
         )

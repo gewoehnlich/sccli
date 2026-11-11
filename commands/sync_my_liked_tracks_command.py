@@ -1,5 +1,5 @@
 import asyncio
-from collections.abc import Callable, AsyncGenerator, Sequence
+from collections.abc import AsyncGenerator, Callable, Sequence
 from typing import Any
 
 from core.auth import Auth
@@ -94,7 +94,9 @@ class SyncMyLikedTracksCommand(Command):
 
     async def _store_image(self, url: str) -> None:
         try:
-            image: Image | None = await self.image_repository.get_one(primary_key=url)
+            image: Image | None = await self.image_repository.get_one(
+                primary_key=url
+            )
 
             if image:
                 return

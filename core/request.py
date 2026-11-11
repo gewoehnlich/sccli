@@ -65,7 +65,9 @@ class Request:
 
         self.headers: dict[str, str] = dict(headers or {})
         self.headers.setdefault("Accept", "application/json; charset=utf-8")
-        self.headers.setdefault("Content-Type", "application/x-www-form-urlencoded")
+        self.headers.setdefault(
+            "Content-Type", "application/x-www-form-urlencoded"
+        )
 
         if access_token and not self.is_image:
             self.headers["Authorization"] = f"OAuth {access_token}"
@@ -84,8 +86,10 @@ class Request:
     def _stringify(values: dict[str, Any]) -> dict[str, str]:
         return {
             key: (
-                "true" if value is True
-                else "false" if value is False
+                "true"
+                if value is True
+                else "false"
+                if value is False
                 else str(value)
             )
             for key, value in values.items()

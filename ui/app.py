@@ -110,5 +110,7 @@ class App(BaseApp[None]):
         track = self.playlist.select(index=event.index)
         await self.query_one(MusicPlayer).play(track)
 
-    async def on_current_track_changed(self, event: CurrentTrackChanged) -> None:
+    async def on_current_track_changed(
+        self, event: CurrentTrackChanged
+    ) -> None:
         self.current_track = event.track
