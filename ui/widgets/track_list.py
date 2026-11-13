@@ -22,7 +22,9 @@ class TrackList(DataTable[None]):
     def __init__(
         self,
         logger: Logger = Provide[DiContainer.logger],
-        user_repository: UserRepository = Provide[DiContainer.repositories().user],
+        user_repository: UserRepository = Provide[
+            DiContainer.repositories().user
+        ],
     ) -> None:
         super().__init__()
 

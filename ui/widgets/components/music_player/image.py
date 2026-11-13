@@ -1,7 +1,7 @@
 from io import BytesIO
 
-from dependency_injector.wiring import Provide, inject
 import requests
+from dependency_injector.wiring import Provide, inject
 from PIL import Image as PILImage
 from PIL.ImageFile import ImageFile
 from textual.app import ComposeResult
@@ -21,7 +21,9 @@ class Image(Widget):
     @inject
     def __init__(
         self,
-        fetch_image_action: FetchImageAction = Provide[DiContainer.actions().fetch_image],
+        fetch_image_action: FetchImageAction = Provide[
+            DiContainer.actions().fetch_image
+        ],
     ) -> None:
         self.fetch_image_action: FetchImageAction = fetch_image_action
 

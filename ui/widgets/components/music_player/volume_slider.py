@@ -19,7 +19,9 @@ class VolumeSlider(Widget):
     def __init__(
         self,
         player: Player = Provide[DiContainer.player],
-        setting_repository: SettingRepository = Provide[DiContainer.repositories().setting],
+        setting_repository: SettingRepository = Provide[
+            DiContainer.repositories().setting
+        ],
     ) -> None:
         self.player: Player = player
         self.setting_repository: SettingRepository = setting_repository

@@ -6,11 +6,7 @@ from textual.widgets import Footer, Header
 
 from core.di_container import DiContainer
 from core.logger import Logger
-from core.player import Player
-from di.actions_container import ActionsContainer
-from di.commands_container import CommandsContainer
 from models.track import Track
-from repositories.setting_repository import SettingRepository
 from repositories.track_repository import TrackRepository
 from ui.events.current_track_changed import CurrentTrackChanged
 from ui.events.track_selected import TrackSelected
@@ -30,7 +26,9 @@ class App(BaseApp[None]):
     def __init__(
         self,
         logger: Logger = Provide[DiContainer.logger],
-        track_repository: TrackRepository = Provide[DiContainer.repositories().track]
+        track_repository: TrackRepository = Provide[
+            DiContainer.repositories().track
+        ],
     ) -> None:
         super().__init__()
 
@@ -93,5 +91,7 @@ class App(BaseApp[None]):
         track = self.playlist.select(index=event.index)
         await self.query_one(MusicPlayer).play(track)
 
-    async def on_current_track_changed(self, event: CurrentTrackChanged) -> None:
+    async def on_current_track_changed(
+        self, event: CurrentTrackChanged
+    ) -> None:
         self.current_track = event.track

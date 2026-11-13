@@ -4,7 +4,6 @@ from actions.fetch_image_action import FetchImageAction
 from actions.fetch_track_streams_action import FetchTrackStreamsAction
 from core.auth import Auth
 from core.http_client import HttpClient
-from di.repositories_container import RepositoriesContainer
 
 
 class ActionsContainer(containers.DeclarativeContainer):
@@ -14,11 +13,13 @@ class ActionsContainer(containers.DeclarativeContainer):
 
     repositories = providers.DependenciesContainer()
 
-    fetch_track_streams: providers.Singleton[FetchTrackStreamsAction] = providers.Singleton(
-        FetchTrackStreamsAction,
-        auth=auth,
-        http_client=http_client,
-        track_repository=repositories.track,
+    fetch_track_streams: providers.Singleton[FetchTrackStreamsAction] = (
+        providers.Singleton(
+            FetchTrackStreamsAction,
+            auth=auth,
+            http_client=http_client,
+            track_repository=repositories.track,
+        )
     )
 
     fetch_image: providers.Singleton[FetchImageAction] = providers.Singleton(

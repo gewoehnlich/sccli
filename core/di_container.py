@@ -40,12 +40,14 @@ class DiContainer(containers.DeclarativeContainer):
             AlembicConfig,
             file_=config.provided.database.alembic.ini,
             toml_file=config.provided.database.alembic.toml,
-        )
+        ),
     )
 
-    repositories: providers.Container[RepositoriesContainer] = providers.Container(
-        RepositoriesContainer,
-        database=database,
+    repositories: providers.Container[RepositoriesContainer] = (
+        providers.Container(
+            RepositoriesContainer,
+            database=database,
+        )
     )
 
     server: providers.Singleton[Server] = providers.Singleton(
@@ -66,7 +68,7 @@ class DiContainer(containers.DeclarativeContainer):
         client_secret=config.provided.soundcloud.client_secret,
         redirect_uri=config.provided.server.redirect_uri,
         server=server,
-        account_repository=repositories.account,
+        account_repository=repositories().account,
         http_client=http_client,
     )
 

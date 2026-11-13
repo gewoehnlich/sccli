@@ -1,5 +1,4 @@
 import shlex
-from typing import Any
 
 from dependency_injector.wiring import Provide, inject
 from textual.app import ComposeResult

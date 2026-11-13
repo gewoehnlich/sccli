@@ -1,3 +1,5 @@
+from dependency_injector import containers, providers
+
 from commands.output_message_command import OutputMessageCommand
 from commands.play_track_command import PlayTrackCommand
 from commands.remove_liked_track_command import RemoveLikedTrackCommand
@@ -7,8 +9,6 @@ from core.auth import Auth
 from core.command import Command
 from core.http_client import HttpClient
 from core.player import Player
-
-from dependency_injector import containers, providers
 
 
 class CommandsContainer(containers.DeclarativeContainer):
@@ -39,13 +39,15 @@ class CommandsContainer(containers.DeclarativeContainer):
         message=messages.provided.unknown,
     )
 
-    sync_my_liked_tracks: providers.Singleton[SyncMyLikedTracksCommand] = providers.Singleton(
-        SyncMyLikedTracksCommand,
-        auth=auth,
-        track_repository=repositories.track,
-        user_repository=repositories.user,
-        image_repository=repositories.image,
-        http_client=http_client,
+    sync_my_liked_tracks: providers.Singleton[SyncMyLikedTracksCommand] = (
+        providers.Singleton(
+            SyncMyLikedTracksCommand,
+            auth=auth,
+            track_repository=repositories.track,
+            user_repository=repositories.user,
+            image_repository=repositories.image,
+            http_client=http_client,
+        )
     )
 
     play_track: providers.Singleton[PlayTrackCommand] = providers.Singleton(
@@ -55,9 +57,11 @@ class CommandsContainer(containers.DeclarativeContainer):
         fetch_track_streams_action=actions.fetch_track_streams,
     )
 
-    remove_liked_track: providers.Singleton[RemoveLikedTrackCommand] = providers.Singleton(
-        RemoveLikedTrackCommand,
-        auth=auth,
-        http_client=http_client,
-        track_repository=repositories.track,
+    remove_liked_track: providers.Singleton[RemoveLikedTrackCommand] = (
+        providers.Singleton(
+            RemoveLikedTrackCommand,
+            auth=auth,
+            http_client=http_client,
+            track_repository=repositories.track,
+        )
     )
