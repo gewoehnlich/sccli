@@ -1,9 +1,11 @@
 from typing import Any
 
+from dependency_injector.wiring import Provide, inject
 from textual import events
 from textual.reactive import Reactive, reactive
 from textual.widgets import DataTable
 
+from core.di_container import DiContainer
 from core.logger import Logger
 from repositories.user_repository import UserRepository
 from ui.events.track_selected import TrackSelected
@@ -16,15 +18,16 @@ class TrackList(DataTable[None]):
 
     playlist: Reactive[Playlist] = reactive(Playlist(tracks=()))
 
+    @inject
     def __init__(
         self,
-        logger: Logger,
-        user_repository: UserRepository,
+        logger: Logger = Provide[DiContainer.logger],
+        user_repository: UserRepository = Provide[DiContainer.repositories().user],
     ) -> None:
+        super().__init__()
+
         self.logger: Logger = logger
         self.user_repository: UserRepository = user_repository
-
-        super().__init__()
 
     def on_mount(self) -> None:
         self.cursor_type = "row"

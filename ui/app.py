@@ -1,3 +1,4 @@
+from dependency_injector.wiring import Provide, inject
 from textual.app import App as BaseApp, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.reactive import Reactive, reactive
@@ -25,22 +26,16 @@ class App(BaseApp[None]):
     playlist: Reactive[Playlist] = reactive(Playlist(tracks=()))
     current_track: Reactive[Track | None] = reactive(None)
 
+    @inject
     def __init__(
         self,
-        di_container: DiContainer,
+        logger: Logger = Provide[DiContainer.logger],
+        track_repository: TrackRepository = Provide[DiContainer.repositories().track]
     ) -> None:
-        self.di_container = di_container
-
-        self.track_repository: TrackRepository = di_container.repositories().track
-        self.logger: Logger = di_container.logger()
-        self.commands: CommandsContainer = di_container.commands()
-        self.player: Player = di_container.player()
-        self.actions: ActionsContainer = di_container.actions()
-        self.setting_repository: SettingRepository = (
-            di_container.repositories().setting
-        )
-
         super().__init__()
+
+        self.logger: Logger = logger
+        self.track_repository: TrackRepository = track_repository
 
     def compose(self) -> ComposeResult:
         yield Header(
@@ -50,27 +45,15 @@ class App(BaseApp[None]):
 
         with Horizontal(id="main"):
             with Vertical(id="left"):
-                yield MusicPlayer(
-                    player=self.player,
-                    commands=self.commands,
-                    actions=self.actions,
-                    setting_repository=self.setting_repository,
-                ).data_bind(
+                yield MusicPlayer().data_bind(
                     playlist=App.playlist,
                     current_track=App.current_track,
                 )
-                yield Shell(
-                    id="shell",
-                    commands=self.commands,
-                    logger=self.logger,
-                ).data_bind(
+                yield Shell().data_bind(
                     current_track=App.current_track,
                 )
 
-            yield TrackList(
-                logger=self.logger,
-                user_repository=self.di_container.repositories().user,
-            ).data_bind(
+            yield TrackList().data_bind(
                 playlist=App.playlist,
             )
 
@@ -110,7 +93,5 @@ class App(BaseApp[None]):
         track = self.playlist.select(index=event.index)
         await self.query_one(MusicPlayer).play(track)
 
-    async def on_current_track_changed(
-        self, event: CurrentTrackChanged
-    ) -> None:
+    async def on_current_track_changed(self, event: CurrentTrackChanged) -> None:
         self.current_track = event.track

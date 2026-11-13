@@ -1,7 +1,9 @@
+from dependency_injector.wiring import Provide, inject
 from textual.app import ComposeResult
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 
+from core.di_container import DiContainer
 from core.player import Player
 from models.setting import Setting
 from repositories.setting_repository import SettingRepository
@@ -13,10 +15,11 @@ from ui.events.volume_changed import VolumeChanged
 class VolumeSlider(Widget):
     volume: Reactive[int | None] = reactive(None)
 
+    @inject
     def __init__(
         self,
-        player: Player,
-        setting_repository: SettingRepository,
+        player: Player = Provide[DiContainer.player],
+        setting_repository: SettingRepository = Provide[DiContainer.repositories().setting],
     ) -> None:
         self.player: Player = player
         self.setting_repository: SettingRepository = setting_repository

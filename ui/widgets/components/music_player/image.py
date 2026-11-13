@@ -1,5 +1,6 @@
 from io import BytesIO
 
+from dependency_injector.wiring import Provide, inject
 import requests
 from PIL import Image as PILImage
 from PIL.ImageFile import ImageFile
@@ -9,6 +10,7 @@ from textual.widget import Widget
 from textual_image.widget import Image as BaseImage
 
 from actions.fetch_image_action import FetchImageAction
+from core.di_container import DiContainer
 
 
 class Image(Widget):
@@ -16,11 +18,12 @@ class Image(Widget):
 
     image: Reactive[ImageFile | None] = reactive(None)
 
+    @inject
     def __init__(
         self,
-        fetch_image_action: FetchImageAction,
+        fetch_image_action: FetchImageAction = Provide[DiContainer.actions().fetch_image],
     ) -> None:
-        self.fetch_image_action = fetch_image_action
+        self.fetch_image_action: FetchImageAction = fetch_image_action
 
         super().__init__()
 

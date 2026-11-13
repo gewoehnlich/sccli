@@ -10,13 +10,13 @@ from ui.app import App
 async def main() -> int:
     try:
         di_container: DiContainer = DiContainer(
-            _config_file=Path("config.yml"),
+            config_file=Path("config.yml"),
         )
+        di_container.wire(packages=["ui"])
 
         await asyncio.to_thread(di_container.database().run_migrations)
 
-        app = App(di_container=di_container)
-        await app.run_async()
+        await App().run_async()
     except ConfigError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
         return 1

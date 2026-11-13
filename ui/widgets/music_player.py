@@ -1,13 +1,13 @@
+from dependency_injector.wiring import Provide, inject
 from textual.app import ComposeResult
 from textual.containers import Center, Container, Horizontal
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 
+from core.di_container import DiContainer
 from core.player import Player
-from di.actions_container import ActionsContainer
 from di.commands_container import CommandsContainer
 from models.track import Track
-from repositories.setting_repository import SettingRepository
 from ui.events.current_track_changed import CurrentTrackChanged
 from ui.events.track_current_playtime_changed import TrackCurrentPlaytimeChanged
 from ui.widgets.components.music_player.buttons import (
@@ -31,26 +31,21 @@ class MusicPlayer(Widget):
     current_track_playtime: Reactive[int] = reactive(0)
     current_track_duration: Reactive[int] = reactive(0)
 
+    @inject
     def __init__(
         self,
-        player: Player,
-        commands: CommandsContainer,
-        actions: ActionsContainer,
-        setting_repository: SettingRepository,
+        player: Player = Provide[DiContainer.player],
+        commands: CommandsContainer = Provide[DiContainer.commands],
     ) -> None:
         self.player: Player = player
         self.commands: CommandsContainer = commands
-        self.actions: ActionsContainer = actions
-        self.setting_repository: SettingRepository = setting_repository
 
         super().__init__()
 
     def compose(self) -> ComposeResult:
         with Container(id="music-player-container"):
             with Center():
-                yield Image(
-                    fetch_image_action=self.actions.fetch_image,
-                )
+                yield Image()
 
             with Center():
                 yield MusicPlayerButtonsComponent().data_bind(
@@ -70,10 +65,7 @@ class MusicPlayer(Widget):
 
             with Horizontal(id="music-player-footer"):
                 with Container(id="volume"):
-                    yield VolumeSlider(
-                        player=self.player,
-                        setting_repository=self.setting_repository,
-                    )
+                    yield VolumeSlider()
 
     def on_mount(self) -> None:
         self.styles.align_horizontal = "center"
@@ -130,7 +122,7 @@ class MusicPlayer(Widget):
 
         self.current_track = track
         self.is_playing = True
-        await self.commands.play_track.run(track=track)
+        await self.commands.play_track().run(track=track)
 
     async def on_previous_track_button_pressed(self) -> None:
         await self.play(track=self.playlist.prev())

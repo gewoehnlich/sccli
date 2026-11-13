@@ -20,11 +20,11 @@ from servers.http_server import HttpServer
 
 
 class DiContainer(containers.DeclarativeContainer):
-    _config_file = providers.Dependency(instance_of=Path)
+    config_file = providers.Dependency(instance_of=Path)
 
     config: providers.Singleton[Config] = providers.Singleton(
         ConfigLoader.load,
-        path=_config_file,
+        path=config_file,
     )
 
     logger: providers.Singleton[Logger] = providers.Singleton(
@@ -43,7 +43,7 @@ class DiContainer(containers.DeclarativeContainer):
         )
     )
 
-    repositories: providers.Singleton[RepositoriesContainer] = providers.Singleton(
+    repositories: providers.Container[RepositoriesContainer] = providers.Container(
         RepositoriesContainer,
         database=database,
     )
@@ -66,7 +66,7 @@ class DiContainer(containers.DeclarativeContainer):
         client_secret=config.provided.soundcloud.client_secret,
         redirect_uri=config.provided.server.redirect_uri,
         server=server,
-        account_repository=repositories.provided.account,
+        account_repository=repositories.account,
         http_client=http_client,
     )
 
@@ -77,14 +77,14 @@ class DiContainer(containers.DeclarativeContainer):
         logger=logger,
     )
 
-    actions: providers.Singleton[ActionsContainer] = providers.Singleton(
+    actions: providers.Container[ActionsContainer] = providers.Container(
         ActionsContainer,
         auth=auth,
         http_client=http_client,
         repositories=repositories,
     )
 
-    commands: providers.Singleton[CommandsContainer] = providers.Singleton(
+    commands: providers.Container[CommandsContainer] = providers.Container(
         CommandsContainer,
         actions=actions,
         auth=auth,

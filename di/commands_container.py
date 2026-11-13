@@ -7,56 +7,57 @@ from core.auth import Auth
 from core.command import Command
 from core.http_client import HttpClient
 from core.player import Player
-from di.actions_container import ActionsContainer
-from di.repositories_container import RepositoriesContainer
+
+from dependency_injector import containers, providers
 
 
-class CommandsContainer:
-    def __init__(
-        self,
-        actions: ActionsContainer,
-        auth: Auth,
-        repositories: RepositoriesContainer,
-        messages: MessagesConfig,
-        player: Player,
-        http_client: HttpClient,
-    ) -> None:
-        self.welcome: Command = OutputMessageCommand(
-            message=messages.welcome,
-        )
+class CommandsContainer(containers.DeclarativeContainer):
+    auth = providers.Dependency(instance_of=Auth)
+    http_client = providers.Dependency(instance_of=HttpClient)
+    player = providers.Dependency(instance_of=Player)
+    messages = providers.Dependency(instance_of=MessagesConfig)
+    actions = providers.DependenciesContainer()
+    repositories = providers.DependenciesContainer()
 
-        self.exit: Command = OutputMessageCommand(
-            message=messages.exit,
-        )
+    welcome: providers.Singleton[Command] = providers.Singleton(
+        OutputMessageCommand,
+        message=messages.provided.welcome,
+    )
 
-        self.help: Command = OutputMessageCommand(
-            message=messages.help,
-        )
+    exit: providers.Singleton[Command] = providers.Singleton(
+        OutputMessageCommand,
+        message=messages.provided.exit,
+    )
 
-        self.unknown: Command = OutputMessageCommand(
-            message=messages.unknown,
-        )
+    help: providers.Singleton[Command] = providers.Singleton(
+        OutputMessageCommand,
+        message=messages.provided.help,
+    )
 
-        self.sync_my_liked_tracks: SyncMyLikedTracksCommand = (
-            SyncMyLikedTracksCommand(
-                auth=auth,
-                track_repository=repositories.track,
-                user_repository=repositories.user,
-                image_repository=repositories.image,
-                http_client=http_client,
-            )
-        )
+    unknown: providers.Singleton[Command] = providers.Singleton(
+        OutputMessageCommand,
+        message=messages.provided.unknown,
+    )
 
-        self.play_track: PlayTrackCommand = PlayTrackCommand(
-            auth=auth,
-            player=player,
-            fetch_track_streams_action=actions.fetch_track_streams,
-        )
+    sync_my_liked_tracks: providers.Singleton[SyncMyLikedTracksCommand] = providers.Singleton(
+        SyncMyLikedTracksCommand,
+        auth=auth,
+        track_repository=repositories.track,
+        user_repository=repositories.user,
+        image_repository=repositories.image,
+        http_client=http_client,
+    )
 
-        self.remove_liked_track: RemoveLikedTrackCommand = (
-            RemoveLikedTrackCommand(
-                auth=auth,
-                http_client=http_client,
-                track_repository=repositories.track,
-            )
-        )
+    play_track: providers.Singleton[PlayTrackCommand] = providers.Singleton(
+        PlayTrackCommand,
+        auth=auth,
+        player=player,
+        fetch_track_streams_action=actions.fetch_track_streams,
+    )
+
+    remove_liked_track: providers.Singleton[RemoveLikedTrackCommand] = providers.Singleton(
+        RemoveLikedTrackCommand,
+        auth=auth,
+        http_client=http_client,
+        track_repository=repositories.track,
+    )

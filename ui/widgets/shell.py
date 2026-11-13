@@ -1,11 +1,13 @@
 import shlex
 from typing import Any
 
+from dependency_injector.wiring import Provide, inject
 from textual.app import ComposeResult
 from textual.containers import Container, Vertical
 from textual.reactive import Reactive, reactive
 from textual.widgets import Input, RichLog
 
+from core.di_container import DiContainer
 from core.logger import Logger
 from di.commands_container import CommandsContainer
 from models.track import Track
@@ -14,13 +16,15 @@ from models.track import Track
 class Shell(Vertical):
     current_track: Reactive[Track | None] = reactive(None)
 
+    @inject
     def __init__(
         self,
-        logger: Logger,
-        commands: CommandsContainer,
-        **kwargs: Any,
+        logger: Logger = Provide[DiContainer.logger],
+        commands: CommandsContainer = Provide[DiContainer.commands],
     ) -> None:
-        super().__init__(**kwargs)
+        super().__init__(
+            id="shell",
+        )
 
         self.commands: CommandsContainer = commands
         self.logger: Logger = logger
@@ -49,7 +53,7 @@ class Shell(Vertical):
         input_widget.styles.height = 3
         input_widget.focus()
 
-        await self.commands.welcome.run(
+        await self.commands.welcome().run(
             output=self.write,
         )
 
@@ -77,23 +81,23 @@ class Shell(Vertical):
 
         match command:
             case "help":
-                await self.commands.help.run(
+                await self.commands.help().run(
                     output=self.write,
                 )
             case "sync:my_liked_tracks" | "smlt":
-                await self.commands.sync_my_liked_tracks.run(
+                await self.commands.sync_my_liked_tracks().run(
                     output=self.write,
                 )
             case "exit" | "quit" | "q":
                 self.write("exit")
                 # self.app.exit()
             case "unlike":
-                await self.commands.remove_liked_track.run(
+                await self.commands.remove_liked_track().run(
                     track=self.current_track,
                     output=self.write,
                 )
             case _:
-                await self.commands.unknown.run(
+                await self.commands.unknown().run(
                     output=self.write,
                 )
 

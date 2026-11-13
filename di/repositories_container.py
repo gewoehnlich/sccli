@@ -6,27 +6,24 @@ from repositories.track_repository import TrackRepository
 from repositories.user_repository import UserRepository
 
 
-class RepositoriesContainer:
-    def __init__(
-        self,
-        database: Database,
-    ) -> None:
-        self.account = AccountRepository(
-            database=database,
-        )
+from dependency_injector import containers, providers
 
-        self.track = TrackRepository(
-            database=database,
-        )
 
-        self.user = UserRepository(
-            database=database,
-        )
+class RepositoriesContainer(containers.DeclarativeContainer):
+    database = providers.Dependency(instance_of=Database)
 
-        self.image = ImageRepository(
-            database=database,
-        )
-
-        self.setting = SettingRepository(
-            database=database,
-        )
+    account: providers.Singleton[AccountRepository] = providers.Singleton(
+        AccountRepository, database=database,
+    )
+    track: providers.Singleton[TrackRepository] = providers.Singleton(
+        TrackRepository, database=database,
+    )
+    user: providers.Singleton[UserRepository] = providers.Singleton(
+        UserRepository, database=database,
+    )
+    image: providers.Singleton[ImageRepository] = providers.Singleton(
+        ImageRepository, database=database,
+    )
+    setting: providers.Singleton[SettingRepository] = providers.Singleton(
+        SettingRepository, database=database,
+    )
