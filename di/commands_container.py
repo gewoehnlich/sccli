@@ -1,7 +1,6 @@
 from dependency_injector import containers, providers
 
 from commands.output_message_command import OutputMessageCommand
-from commands.play_track_command import PlayTrackCommand
 from commands.remove_liked_track_command import RemoveLikedTrackCommand
 from commands.sync_my_liked_tracks_command import SyncMyLikedTracksCommand
 from config.messages import MessagesConfig
@@ -48,13 +47,6 @@ class CommandsContainer(containers.DeclarativeContainer):
             image_repository=repositories.image,
             http_client=http_client,
         )
-    )
-
-    play_track: providers.Singleton[PlayTrackCommand] = providers.Singleton(
-        PlayTrackCommand,
-        auth=auth,
-        player=player,
-        fetch_track_streams_action=actions.fetch_track_streams,
     )
 
     remove_liked_track: providers.Singleton[RemoveLikedTrackCommand] = (

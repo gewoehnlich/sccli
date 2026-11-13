@@ -4,7 +4,7 @@ from textual.containers import Center, Container, Horizontal
 from textual.reactive import Reactive, reactive
 from textual.widget import Widget
 
-from core.di_container import DiContainer
+from core.di_container import ActionsContainer, DiContainer
 from core.player import Player
 from di.commands_container import CommandsContainer
 from models.track import Track
@@ -36,9 +36,11 @@ class MusicPlayer(Widget):
         self,
         player: Player = Provide[DiContainer.player],
         commands: CommandsContainer = Provide[DiContainer.commands],
+        actions: ActionsContainer = Provide[DiContainer.actions],
     ) -> None:
         self.player: Player = player
         self.commands: CommandsContainer = commands
+        self.actions: ActionsContainer = actions
 
         super().__init__()
 
@@ -122,7 +124,7 @@ class MusicPlayer(Widget):
 
         self.current_track = track
         self.is_playing = True
-        await self.commands.play_track().run(track=track)
+        await self.actions.play_track().run(track=track)
 
     async def on_previous_track_button_pressed(self) -> None:
         await self.play(track=self.playlist.prev())

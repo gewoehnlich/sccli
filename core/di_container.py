@@ -84,6 +84,8 @@ class DiContainer(containers.DeclarativeContainer):
         auth=auth,
         http_client=http_client,
         repositories=repositories,
+        logger=logger,
+        player=player,
     )
 
     commands: providers.Container[CommandsContainer] = providers.Container(
