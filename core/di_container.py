@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from alembic.config import Config as AlembicConfig
+from dependency_injector import containers, providers
 
 from core.auth import Auth
 from core.config import Config
@@ -18,66 +19,77 @@ from players.mpv_player import MpvPlayer
 from servers.http_server import HttpServer
 
 
-class DiContainer:
-    def __init__(
-        self,
-        config_file: Path,
-    ) -> None:
-        self.config: Config = ConfigLoader.load(path=config_file)
+class DiContainer(containers.DeclarativeContainer):
+    _config_file = providers.Dependency(instance_of=Path)
 
-        self.logger: Logger = Logger(
-            directory=self.config.logs.directory,
-            level=self.config.logs.level,
-        )
+    config: providers.Singleton[Config] = providers.Singleton(
+        ConfigLoader.load,
+        path=_config_file,
+    )
 
-        self.database: Database = SqliteDatabase(
-            path=self.config.database.path,
-            alembic_config=AlembicConfig(
-                file_=self.config.database.alembic.ini,
-                toml_file=self.config.database.alembic.toml,
-            ),
-        )
+    logger: providers.Singleton[Logger] = providers.Singleton(
+        Logger,
+        directory=config.provided.logs.directory,
+        level=config.provided.logs.level,
+    )
 
-        self.repositories: RepositoriesContainer = RepositoriesContainer(
-            database=self.database,
+    database: providers.Singleton[Database] = providers.Singleton(
+        SqliteDatabase,
+        path=config.provided.database.path,
+        alembic_config=providers.Singleton(
+            AlembicConfig,
+            file_=config.provided.database.alembic.ini,
+            toml_file=config.provided.database.alembic.toml,
         )
+    )
 
-        self.server: Server = HttpServer(
-            host=self.config.server.host,
-            port=self.config.server.port,
-            path=self.config.server.path,
-        )
+    repositories: providers.Singleton[RepositoriesContainer] = providers.Singleton(
+        RepositoriesContainer,
+        database=database,
+    )
 
-        self.http_client: HttpClient = HttpClient(
-            proxy_endpoint=self.config.proxy.endpoint,
-        )
+    server: providers.Singleton[Server] = providers.Singleton(
+        HttpServer,
+        host=config.provided.server.host,
+        port=config.provided.server.port,
+        path=config.provided.server.path,
+    )
 
-        self.auth: Auth = Auth(
-            client_id=self.config.soundcloud.client_id,
-            client_secret=self.config.soundcloud.client_secret,
-            redirect_uri=self.config.server.redirect_uri,
-            server=self.server,
-            account_repository=self.repositories.account,
-            http_client=self.http_client,
-        )
+    http_client: providers.Singleton[HttpClient] = providers.Singleton(
+        HttpClient,
+        proxy_endpoint=config.provided.proxy.endpoint,
+    )
 
-        self.player: Player = MpvPlayer(
-            auth=self.auth,
-            http_proxy=self.config.proxy.endpoint,
-            logger=self.logger,
-        )
+    auth: providers.Singleton[Auth] = providers.Singleton(
+        Auth,
+        client_id=config.provided.soundcloud.client_id,
+        client_secret=config.provided.soundcloud.client_secret,
+        redirect_uri=config.provided.server.redirect_uri,
+        server=server,
+        account_repository=repositories.provided.account,
+        http_client=http_client,
+    )
 
-        self.actions: ActionsContainer = ActionsContainer(
-            auth=self.auth,
-            http_client=self.http_client,
-            repositories=self.repositories,
-        )
+    player: providers.Singleton[Player] = providers.Singleton(
+        MpvPlayer,
+        auth=auth,
+        http_proxy=config.provided.proxy.endpoint,
+        logger=logger,
+    )
 
-        self.commands: CommandsContainer = CommandsContainer(
-            actions=self.actions,
-            auth=self.auth,
-            repositories=self.repositories,
-            messages=self.config.messages,
-            player=self.player,
-            http_client=self.http_client,
-        )
+    actions: providers.Singleton[ActionsContainer] = providers.Singleton(
+        ActionsContainer,
+        auth=auth,
+        http_client=http_client,
+        repositories=repositories,
+    )
+
+    commands: providers.Singleton[CommandsContainer] = providers.Singleton(
+        CommandsContainer,
+        actions=actions,
+        auth=auth,
+        repositories=repositories,
+        messages=config.provided.messages,
+        player=player,
+        http_client=http_client,
+    )

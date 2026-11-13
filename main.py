@@ -10,10 +10,10 @@ from ui.app import App
 async def main() -> int:
     try:
         di_container: DiContainer = DiContainer(
-            config_file=Path("config.yml"),
+            _config_file=Path("config.yml"),
         )
 
-        await asyncio.to_thread(di_container.database.run_migrations)
+        await asyncio.to_thread(di_container.database().run_migrations)
 
         app = App(di_container=di_container)
         await app.run_async()

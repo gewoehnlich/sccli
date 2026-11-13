@@ -71,6 +71,15 @@ reportMissingImports = true
 reportUnusedImport = true
 pythonPlatform = "Linux"
 
+[tool.pylint.main]
+extension-pkg-allow-list = ["dependency_injector"]
+source-roots = ["."]
+
+[tool.pylint.typecheck]
+ignored-modules = ["dependency_injector"]
+
+[tool.pylint.messages_control]
+disable = ["c-extension-no-member"]
 
 [tool.alembic]
 script_location = "%(here)s/migrations"

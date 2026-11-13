@@ -31,13 +31,13 @@ class App(BaseApp[None]):
     ) -> None:
         self.di_container = di_container
 
-        self.track_repository: TrackRepository = di_container.repositories.track
-        self.logger: Logger = di_container.logger
-        self.commands: CommandsContainer = di_container.commands
-        self.player: Player = di_container.player
-        self.actions: ActionsContainer = di_container.actions
+        self.track_repository: TrackRepository = di_container.repositories().track
+        self.logger: Logger = di_container.logger()
+        self.commands: CommandsContainer = di_container.commands()
+        self.player: Player = di_container.player()
+        self.actions: ActionsContainer = di_container.actions()
         self.setting_repository: SettingRepository = (
-            di_container.repositories.setting
+            di_container.repositories().setting
         )
 
         super().__init__()
@@ -69,7 +69,7 @@ class App(BaseApp[None]):
 
             yield TrackList(
                 logger=self.logger,
-                user_repository=self.di_container.repositories.user,
+                user_repository=self.di_container.repositories().user,
             ).data_bind(
                 playlist=App.playlist,
             )
