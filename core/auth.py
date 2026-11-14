@@ -5,6 +5,7 @@ import secrets
 import time
 import webbrowser
 from typing import Any
+from dataclasses import dataclass
 
 from core.http_client import HttpClient
 from core.request import Request
@@ -16,23 +17,15 @@ from models.account import Account
 from repositories.account_repository import AccountRepository
 
 
+@dataclass(slots=True, kw_only=True, frozen=True)
 class Auth:
-    def __init__(
-        self,
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
-        server: Server,
-        account_repository: AccountRepository,
-        http_client: HttpClient,
-    ) -> None:
-        self._client_id: str = client_id
-        self._client_secret: str = client_secret
-        self._redirect_uri: str = redirect_uri
+    _client_id: str
+    _client_secret: str
+    _redirect_uri: str
 
-        self._server: Server = server
-        self._account_repository: AccountRepository = account_repository
-        self._http_client: HttpClient = http_client
+    _server: Server
+    _account_repository: AccountRepository
+    _http_client: HttpClient
 
     async def get_access_token(self) -> str:
         account: Account | None = await self._account_repository.get_one(

@@ -64,12 +64,12 @@ class DiContainer(containers.DeclarativeContainer):
 
     auth: providers.Singleton[Auth] = providers.Singleton(
         Auth,
-        client_id=config.provided.soundcloud.client_id,
-        client_secret=config.provided.soundcloud.client_secret,
-        redirect_uri=config.provided.server.redirect_uri,
-        server=server,
-        account_repository=repositories().account,
-        http_client=http_client,
+        _client_id=config.provided.soundcloud.client_id,
+        _client_secret=config.provided.soundcloud.client_secret,
+        _redirect_uri=config.provided.server.redirect_uri,
+        _server=server,
+        _account_repository=repositories().account,
+        _http_client=http_client,
     )
 
     player: providers.Singleton[Player] = providers.Singleton(

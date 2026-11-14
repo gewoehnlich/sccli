@@ -4,6 +4,7 @@ from typing import Any, cast
 import yaml
 
 from core.config import Config
+from core.types import ConfigFileData
 from exceptions.config.cannot_read_config_file_error import (
     CannotReadConfigFileError,
 )
@@ -24,8 +25,6 @@ from exceptions.config.invalid_yaml_config_error import InvalidYamlConfigError
 from exceptions.config.no_permission_to_read_config_error import (
     NoPermissionToReadConfigError,
 )
-
-type ConfigFileData = dict[str, str | None]
 
 
 class ConfigLoader:

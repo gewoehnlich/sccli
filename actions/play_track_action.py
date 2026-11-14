@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Any, cast
 
 from core.action import Action
@@ -11,20 +12,13 @@ from models.track import Track
 from repositories.track_repository import TrackRepository
 
 
+@dataclass(slots=True, kw_only=True, frozen=True)
 class PlayTrackAction(Action):
-    def __init__(
-        self,
-        auth: Auth,
-        http_client: HttpClient,
-        player: Player,
-        track_repository: TrackRepository,
-        logger: Logger,
-    ) -> None:
-        self.auth: Auth = auth
-        self.http_client: HttpClient = http_client
-        self.player: Player = player
-        self.track_repository: TrackRepository = track_repository
-        self.logger: Logger = logger
+    auth: Auth
+    http_client: HttpClient
+    player: Player
+    track_repository: TrackRepository
+    logger: Logger
 
     async def run(
         self,

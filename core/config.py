@@ -10,14 +10,13 @@ from config.proxy import ProxyConfig
 from config.server import ServerConfig
 from config.soundcloud import SoundcloudConfig
 from config.tests import TestsConfig
+from core.types import ConfigFileData
 from exceptions.config.client_id_invalid_format_error import (
     ClientIdInvalidFormatError,
 )
 from exceptions.config.client_secret_invalid_format_error import (
     ClientSecretInvalidFormatError,
 )
-
-type ConfigFileData = dict[str, str | None]
 
 
 class Config(BaseConfigModel):

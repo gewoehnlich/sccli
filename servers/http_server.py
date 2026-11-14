@@ -16,12 +16,7 @@ from values.callback_result import CallbackResult
 
 
 class HttpServer(Server):
-    def __init__(
-        self,
-        host: str,
-        port: int,
-        path: str,
-    ) -> None:
+    def __init__(self, host: str, port: int, path: str) -> None:
         super().__init__(host=host, port=port, path=path)
 
         self._server: _CallbackServer | None = None
@@ -38,7 +33,6 @@ class HttpServer(Server):
             raise PortUnavailableError(port=self.port) from e
 
         server.callback_path = self.path
-        self.port = server.server_port
         self._server = server
 
     def wait_for_callback(

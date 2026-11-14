@@ -1,18 +1,14 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from values.callback_result import CallbackResult
 
 
+@dataclass(slots=True, kw_only=True, frozen=True)
 class Server(ABC):
-    def __init__(
-        self,
-        host: str,
-        port: int,
-        path: str,
-    ) -> None:
-        self.host = host
-        self.port = port
-        self.path = path
+    host: str
+    port: int
+    path: str
 
     @abstractmethod
     def start(self) -> None:
