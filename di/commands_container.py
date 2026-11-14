@@ -41,11 +41,7 @@ class CommandsContainer(containers.DeclarativeContainer):
     sync_my_liked_tracks: providers.Singleton[SyncMyLikedTracksCommand] = (
         providers.Singleton(
             SyncMyLikedTracksCommand,
-            auth=auth,
-            track_repository=repositories.track,
-            user_repository=repositories.user,
-            image_repository=repositories.image,
-            http_client=http_client,
+            action=actions.sync_my_liked_tracks,
         )
     )
 

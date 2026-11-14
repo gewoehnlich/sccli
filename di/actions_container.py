@@ -2,6 +2,7 @@ from dependency_injector import containers, providers
 
 from actions.fetch_image_action import FetchImageAction
 from actions.play_track_action import PlayTrackAction
+from actions.sync_my_liked_tracks_action import SyncMyLikedTracksAction
 from core.auth import Auth
 from core.http_client import HttpClient
 from core.logger import Logger
@@ -29,4 +30,12 @@ class ActionsContainer(containers.DeclarativeContainer):
         auth=auth,
         http_client=http_client,
         image_repository=repositories.image,
+    )
+
+    sync_my_liked_tracks: providers.Singleton[SyncMyLikedTracksAction] = providers.Singleton(
+        SyncMyLikedTracksAction,
+        auth=auth,
+        http_client=http_client,
+        user_repository=repositories.user,
+        track_repository=repositories.track,
     )
