@@ -2,7 +2,10 @@ from dependency_injector import containers, providers
 
 from actions.fetch_image_action import FetchImageAction
 from actions.play_track_action import PlayTrackAction
+from actions.remove_liked_track_action import RemoveLikedTrackAction
 from actions.sync_my_liked_tracks_action import SyncMyLikedTracksAction
+from actions.output_message_action import OutputMessageAction
+from config.messages import MessagesConfig
 from core.auth import Auth
 from core.http_client import HttpClient
 from core.logger import Logger
@@ -15,6 +18,7 @@ class ActionsContainer(containers.DeclarativeContainer):
     repositories = providers.DependenciesContainer()
     player = providers.Dependency(instance_of=Player)
     logger = providers.Dependency(instance_of=Logger)
+    messages = providers.Dependency(instance_of=MessagesConfig)
 
     play_track: providers.Singleton[PlayTrackAction] = providers.Singleton(
         PlayTrackAction,
@@ -40,4 +44,33 @@ class ActionsContainer(containers.DeclarativeContainer):
             user_repository=repositories.user,
             track_repository=repositories.track,
         )
+    )
+
+    remove_liked_track: providers.Singleton[RemoveLikedTrackAction] = (
+        providers.Singleton(
+            RemoveLikedTrackAction,
+            auth=auth,
+            http_client=http_client,
+            track_repository=repositories.track,
+        )
+    )
+
+    welcome: providers.Singleton[OutputMessageAction] = providers.Singleton(
+        OutputMessageAction,
+        message=messages.provided.welcome,
+    )
+
+    exit: providers.Singleton[OutputMessageAction] = providers.Singleton(
+        OutputMessageAction,
+        message=messages.provided.exit,
+    )
+
+    help: providers.Singleton[OutputMessageAction] = providers.Singleton(
+        OutputMessageAction,
+        message=messages.provided.help,
+    )
+
+    unknown: providers.Singleton[OutputMessageAction] = providers.Singleton(
+        OutputMessageAction,
+        message=messages.provided.unknown,
     )

@@ -8,7 +8,7 @@ from textual.widgets import Input, RichLog
 
 from core.di_container import DiContainer
 from core.logger import Logger
-from di.commands_container import CommandsContainer
+from di.actions_container import ActionsContainer
 from models.track import Track
 
 
@@ -19,14 +19,14 @@ class Shell(Vertical):
     def __init__(
         self,
         logger: Logger = Provide[DiContainer.logger],
-        commands: CommandsContainer = Provide[DiContainer.commands],
+        actions: ActionsContainer = Provide[DiContainer.actions],
     ) -> None:
         super().__init__(
             id="shell",
         )
 
-        self.commands: CommandsContainer = commands
         self.logger: Logger = logger
+        self.actions: ActionsContainer = actions
 
     def compose(self) -> ComposeResult:
         with Container(id="shell-container"):
@@ -52,7 +52,7 @@ class Shell(Vertical):
         input_widget.styles.height = 3
         input_widget.focus()
 
-        await self.commands.welcome().run(
+        await self.actions.welcome().run(
             output=self.write,
         )
 
@@ -80,23 +80,23 @@ class Shell(Vertical):
 
         match command:
             case "help":
-                await self.commands.help().run(
+                await self.actions.help().run(
                     output=self.write,
                 )
             case "sync:my_liked_tracks" | "smlt":
-                await self.commands.sync_my_liked_tracks().run(
+                await self.actions.sync_my_liked_tracks().run(
                     output=self.write,
                 )
             case "exit" | "quit" | "q":
                 self.write("exit")
                 # self.app.exit()
             case "unlike":
-                await self.commands.remove_liked_track().run(
+                await self.actions.remove_liked_track().run(
                     track=self.current_track,
                     output=self.write,
                 )
             case _:
-                await self.commands.unknown().run(
+                await self.actions.unknown().run(
                     output=self.write,
                 )
 

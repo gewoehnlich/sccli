@@ -13,7 +13,6 @@ from core.player import Player
 from core.server import Server
 from databases.sqlite_database import SqliteDatabase
 from di.actions_container import ActionsContainer
-from di.commands_container import CommandsContainer
 from di.repositories_container import RepositoriesContainer
 from players.mpv_player import MpvPlayer
 from servers.http_server import HttpServer
@@ -86,14 +85,5 @@ class DiContainer(containers.DeclarativeContainer):
         repositories=repositories,
         logger=logger,
         player=player,
-    )
-
-    commands: providers.Container[CommandsContainer] = providers.Container(
-        CommandsContainer,
-        actions=actions,
-        auth=auth,
-        repositories=repositories,
         messages=config.provided.messages,
-        player=player,
-        http_client=http_client,
     )
