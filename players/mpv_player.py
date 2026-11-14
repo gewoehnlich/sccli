@@ -17,10 +17,10 @@ class MpvPlayer(Player):
     ) -> None:
         super().__init__()
 
-        self.auth: Auth = auth
-        self.logger: Logger = logger
-        self.player: mpv.MPV = mpv.MPV(
-            # log_handler=self._log,
+        self._auth: Auth = auth
+        self._logger: Logger = logger
+        self._player: mpv.MPV = mpv.MPV(
+            log_handler=self._log,
             ytdl=True,
             vid="no",
             volume=60,
@@ -28,7 +28,7 @@ class MpvPlayer(Player):
         )
         self._current_streaming_link: str | None = None
 
-        @self.player.event_callback("end-file")
+        @self._player.event_callback("end-file")
         def on_end_file(event: mpv.MpvEventEndFile) -> None:
             event = event.as_dict()
 
@@ -36,30 +36,30 @@ class MpvPlayer(Player):
                 self.emit_track_finished()
 
     def _log(self, level: str, prefix: str, text: str) -> None:
-        self.logger.debug(f"[{level}] {prefix}: {text}")
+        self._logger.debug(f"[{level}] {prefix}: {text}")
 
     async def play(self, link: str) -> None:
-        if cast(bool, self.player.pause):
-            self.player.pause = False
+        if cast(bool, self._player.pause):
+            self._player.pause = False
 
         if self._current_streaming_link != link:
-            self.player.http_header_fields = [
-                f"Authorization: Bearer {await self.auth.get_access_token()}"
+            self._player.http_header_fields = [
+                f"Authorization: Bearer {await self._auth.get_access_token()}"
             ]
             self._current_streaming_link = link
-            cast(Callable[..., None], self.player.play)(filename=link)
+            cast(Callable[..., None], self._player.play)(filename=link)
 
     def stop(self) -> None:
-        self.player.pause = True
+        self._player.pause = True
 
     def get_current_track_playtime(self) -> int:
-        return cast(int, self.player.time_pos) or 0
+        return cast(int, self._player.time_pos) or 0
 
     def get_current_track_duration(self) -> int:
-        return cast(int, self.player.duration) or 0
+        return cast(int, self._player.duration) or 0
 
     def update_current_track_playtime(self, playtime: int) -> None:
-        self.player.time_pos = playtime
+        self._player.time_pos = playtime
 
     def update_volume(self, volume: int) -> None:
-        self.player.volume = volume
+        self._player.volume = volume

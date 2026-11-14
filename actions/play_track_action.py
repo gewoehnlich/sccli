@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Any, cast
 
 from core.action import Action
@@ -12,20 +11,27 @@ from models.track import Track
 from repositories.track_repository import TrackRepository
 
 
-@dataclass(slots=True, kw_only=True, frozen=True)
 class PlayTrackAction(Action):
-    auth: Auth
-    http_client: HttpClient
-    player: Player
-    track_repository: TrackRepository
-    logger: Logger
+    def __init__(
+        self,
+        auth: Auth,
+        http_client: HttpClient,
+        player: Player,
+        track_repository: TrackRepository,
+        logger: Logger,
+    ) -> None:
+        self._auth: Auth = auth
+        self._http_client: HttpClient = http_client
+        self._player: Player = player
+        self._track_repository: TrackRepository = track_repository
+        self._logger: Logger = logger
 
     async def run(
         self,
         track: Track,
     ) -> Any:
         if not track.streams:
-            self.logger.trace(
+            self._logger.trace(
                 f"no stored streams for track: {track.id} - {track.title}, fetching from API"
             )
             fetched_streams: dict[str, Any] = await self._fetch_track_streams(
@@ -34,7 +40,7 @@ class PlayTrackAction(Action):
 
             track.streams = fetched_streams
 
-            track = await self.track_repository.store(model=track)
+            track = await self._track_repository.store(model=track)
 
         streams: dict[str, str] | None = track.streams
 
@@ -48,7 +54,7 @@ class PlayTrackAction(Action):
             streams.get("hls_aac_160_url") or streams.get("hls_mp3_128_url"),
         )
 
-        await self.player.play(link=streaming_url)
+        await self._player.play(link=streaming_url)
 
     async def _fetch_track_streams(
         self,
@@ -57,9 +63,9 @@ class PlayTrackAction(Action):
         request: Request = Request(
             method=Request.METHOD.GET,
             url=Request.URL.API + f"/tracks/{track.urn}/streams",
-            access_token=await self.auth.get_access_token(),
+            access_token=await self._auth.get_access_token(),
         )
 
-        response: dict[str, Any] = await self.http_client.send(request)
+        response: dict[str, Any] = await self._http_client.send(request)
 
         return response

@@ -9,9 +9,7 @@ from ui.app import App
 
 async def main() -> int:
     try:
-        di_container: DiContainer = DiContainer(
-            config_file=Path("config.yml"),
-        )
+        di_container: DiContainer = DiContainer()
         di_container.wire(packages=["ui"])
 
         await asyncio.to_thread(di_container.database().run_migrations)

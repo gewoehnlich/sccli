@@ -21,9 +21,7 @@ class HttpServer(Server):
 
         self._server: _CallbackServer | None = None
 
-    def start(
-        self,
-    ) -> None:
+    def start(self) -> None:
         if self._server is not None:
             raise ServerIsAlreadyRunningError()
 
@@ -35,10 +33,7 @@ class HttpServer(Server):
         server.callback_path = self.path
         self._server = server
 
-    def wait_for_callback(
-        self,
-        timeout: float,
-    ) -> CallbackResult:
+    def wait_for_callback(self, timeout: float) -> CallbackResult:
         if self._server is None:
             raise ServerIsNotStartedError()
 
@@ -54,9 +49,7 @@ class HttpServer(Server):
 
         return self._server.result
 
-    def stop(
-        self,
-    ) -> None:
+    def stop(self) -> None:
         if self._server is not None:
             self._server.server_close()
             self._server = None

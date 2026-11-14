@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from core.action import Action
 from core.auth import Auth
 from core.http_client import HttpClient
@@ -10,11 +8,16 @@ from models.track import Track
 from repositories.track_repository import TrackRepository
 
 
-@dataclass(slots=True, kw_only=True, frozen=True)
 class RemoveLikedTrackAction(Action):
-    auth: Auth
-    http_client: HttpClient
-    track_repository: TrackRepository
+    def __init__(
+        self,
+        auth: Auth,
+        http_client: HttpClient,
+        track_repository: TrackRepository,
+    ) -> None:
+        self._auth: Auth = auth
+        self._http_client: HttpClient = http_client
+        self._track_repository: TrackRepository = track_repository
 
     async def run(
         self,
@@ -24,15 +27,15 @@ class RemoveLikedTrackAction(Action):
         if not track:
             return
 
-        await self.http_client.send(
+        await self._http_client.send(
             request=Request(
                 method=Request.METHOD.DELETE,
                 url=Request.URL.API + f"/likes/tracks/{track.urn}",
-                access_token=await self.auth.get_access_token(),
+                access_token=await self._auth.get_access_token(),
             ),
         )
 
-        await self.track_repository.delete(model=track)
+        await self._track_repository.delete(model=track)
 
         if output:
             output(f"Removed like from {track.id} - {track.title}")
