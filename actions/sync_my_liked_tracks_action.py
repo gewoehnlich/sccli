@@ -1,10 +1,11 @@
-from collections.abc import AsyncGenerator, Callable, Sequence
+from collections.abc import AsyncGenerator, Sequence
 from typing import Any
 
 from core.action import Action
 from core.auth import Auth
 from core.http_client import HttpClient
 from core.request import Request
+from core.types import ShellOutputMethod
 from models.track import Track
 from models.user import User
 from repositories.track_repository import TrackRepository
@@ -24,7 +25,7 @@ class SyncMyLikedTracksAction(Action):
         self.user_repository: UserRepository = user_repository
         self.http_client: HttpClient = http_client
 
-    async def run(self, output: Callable[[str], None] | None = None) -> None:
+    async def run(self, output: ShellOutputMethod | None = None) -> None:
         existing_users: Sequence[User] = await self.user_repository.get()
         existing_tracks: Sequence[Track] = await self.track_repository.get()
 

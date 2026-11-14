@@ -4,6 +4,7 @@ from typing import Any
 
 from loguru import logger
 
+from core.types import ShellOutputMethod
 from enums.logger_level import LoggerLevelEnum
 
 
@@ -34,7 +35,7 @@ class Logger:
 
         self._logger.complete()
 
-    def attach_sink(self, write: Callable[[str], None]) -> None:
+    def attach_sink(self, write: ShellOutputMethod) -> None:
         def sink(message: Any) -> None:
             write(str(message).rstrip("\n"))
 

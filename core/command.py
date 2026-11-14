@@ -1,12 +1,13 @@
 from abc import abstractmethod
-from collections.abc import Callable
 from typing import Any
+
+from core.types import ShellOutputMethod
 
 
 class Command:
     @abstractmethod
     async def run(
         self,
-        output: Callable[[str], None] | None = None,
+        output: ShellOutputMethod | None = None,
         **kwargs: dict[str, Any],
     ) -> None: ...

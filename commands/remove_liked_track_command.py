@@ -1,9 +1,8 @@
-from collections.abc import Callable
-
 from core.auth import Auth
 from core.command import Command
 from core.http_client import HttpClient
 from core.request import Request
+from core.types import ShellOutputMethod
 from exceptions.soundcloud_errors import SoundcloudError
 from models.track import Track
 from repositories.track_repository import TrackRepository
@@ -21,7 +20,9 @@ class RemoveLikedTrackCommand(Command):
         self.track_repository: TrackRepository = track_repository
 
     async def run(
-        self, track: Track | None, output: Callable[[str], None] | None = None
+        self,
+        track: Track | None,
+        output: ShellOutputMethod | None = None,
     ) -> None:
         try:
             if not track:
