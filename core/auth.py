@@ -4,8 +4,8 @@ import os
 import secrets
 import time
 import webbrowser
-from typing import Any
 from dataclasses import dataclass
+from typing import Any
 
 from core.http_client import HttpClient
 from core.request import Request

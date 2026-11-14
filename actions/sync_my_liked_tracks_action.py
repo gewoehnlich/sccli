@@ -48,11 +48,11 @@ class SyncMyLikedTracksAction(Action):
         )
 
         for user in existing_users:
-            if not fetched_users.get(user.id, None):
+            if not fetched_users.get(user.id):
                 await self.user_repository.delete(user)
 
         for track in existing_tracks:
-            if not fetched_tracks.get(track.id, None):
+            if not fetched_tracks.get(track.id):
                 await self.track_repository.delete(track)
 
         if output:

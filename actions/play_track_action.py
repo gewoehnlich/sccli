@@ -25,8 +25,12 @@ class PlayTrackAction(Action):
         track: Track,
     ) -> Any:
         if not track.streams:
-            self.logger.trace(f"no stored streams for track: {track.id} - {track.title}, fetching from API")
-            fetched_streams: dict[str, Any] = await self._fetch_track_streams(track=track)
+            self.logger.trace(
+                f"no stored streams for track: {track.id} - {track.title}, fetching from API"
+            )
+            fetched_streams: dict[str, Any] = await self._fetch_track_streams(
+                track=track
+            )
 
             track.streams = fetched_streams
 
@@ -39,7 +43,10 @@ class PlayTrackAction(Action):
                 f"no streams for track {track.id}: {track.title}"
             )
 
-        streaming_url: str = cast(str, streams.get("hls_aac_160_url") or streams.get("hls_mp3_128_url"))
+        streaming_url: str = cast(
+            str,
+            streams.get("hls_aac_160_url") or streams.get("hls_mp3_128_url"),
+        )
 
         await self.player.play(link=streaming_url)
 

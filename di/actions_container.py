@@ -32,10 +32,12 @@ class ActionsContainer(containers.DeclarativeContainer):
         image_repository=repositories.image,
     )
 
-    sync_my_liked_tracks: providers.Singleton[SyncMyLikedTracksAction] = providers.Singleton(
-        SyncMyLikedTracksAction,
-        auth=auth,
-        http_client=http_client,
-        user_repository=repositories.user,
-        track_repository=repositories.track,
+    sync_my_liked_tracks: providers.Singleton[SyncMyLikedTracksAction] = (
+        providers.Singleton(
+            SyncMyLikedTracksAction,
+            auth=auth,
+            http_client=http_client,
+            user_repository=repositories.user,
+            track_repository=repositories.track,
+        )
     )
