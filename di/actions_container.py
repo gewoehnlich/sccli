@@ -1,10 +1,10 @@
 from dependency_injector import containers, providers
 
 from actions.fetch_image_action import FetchImageAction
+from actions.output_message_action import OutputMessageAction
 from actions.play_track_action import PlayTrackAction
 from actions.remove_liked_track_action import RemoveLikedTrackAction
 from actions.sync_my_liked_tracks_action import SyncMyLikedTracksAction
-from actions.output_message_action import OutputMessageAction
 from config.messages import MessagesConfig
 from core.auth import Auth
 from core.http_client import HttpClient

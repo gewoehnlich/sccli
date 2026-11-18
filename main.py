@@ -1,6 +1,5 @@
 import asyncio
 import sys
-from pathlib import Path
 
 from core.di_container import DiContainer
 from exceptions.config.config_error import ConfigError

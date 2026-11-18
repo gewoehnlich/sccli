@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 from core.action import Action
 from core.types import ShellOutputMethod
 

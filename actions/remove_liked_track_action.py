@@ -3,7 +3,6 @@ from core.auth import Auth
 from core.http_client import HttpClient
 from core.request import Request
 from core.types import ShellOutputMethod
-from exceptions.soundcloud_errors import SoundcloudError
 from models.track import Track
 from repositories.track_repository import TrackRepository
 
