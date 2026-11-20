@@ -20,7 +20,7 @@ class MpvPlayer(Player):
         self._auth: Auth = auth
         self._logger: Logger = logger
         self._player: mpv.MPV = mpv.MPV(
-            log_handler=self._log,
+            # log_handler=self._log,
             ytdl=True,
             vid="no",
             volume=60,

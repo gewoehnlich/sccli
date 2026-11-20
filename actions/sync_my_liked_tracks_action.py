@@ -1,8 +1,6 @@
 from collections.abc import AsyncGenerator, Sequence
 from typing import Any
 
-from loguru import logger
-
 from core.action import Action
 from core.auth import Auth
 from core.http_client import HttpClient
@@ -35,7 +33,6 @@ class SyncMyLikedTracksAction(Action):
         fetched_tracks: dict[int, Track] = {}
 
         async for item in self._fetch():
-            logger.info(f"{item!s}")
             user: User = User.from_api(data=item["user"])
             track: Track = Track.from_api(data=item, user_id=user.id)
 
@@ -50,13 +47,13 @@ class SyncMyLikedTracksAction(Action):
             models=list(fetched_tracks.values()),
         )
 
-        for user in existing_users:
-            if not fetched_users.get(user.id):
-                await self.user_repository.delete(user)
-
         for track in existing_tracks:
             if not fetched_tracks.get(track.id):
                 await self.track_repository.delete(track)
+
+        for user in existing_users:
+            if not fetched_users.get(user.id):
+                await self.user_repository.delete(user)
 
         if output:
             output(f"Synced {len(fetched_tracks)} liked tracks!")
