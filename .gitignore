@@ -12,3 +12,4 @@ test.db
 config.yml
 logs/
 todo.txt
+.aider*
