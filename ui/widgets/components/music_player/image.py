@@ -1,6 +1,5 @@
 from io import BytesIO
 
-import requests
 from dependency_injector.wiring import Provide, inject
 from PIL import Image as PILImage
 from PIL.ImageFile import ImageFile
@@ -50,13 +49,10 @@ class Image(Widget):
         image: ImageFile | None = None
 
         if url:
-            try:
-                data = await self.fetch_image_action.run(url=url)
+            data = await self.fetch_image_action.run(url=url)
 
-                image = PILImage.open(BytesIO(data))
-                image.load()
-            except requests.RequestException, OSError:
-                image = None
+            image = PILImage.open(BytesIO(data))
+            image.load()
 
         if image is None:
             self.show_default()

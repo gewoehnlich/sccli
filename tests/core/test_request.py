@@ -2,7 +2,6 @@ import json
 from unittest.mock import MagicMock
 
 import pytest
-import requests
 from pytest_mock import MockerFixture
 
 from core.http_client import HttpClient
