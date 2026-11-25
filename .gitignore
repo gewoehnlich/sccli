@@ -13,3 +13,4 @@ config.yml
 logs/
 todo.txt
 .aider*
+soundcloud_api_specification.json
